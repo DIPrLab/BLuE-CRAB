@@ -79,10 +79,8 @@ class ScannerViewState extends State<ScannerView> {
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
       devices = results
-          .map((ScanResult e) => Device(e.device.remoteId.toString(),
-              name: e.advertisementData.advName,
-              platformName: e.device.platformName,
-              manufacturer: e.advertisementData.manufacturerData.keys.toList()))
+          .map((ScanResult e) => Device(e.device.remoteId.toString(), e.advertisementData.advName,
+              e.device.platformName, e.advertisementData.manufacturerData.keys.toList()))
           .toList();
       results.forEach((result) => probe(result.device));
       if (mounted) {
