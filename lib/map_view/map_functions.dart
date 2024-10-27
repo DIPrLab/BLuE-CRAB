@@ -35,10 +35,10 @@ LatLng middlePoint(List<LatLng> locations) {
   }
   List<double> latitudes = [];
   List<double> longitudes = [];
-  locations.forEach((location) {
+  for (var location in locations) {
     latitudes.insert(0, location.latitude.degrees);
     longitudes.insert(0, location.longitude.degrees);
-  });
+  }
   double latitude = (latitudes.max + latitudes.min) / 2;
   double longitude = (longitudes.max + longitudes.min) / 2;
   return LatLng.degree(latitude, longitude);

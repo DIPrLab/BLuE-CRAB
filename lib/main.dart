@@ -26,14 +26,23 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   @override
-  void initState() => super.initState();
+  void initState() {
+    super.initState();
+  }
 
   @override
-  void dispose() => super.dispose();
+  void dispose() {
+    super.dispose();
+  }
 
   @override
-  Widget build(BuildContext context) =>
-      MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen(), theme: Themes.darkMode);
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
+      theme: Themes.darkMode,
+    );
+  }
 }
 
 class SplashScreen extends StatefulWidget {
@@ -54,31 +63,51 @@ class _SplashScreen extends State<SplashScreen> {
   }
 
   @override
-  void dispose() => super.dispose();
+  void dispose() {
+    super.dispose();
+  }
 
   Future<void> _loadData() async {
-    await readSettings().then((settings) => this.settings = settings);
-    await readReport().then((savedReport) => report = savedReport);
+    await readSettings().then((settings) {
+      this.settings = settings;
+      print('Settings loaded');
+    });
+    await readReport().then((savedReport) {
+      report = savedReport;
+    });
     await Future.delayed(Duration(seconds: 2), () {});
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SafeArea(child: HomePage(report, settings))));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SafeArea(child: HomePage(report, settings))));
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-          body: Center(
-              child: Column(children: [
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+      child: Column(children: [
         Spacer(),
-        Text("BL(u)E CRAB",
-            // style: GoogleFonts.nothingYouCouldDo(
-            // style: GoogleFonts.sniglet(
-            // style: GoogleFonts.caprasimo(
-            // style: GoogleFonts.mogra(
-            style: GoogleFonts.irishGrover(textStyle: TextStyles.splashText)),
+        Text(
+          "BL(u)E CRAB",
+          // style: GoogleFonts.nothingYouCouldDo(
+          // style: GoogleFonts.sniglet(
+          // style: GoogleFonts.caprasimo(
+          // style: GoogleFonts.mogra(
+          style: GoogleFonts.irishGrover(
+            textStyle: TextStyles.splashText,
+          ),
+        ),
         Spacer(),
-        SpinKitFadingCircle(color: Colors.white, size: 50.0),
+        SpinKitFadingCircle(
+          color: Colors.white,
+          size: 50.0,
+        ),
         Spacer(),
-      ])));
+      ]),
+    ));
+  }
 }
 
 class HomePage extends StatefulWidget {
@@ -100,7 +129,12 @@ class _HomePage extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) => setState(() => _adapterState = state));
+    _adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) {
+      _adapterState = state;
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override

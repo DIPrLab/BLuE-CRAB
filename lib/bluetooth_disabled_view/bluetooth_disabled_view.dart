@@ -10,33 +10,52 @@ class BluetoothOffView extends StatelessWidget {
 
   final BluetoothAdapterState? adapterState;
 
-  Widget bluetoothOffIcon(BuildContext context) => const Icon(Icons.bluetooth_disabled, size: 200.0);
+  Widget bluetoothOffIcon(BuildContext context) {
+    return const Icon(
+      Icons.bluetooth_disabled,
+      size: 200.0,
+    );
+  }
 
   Widget errorText(BuildContext context) {
     String? state = adapterState?.toString().split(".").last;
-    return Text('Bluetooth Adapter is ${state ?? 'not available'}');
+    return Text(
+      'Bluetooth Adapter is ${state ?? 'not available'}',
+    );
   }
 
-  Widget turnOnBluetoothButton(BuildContext context) => Padding(
+  Widget turnOnBluetoothButton(BuildContext context) {
+    return Padding(
       padding: const EdgeInsets.all(20.0),
       child: ElevatedButton(
-          child: const Text('TURN ON'),
-          onPressed: () async {
-            try {
-              await FlutterBluePlus.turnOn();
-            } catch (e) {
-              // Snackbar.show(ABC.a, prettyException("Error Turning On:", e), success: false);
-            }
-          }));
+        child: const Text('TURN ON'),
+        onPressed: () async {
+          try {
+            await FlutterBluePlus.turnOn();
+          } catch (e) {
+            // Snackbar.show(ABC.a, prettyException("Error Turning On:", e), success: false);
+          }
+        },
+      ),
+    );
+  }
 
   @override
-  Widget build(BuildContext context) => ScaffoldMessenger(
-          // key: Snackbar.snackBarKeyA,
-          child: Scaffold(
-              body: Center(
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-        bluetoothOffIcon(context),
-        errorText(context),
-        if (Platform.isAndroid) turnOnBluetoothButton(context),
-      ]))));
+  Widget build(BuildContext context) {
+    return ScaffoldMessenger(
+      // key: Snackbar.snackBarKeyA,
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              bluetoothOffIcon(context),
+              errorText(context),
+              if (Platform.isAndroid) turnOnBluetoothButton(context),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -18,14 +18,18 @@ extension Controllers on MapViewState {
           ));
     } else if (Platform.isIOS || Platform.isMacOS) {
       return AppleSettings(
-          accuracy: accuracy,
-          activityType: ActivityType.fitness,
-          distanceFilter: distanceFilter,
-          pauseLocationUpdatesAutomatically: true,
-          // Only set to true if our app will be started up in the background.
-          showBackgroundLocationIndicator: false);
+        accuracy: accuracy,
+        activityType: ActivityType.fitness,
+        distanceFilter: distanceFilter,
+        pauseLocationUpdatesAutomatically: true,
+        // Only set to true if our app will be started up in the background.
+        showBackgroundLocationIndicator: false,
+      );
     } else {
-      return LocationSettings(accuracy: accuracy, distanceFilter: distanceFilter);
+      return LocationSettings(
+        accuracy: accuracy,
+        distanceFilter: distanceFilter,
+      );
     }
   }
 
@@ -47,9 +51,11 @@ extension Controllers on MapViewState {
     scaleStart = details.scale;
 
     if (scaleDiff > 0) {
-      setState(() => widget.controller!.zoom += 0.02);
+      widget.controller!.zoom += 0.02;
+      setState(() {});
     } else if (scaleDiff < 0) {
-      setState(() => widget.controller!.zoom -= 0.02);
+      widget.controller!.zoom -= 0.02;
+      setState(() {});
     } else {
       final now = details.focalPoint;
       final diff = now - dragStart!;

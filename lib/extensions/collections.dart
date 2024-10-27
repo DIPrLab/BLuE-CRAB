@@ -25,8 +25,11 @@ extension ListStats on List<num> {
 
   (num, num) iqrLimits() => (q1() - (iqr() * 1.5), q3() + (iqr() * 1.5));
 
-  (Iterable<num> lowOutliers, Iterable<num> highOutliers) iqrOutliers() =>
-      (this.where((element) => element < iqrLimits().$1), this.where((element) => element > iqrLimits().$2));
+  (Iterable<num>, Iterable<num>) iqrOutliers() {
+    Iterable<num> lowOutliers = this.where((element) => element < iqrLimits().$1);
+    Iterable<num> highOutliers = this.where((element) => element > iqrLimits().$2);
+    return (lowOutliers, highOutliers);
+  }
 
   (num, num, num, num) tukeyLimits() =>
       (q1() - (iqr() * 3), q1() - (iqr() * 1.5), q3() + (iqr() * 1.5), q3() + (iqr() * 3));

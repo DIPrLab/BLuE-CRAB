@@ -46,56 +46,82 @@ class MapViewState extends State<MapView> {
   void initState() {
     super.initState();
 
-    widget.controller =
-        widget.controller ?? MapController(location: LatLng.degree(45.511280676982636, -122.68334923167914));
+    widget.controller = widget.controller ??
+        MapController(
+          location: LatLng.degree(45.511280676982636, -122.68334923167914),
+        );
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    return Scaffold(
       body: MapLayout(
-          controller: widget.controller!,
-          builder: (context, transformer) {
-            List<Widget>? markerWidgets = widget.device
-                .locations()
-                .toList()
-                .map((location) => buildMarkerWidget(
-                    context, transformer.toOffset(location), Icon(Icons.circle, color: Colors.red, size: 24.0), false))
-                .toList();
-            return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onDoubleTapDown: (details) => onDoubleTap(transformer, details.localPosition),
-                onScaleStart: onScaleStart,
-                onScaleUpdate: (details) => onScaleUpdate(details, transformer),
-                child: Listener(
-                    behavior: HitTestBehavior.opaque,
-                    onPointerSignal: (event) {
-                      if (event is PointerScrollEvent) {
-                        transformer.setZoomInPlace(
-                            clamp(widget.controller!.zoom + event.scrollDelta.dy / -1000.0, 2, 18),
-                            event.localPosition);
-                        setState(() {});
+        controller: widget.controller!,
+        builder: (context, transformer) {
+          List<Widget>? markerWidgets = widget.device
+              .locations()
+              .toList()
+              .map((location) => buildMarkerWidget(
+                  context,
+                  transformer.toOffset(location),
+                  Icon(
+                    Icons.circle,
+                    color: Colors.red,
+                    size: 24.0,
+                  ),
+                  false))
+              .toList();
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onDoubleTapDown: (details) => onDoubleTap(
+              transformer,
+              details.localPosition,
+            ),
+            onScaleStart: onScaleStart,
+            onScaleUpdate: (details) => onScaleUpdate(details, transformer),
+            child: Listener(
+              behavior: HitTestBehavior.opaque,
+              onPointerSignal: (event) {
+                if (event is PointerScrollEvent) {
+                  transformer.setZoomInPlace(
+                      clamp(widget.controller!.zoom + event.scrollDelta.dy / -1000.0, 2, 18), event.localPosition);
+                  setState(() {});
+                }
+              },
+              child: Stack(
+                children: [
+                  TileLayer(
+                    builder: (context, x, y, z) {
+                      final tilesInZoom = pow(2.0, z).floor();
+
+                      while (x < 0) {
+                        x += tilesInZoom;
                       }
+                      while (y < 0) {
+                        y += tilesInZoom;
+                      }
+
+                      x %= tilesInZoom;
+                      y %= tilesInZoom;
+
+                      return CachedNetworkImage(
+                        imageUrl: mapbox(z, x, y),
+                        fit: BoxFit.cover,
+                      );
                     },
-                    child: Stack(children: [
-                      TileLayer(builder: (context, x, y, z) {
-                        final tilesInZoom = pow(2.0, z).floor();
-
-                        while (x < 0) {
-                          x += tilesInZoom;
-                        }
-                        while (y < 0) {
-                          y += tilesInZoom;
-                        }
-
-                        x %= tilesInZoom;
-                        y %= tilesInZoom;
-
-                        return CachedNetworkImage(imageUrl: mapbox(z, x, y), fit: BoxFit.cover);
-                      }),
-                      CustomPaint(painter: PolylinePainter(transformer, widget.device, widget.settings)),
-                      ...markerWidgets,
-                    ])));
-          }));
+                  ),
+                  CustomPaint(
+                    painter: PolylinePainter(transformer, widget.device, widget.settings),
+                  ),
+                  ...markerWidgets,
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
 
 class PolylinePainter extends CustomPainter {
@@ -105,20 +131,25 @@ class PolylinePainter extends CustomPainter {
   Settings settings;
   final MapTransformer transformer;
 
-  Offset generateOffsetPosition(Position p) => transformer.toOffset(LatLng.degree(p.latitude, p.longitude));
+  Offset generateOffsetPosition(Position p) {
+    LatLng coordinate = LatLng.degree(p.latitude, p.longitude);
+    return transformer.toOffset(coordinate);
+  }
 
-  Offset generateOffsetLatLng(LatLng coordinate) => transformer.toOffset(coordinate);
+  Offset generateOffsetLatLng(LatLng coordinate) {
+    return transformer.toOffset(coordinate);
+  }
 
   @override
-  void paint(Canvas canvas, Size size) =>
-      device.paths(settings.thresholdTime.toInt()).forEach((Path path) => path.forEachMappedOrderedPair(
-          (pc) => generateOffsetLatLng(pc.location),
-          ((offsets) => canvas.drawLine(
-              offsets.$1,
-              offsets.$2,
-              Paint()
-                ..color = Colors.red
-                ..strokeWidth = 4))));
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 4;
+    device.paths(settings.thresholdTime.toInt()).forEach((Path path) {
+      path.forEachMappedOrderedPair(
+          (pc) => generateOffsetLatLng(pc.location), ((offsets) => canvas.drawLine(offsets.$1, offsets.$2, paint)));
+    });
+  }
 
   // Since this Sky painter has no fields, it always paints
   // the same thing and semantics information is the same.

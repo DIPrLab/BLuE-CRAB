@@ -12,8 +12,9 @@ extension Buttons on ScannerViewState {
       },
       child: const Icon(Icons.newspaper));
 
-  Widget scanButton() => FlutterBluePlus.isScanningNow
-      ? FloatingActionButton.large(
+  Widget scanButton() {
+    if (FlutterBluePlus.isScanningNow) {
+      return FloatingActionButton.large(
           onPressed: () {
             log();
             stopScan();
@@ -26,11 +27,16 @@ extension Buttons on ScannerViewState {
                 MaterialPageRoute(
                     builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))));
           },
-          child: const Icon(Icons.stop))
-      : FloatingActionButton.large(onPressed: () => startScan(), child: const Icon(Icons.play_arrow_rounded));
+          child: const Icon(Icons.stop));
+    } else {
+      return FloatingActionButton.large(onPressed: () => startScan(), child: const Icon(Icons.play_arrow_rounded));
+    }
+  }
 
-  Widget settingsButton() => FloatingActionButton.large(
-      onPressed: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SafeArea(child: SettingsView(widget.settings)))),
-      child: const Icon(Icons.settings));
+  Widget settingsButton() {
+    return FloatingActionButton.large(
+        onPressed: () => Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SafeArea(child: SettingsView(widget.settings)))),
+        child: const Icon(Icons.settings));
+  }
 }
