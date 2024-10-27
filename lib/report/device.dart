@@ -20,9 +20,15 @@ class Device {
   String id;
   String name;
   String platformName;
+  bool markedSafe;
   List<int> manufacturer;
-  Set<Datum> dataPoints = {};
-  Device(this.id, this.name, this.platformName, this.manufacturer);
+  Set<Datum> dataPoints;
+  Device(this.id,
+      {this.name = "",
+      this.platformName = "",
+      this.manufacturer = const [],
+      this.dataPoints = const {},
+      this.markedSafe = false});
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
