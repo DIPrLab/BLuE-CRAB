@@ -42,3 +42,14 @@ extension ListStats on List<num> {
     return (extremeLowOutliers, mildLowOutliers, mildHighOutliers, extremeHighOutliers);
   }
 }
+
+extension CommonElements<T> on Set<Set<T>> {
+  Set<Set<T>> combineSetsWithCommonElements() {
+    var result = Set<Set<T>>.from(this);
+    result.forEach((s1) => result.difference({s1}).where((s2) => s1.intersection(s2).isNotEmpty).forEach((s2) {
+          s1 = s1.union(s2);
+          result.remove(s2);
+        }));
+    return result;
+  }
+}

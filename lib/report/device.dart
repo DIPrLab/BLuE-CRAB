@@ -7,6 +7,7 @@ import 'package:bluetooth_detector/extensions/ordered_pairs.dart';
 import 'package:bluetooth_detector/assigned_numbers/company_identifiers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:bluetooth_detector/settings.dart';
+import 'package:bluetooth_detector/extensions/collections.dart';
 
 part 'device.g.dart';
 
@@ -56,30 +57,10 @@ class Device {
 
   Set<Area> areas(double thresholdDistance) {
     Set<Area> result = {};
-    for (LatLng curr in locations()) {
-      if (result.isEmpty) {
-        result.add({curr});
-        continue;
-      }
-      for (Area area in result) {
-        for (LatLng location in area) {
-          double distance = distanceBetween(curr, location);
-          if (distance <= thresholdDistance) {
-            area.add(curr);
-            break;
-          }
-        }
-      }
-    }
-    for (Area area1 in result) {
-      for (Area area2 in result.difference({area1})) {
-        if (area1.intersection(area2).isNotEmpty) {
-          area1 = area1.union(area2);
-          result.remove(area2);
-        }
-      }
-    }
-    return result;
+    locations().forEach((location) => result
+        .where((area) => area.any((areaLocation) => distanceBetween(location, areaLocation) < thresholdDistance))
+        .forEach((area) => area.add(location)));
+    return result.combineSetsWithCommonElements();
   }
 
   Duration timeTravelled(int thresholdTime) => this
