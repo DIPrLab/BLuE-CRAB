@@ -78,8 +78,6 @@ class Device {
         .map((datum) => PathComponent(datum.time, datum.location!))
         .sorted((a, b) => a.time.compareTo(b.time));
 
-    dataPoints.forEachOrderedPair((pair) {});
-
     while (!dataPoints.isEmpty) {
       PathComponent curr = dataPoints.first;
       dataPoints.removeAt(0);
