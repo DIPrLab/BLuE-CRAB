@@ -2,16 +2,7 @@ part of "package:bluetooth_detector/filesystem/filesystem.dart";
 
 Future<File> get _localReportFile async => _localFileDirectory.then((dir) => File("${dir.path}/reports.json"));
 
-void write(Report report) async {
-  final File file = await _localReportFile;
-  final String data = report.toJson().toString();
-
-  // Write the file
-  await file.writeAsString('${data}');
-  print(data);
-
-  printSuccess("Saved!");
-}
+void write(Report report) async => _localReportFile.then((file) => file.writeAsString("${report.toJson().toString()}"));
 
 Future<Report> readReport() async {
   try {
