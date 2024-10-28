@@ -1,8 +1,9 @@
 part of "package:bluetooth_detector/filesystem/filesystem.dart";
 
-void writeBatteryReport(String report) async {
+Future<File> get _localBatteryLog async => _localFileDirectory.then((dir) => File("${dir.path}/battery_log.json"));
+
+void writeBatteryLog(String data) async {
   final File file = await _localReportFile;
-  final String data = report.toJson().toString();
 
   // Write the file
   await file.writeAsString('${data}');

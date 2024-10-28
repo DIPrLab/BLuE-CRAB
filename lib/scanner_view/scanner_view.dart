@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:bluetooth_detector/map_view/map_view.dart';
 import 'package:bluetooth_detector/map_view/position.dart';
-import 'package:bluetooth_detector/filesystem/file.dart';
+import 'package:bluetooth_detector/filesystem/filesystem.dart';
 import 'package:bluetooth_detector/report_view/report_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
