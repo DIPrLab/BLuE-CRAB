@@ -84,5 +84,11 @@ class SettingsViewState extends State<SettingsView> {
                 header("Safe Zones"),
                 LocationHeader(onAddLocation: _addLocation),
                 ...widget.settings.safeZones.map((location) => LatLngTile(location)),
+                header("Developer Mode"),
+                SwitchListTile(
+                    title: Text("Developer Mode ${widget.settings.devMode ? "On" : "Off"}"),
+                    value: widget.settings.devMode,
+                    onChanged: ((val) => setState(() => widget.settings.devMode = val)),
+                    secondary: widget.settings.devMode ? Icon(Icons.developer_board) : Icon(Icons.developer_board_off)),
               ]))));
 }

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:bluetooth_detector/map_view/map_view.dart';
 import 'package:bluetooth_detector/map_view/position.dart';
-import 'package:bluetooth_detector/report/file.dart';
+import 'package:bluetooth_detector/filesystem/file.dart';
 import 'package:bluetooth_detector/report_view/report_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -15,6 +15,7 @@ import 'package:bluetooth_detector/settings_view/settings_view.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:vibration/vibration.dart';
 import 'package:latlng/latlng.dart';
+import 'package:battery_plus/battery_plus.dart';
 
 part 'package:bluetooth_detector/scanner_view/buttons.dart';
 part 'package:bluetooth_detector/scanner_view/scanner.dart';
@@ -24,6 +25,7 @@ class ScannerView extends StatefulWidget {
 
   final Report report;
   final Settings settings;
+  final Battery battery = Battery();
 
   @override
   ScannerViewState createState() => ScannerViewState();
@@ -118,6 +120,7 @@ class ScannerViewState extends State<ScannerView> {
             Padding(padding: EdgeInsets.all(16.0), child: reportViewerButton()),
           ]),
           Row(children: [
+            Padding(padding: EdgeInsets.all(16.0), child: Icon(Icons.battery_full)),
             Padding(padding: EdgeInsets.all(16.0), child: scanButton()),
           ]),
           Spacer(),

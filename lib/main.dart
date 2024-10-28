@@ -7,7 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:bluetooth_detector/styles/styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/report/file.dart';
+import 'package:bluetooth_detector/filesystem/file.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:bluetooth_detector/styles/themes.dart';
 import 'package:in_app_notification/in_app_notification.dart';
@@ -77,10 +77,7 @@ class _SplashScreen extends State<SplashScreen> {
     });
     await Future.delayed(Duration(seconds: 2), () {});
 
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SafeArea(child: HomePage(report, settings))));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SafeArea(child: HomePage(report, settings))));
   }
 
   @override

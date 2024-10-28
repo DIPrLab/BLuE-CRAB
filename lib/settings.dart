@@ -2,6 +2,7 @@ import 'package:latlng/latlng.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings {
+  late bool devMode;
   late bool autoConnect;
   late bool locationEnabled;
   late double windowDuration;
@@ -12,6 +13,7 @@ class Settings {
   late List<LatLng> safeZones;
 
   void loadData() async => SharedPreferences.getInstance().then((prefs) {
+        devMode = prefs.getBool("devMode") ?? false;
         autoConnect = prefs.getBool("autoConnect") ?? false;
         locationEnabled = prefs.getBool("locationEnabled") ?? true;
         windowDuration = prefs.getDouble("windowDuration") ?? 10;
@@ -28,6 +30,7 @@ class Settings {
 
   void save() {
     SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool("devMode", devMode);
       prefs.setBool("autoConnect", autoConnect);
       prefs.setBool("locationEnabled", locationEnabled);
       prefs.setDouble("scanTime", scanTime);
