@@ -103,13 +103,11 @@ class ScannerViewState extends State<ScannerView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-            child: Row(children: [
-      Spacer(),
-      Column(
-        children: [
+  Widget build(BuildContext context) => Scaffold(
+          body: Center(
+              child: Row(children: [
+        Spacer(),
+        Column(children: [
           Spacer(),
           Row(children: [
             Padding(padding: EdgeInsets.all(16.0), child: settingsButton()),
@@ -120,9 +118,7 @@ class ScannerViewState extends State<ScannerView> {
             Padding(padding: EdgeInsets.all(16.0), child: scanButton()),
           ]),
           Spacer(),
-        ],
-      ),
-      Spacer(),
-    ])));
-  }
+        ]),
+        Spacer(),
+      ])));
 }
