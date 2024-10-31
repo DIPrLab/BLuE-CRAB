@@ -58,7 +58,6 @@ dependencies:
   accordion: ^2.6.0
   tuple: ^2.0.2
   provider: ^6.1.2
-  battery_plus: ^6.2.0
 
 dev_dependencies:
   build_runner: ^2.3.3

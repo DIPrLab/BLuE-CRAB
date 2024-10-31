@@ -15,7 +15,6 @@ import 'package:bluetooth_detector/settings_view/settings_view.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:vibration/vibration.dart';
 import 'package:latlng/latlng.dart';
-import 'package:battery_plus/battery_plus.dart';
 
 part 'package:bluetooth_detector/scanner_view/buttons.dart';
 part 'package:bluetooth_detector/scanner_view/scanner.dart';
@@ -25,7 +24,6 @@ class ScannerView extends StatefulWidget {
 
   final Report report;
   final Settings settings;
-  final Battery battery = Battery();
 
   @override
   ScannerViewState createState() => ScannerViewState();
@@ -118,7 +116,7 @@ class ScannerViewState extends State<ScannerView> {
             Padding(padding: EdgeInsets.all(16.0), child: reportViewerButton()),
           ]),
           Row(children: [
-            Padding(padding: EdgeInsets.all(16.0), child: Icon(Icons.battery_full)),
+            // if (widget.settings.devMode) ...[Padding(padding: EdgeInsets.all(16.0), child: Icon(Icons.abc))],
             Padding(padding: EdgeInsets.all(16.0), child: scanButton()),
           ]),
           Spacer(),
