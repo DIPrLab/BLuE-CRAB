@@ -40,7 +40,7 @@ class ReportViewState extends State<ReportView> {
           .devices()
           .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
           .sorted((a, b) {
-            int threshold = widget.settings.thresholdTime.toInt();
+            Duration threshold = Duration(seconds: widget.settings.thresholdTime.toInt());
             Duration deviceAValue = a!.timeTravelled(threshold);
             Duration deviceBValue = b!.timeTravelled(threshold);
             return deviceAValue.compareTo(deviceBValue);
@@ -56,7 +56,7 @@ class ReportViewState extends State<ReportView> {
           .devices()
           .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
           .sorted((a, b) {
-            int threshold = widget.settings.thresholdTime.toInt();
+            Duration threshold = Duration(seconds: widget.settings.thresholdTime.toInt());
             int deviceAValue = a!.incidence(threshold);
             int deviceBValue = b!.incidence(threshold);
             return deviceAValue.compareTo(deviceBValue);

@@ -44,14 +44,14 @@ class Device {
   Set<LatLng> locations() =>
       this.dataPoints.where((dataPoint) => dataPoint.location != null).map((dataPoint) => dataPoint.location!).toSet();
 
-  int incidence(int thresholdTime) =>
+  int incidence(Duration thresholdTime) =>
       this
           .dataPoints
           .map((datum) => datum.time)
           .sorted((a, b) => a.compareTo(b))
           .orderedPairs()
           .map((pair) => pair.$2.difference(pair.$1))
-          .where((duration) => duration > (Duration(seconds: thresholdTime)))
+          .where((duration) => duration > thresholdTime)
           .length +
       1;
 
@@ -63,14 +63,15 @@ class Device {
     return result.combineSetsWithCommonElements();
   }
 
-  Duration timeTravelled(int thresholdTime) => this
+  Duration timeTravelled(Duration thresholdTime) => this
       .dataPoints
       .map((datum) => datum.time)
       .sorted()
       .mapOrderedPairs((pair) => pair.$2.difference(pair.$1))
-      .fold(Duration(), (a, b) => b < Duration(seconds: thresholdTime) ? a + b : a);
+      .where((duration) => duration < thresholdTime)
+      .fold(Duration(), (a, b) => a + b);
 
-  List<Path> paths(int thresholdTime) {
+  List<Path> paths(Duration thresholdTime) {
     List<Path> paths = <Path>[];
     List<PathComponent> dataPoints = this
         .dataPoints
@@ -84,7 +85,7 @@ class Device {
       DateTime time1 = paths.isEmpty ? DateTime(1970) : paths.last.last.time;
       DateTime time2 = curr.time;
       Duration time = time2.difference(time1);
-      if (time < Duration(seconds: thresholdTime)) {
+      if (time < thresholdTime) {
         paths.last.add(curr);
       } else {
         paths.add([curr]);
@@ -94,7 +95,7 @@ class Device {
     return paths;
   }
 
-  double distanceTravelled(int thresholdTime) => paths(thresholdTime)
+  double distanceTravelled(Duration thresholdTime) => paths(thresholdTime)
       .map((path) => path
           .mapOrderedPairs((pair) => distanceBetween(pair.$1.location, pair.$2.location))
           .fold(0.0, (a, b) => a + b))
