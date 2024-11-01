@@ -55,7 +55,8 @@ class ScannerViewState extends State<ScannerView> {
   }
 
   void enableLocationStream() {
-    positionStream = Geolocator.getPositionStream(locationSettings: Controllers.getLocationSettings(30))
+    positionStream = Geolocator.getPositionStream(
+            locationSettings: Controllers.getLocationSettings(widget.settings.scanDistance().toInt()))
         .listen((Position? position) {
       setState(() => location = position?.toLatLng());
       if (isScanning) {
@@ -92,7 +93,7 @@ class ScannerViewState extends State<ScannerView> {
 
     isScanningSubscription = FlutterBluePlus.isScanning.listen((state) => setState(() => isScanning = state));
 
-    _timeStream = Stream.periodic(Duration(seconds: widget.settings.scanTime.toInt()), (int x) => DateTime.now());
+    _timeStream = Stream.periodic(widget.settings.scanTime(), (int x) => DateTime.now());
 
     timeStreamSubscription = _timeStream.listen((currentTime) {
       if (isScanning) {

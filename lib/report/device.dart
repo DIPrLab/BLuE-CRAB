@@ -102,8 +102,7 @@ class Device {
       .fold(0.0, (a, b) => a + b);
 
   void window(Settings settings) {
-    Duration duration = Duration(minutes: settings.windowDuration.toInt());
-    DateTime cutOff = DateTime.now().subtract(duration);
+    DateTime cutOff = DateTime.now().subtract(settings.windowDuration());
     dataPoints = dataPoints.where((datum) => datum.time.isAfter(cutOff)).toSet();
   }
 }
