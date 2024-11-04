@@ -6,13 +6,8 @@ void write(Report report) async => _localReportFile.then((file) => file.writeAsS
 
 Future<Report> readReport() async {
   try {
-    return await _localReportFile.then((file) {
-      return file.readAsString().then((fileData) {
-        Report report = Report.fromJson(jsonDecode(fileData));
-        printSuccess("Loaded report");
-        return report;
-      });
-    });
+    return await _localReportFile
+        .then((file) => file.readAsString().then((fileData) => Report.fromJson(jsonDecode(fileData))));
   } catch (e) {
     printWarning("Failed to load report");
     return Report({});
