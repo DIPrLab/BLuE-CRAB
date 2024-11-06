@@ -110,14 +110,16 @@ class ScannerViewState extends State<ScannerView> {
         Spacer(),
         Column(children: [
           Spacer(),
-          Row(children: [
-            Padding(padding: EdgeInsets.all(16.0), child: settingsButton()),
-            Padding(padding: EdgeInsets.all(16.0), child: reportViewerButton()),
-          ]),
-          Row(children: [
-            // if (widget.settings.devMode) ...[Padding(padding: EdgeInsets.all(16.0), child: Icon(Icons.abc))],
-            Padding(padding: EdgeInsets.all(16.0), child: scanButton()),
-          ]),
+          Row(
+              children: [
+            settingsButton(),
+            reportViewerButton(),
+          ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
+          Row(
+              children: [
+            // if (widget.settings.devMode) ...[Icon(Icons.abc)],
+            scanButton(),
+          ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
           Spacer(),
         ]),
         Spacer(),
