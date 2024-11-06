@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:collection/collection.dart';
 import 'package:latlng/latlng.dart';
 import 'package:bluetooth_detector/report/datum.dart';
@@ -21,10 +23,15 @@ class Device {
   String name;
   String platformName;
   List<int> manufacturer;
-  Set<Datum> dataPoints = {};
+  Set<Datum> _dataPoints = {};
   Device(this.id, this.name, this.platformName, this.manufacturer);
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
+
+  Set<Datum> dataPoints(Duration windowDuration) =>
+      _dataPoints.where((datum) => datum.time.isAfter(DateTime.now().subtract(windowDuration))).toSet();
+
+  void addLocation(LatLng? location) => _dataPoints.add(Datum(location));
 
   String deviceLabel() => !this.name.isEmpty
       ? this.name
@@ -37,12 +44,15 @@ class Device {
   Iterable<String> manufacturers() =>
       manufacturer.map((e) => company_identifiers[e.toRadixString(16).toUpperCase().padLeft(4, "0")] ?? "Unknown");
 
-  Set<LatLng> locations() =>
-      this.dataPoints.where((dataPoint) => dataPoint.location != null).map((dataPoint) => dataPoint.location!).toSet();
+  Set<LatLng> locations(Duration windowDuration) => this
+      .dataPoints(windowDuration)
+      .where((dataPoint) => dataPoint.location != null)
+      .map((dataPoint) => dataPoint.location!)
+      .toSet();
 
-  int incidence(Duration thresholdTime) =>
+  int incidence(Duration thresholdTime, Duration windowDuration) =>
       this
-          .dataPoints
+          .dataPoints(windowDuration)
           .map((datum) => datum.time)
           .sorted((a, b) => a.compareTo(b))
           .orderedPairs()
@@ -51,26 +61,26 @@ class Device {
           .length +
       1;
 
-  Set<Area> areas(double thresholdDistance) {
+  Set<Area> areas(double thresholdDistance, Duration windowDuration) {
     Set<Area> result = {};
-    locations().forEach((location) => result
+    locations(windowDuration).forEach((location) => result
         .where((area) => area.any((areaLocation) => distanceBetween(location, areaLocation) < thresholdDistance))
         .forEach((area) => area.add(location)));
     return result.combineSetsWithCommonElements();
   }
 
-  Duration timeTravelled(Duration thresholdTime) => this
-      .dataPoints
+  Duration timeTravelled(Duration thresholdTime, Duration windowDuration) => this
+      .dataPoints(windowDuration)
       .map((datum) => datum.time)
       .sorted()
       .mapOrderedPairs((pair) => pair.$2.difference(pair.$1))
       .where((duration) => duration < thresholdTime)
       .fold(Duration(), (a, b) => a + b);
 
-  List<Path> paths(Duration thresholdTime) {
+  List<Path> paths(Duration thresholdTime, Duration windowDuration) {
     List<Path> paths = <Path>[];
     List<PathComponent> dataPoints = this
-        .dataPoints
+        .dataPoints(windowDuration)
         .where((dataPoint) => dataPoint.location != null)
         .map((datum) => PathComponent(datum.time, datum.location!))
         .sorted((a, b) => a.time.compareTo(b.time));
@@ -91,14 +101,9 @@ class Device {
     return paths;
   }
 
-  double distanceTravelled(Duration thresholdTime) => paths(thresholdTime)
+  double distanceTravelled(Duration thresholdTime, Duration windowDuration) => paths(thresholdTime, windowDuration)
       .map((path) => path
           .mapOrderedPairs((pair) => distanceBetween(pair.$1.location, pair.$2.location))
           .fold(0.0, (a, b) => a + b))
       .fold(0.0, (a, b) => a + b);
-
-  void window(Settings settings) {
-    DateTime cutOff = DateTime.now().subtract(settings.windowDuration());
-    dataPoints = dataPoints.where((datum) => datum.time.isAfter(cutOff)).toSet();
-  }
 }

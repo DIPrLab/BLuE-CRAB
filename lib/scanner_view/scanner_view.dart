@@ -47,9 +47,9 @@ class ScannerViewState extends State<ScannerView> {
   void log() {
     devices.forEach((Device d) {
       if (!widget.report.data.keys.contains(d.id)) {
-        widget.report.data[d.id] = d;
+        widget.report.addDevice(d);
       }
-      widget.report.data[d.id]?.dataPoints.add(Datum(location));
+      widget.report.addDeviceLocation(d, location);
     });
     widget.report.refreshCache(widget.settings);
   }

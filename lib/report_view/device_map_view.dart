@@ -12,8 +12,7 @@ class DeviceMapView extends StatefulWidget {
   final Report report;
   final Settings settings;
 
-  DeviceMapView(Settings this.settings,
-      {super.key, required this.device, required this.report});
+  DeviceMapView(Settings this.settings, {super.key, required this.device, required this.report});
 
   @override
   DeviceMapViewState createState() => DeviceMapViewState();
@@ -31,8 +30,8 @@ class DeviceMapViewState extends State<DeviceMapView> {
       MapView(
         widget.device,
         widget.settings,
-        controller: MapController(
-            location: middlePoint(widget.device.locations().toList())),
+        controller:
+            MapController(location: middlePoint(widget.device.locations(widget.settings.windowDuration()).toList())),
       ),
       BackButton(
         onPressed: () => Navigator.pop(context),

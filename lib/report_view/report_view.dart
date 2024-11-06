@@ -39,8 +39,8 @@ class ReportViewState extends State<ReportView> {
         .devices()
         .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
         .sorted((a, b) {
-          Duration deviceAValue = a!.timeTravelled(widget.settings.timeThreshold());
-          Duration deviceBValue = b!.timeTravelled(widget.settings.timeThreshold());
+          Duration deviceAValue = a!.timeTravelled(widget.settings.timeThreshold(), widget.settings.windowDuration());
+          Duration deviceBValue = b!.timeTravelled(widget.settings.timeThreshold(), widget.settings.windowDuration());
           return deviceAValue.compareTo(deviceBValue);
         })
         .reversed
@@ -52,8 +52,8 @@ class ReportViewState extends State<ReportView> {
         .devices()
         .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
         .sorted((a, b) {
-          int deviceAValue = a!.incidence(widget.settings.timeThreshold());
-          int deviceBValue = b!.incidence(widget.settings.timeThreshold());
+          int deviceAValue = a!.incidence(widget.settings.timeThreshold(), widget.settings.windowDuration());
+          int deviceBValue = b!.incidence(widget.settings.timeThreshold(), widget.settings.windowDuration());
           return deviceAValue.compareTo(deviceBValue);
         })
         .reversed
@@ -65,8 +65,8 @@ class ReportViewState extends State<ReportView> {
         .devices()
         .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
         .sorted((a, b) {
-          int deviceAValue = a!.locations().length;
-          int deviceBValue = b!.locations().length;
+          int deviceAValue = a!.locations(widget.settings.windowDuration()).length;
+          int deviceBValue = b!.locations(widget.settings.windowDuration()).length;
           return deviceAValue.compareTo(deviceBValue);
         })
         .reversed

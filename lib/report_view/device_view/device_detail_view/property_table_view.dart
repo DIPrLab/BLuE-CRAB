@@ -22,9 +22,10 @@ class PropertyTable extends StatelessWidget {
       rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
     rows.add(Row("Risk Score", report.riskScore(device, settings).toString()));
-    rows.add(Row("Incidence", device.incidence(settings.timeThreshold()).toString()));
-    rows.add(Row("Areas", device.areas(settings.distanceThreshold()).length.toString()));
-    rows.add(Row("Duration", device.timeTravelled(settings.timeThreshold()).printFriendly()));
+    rows.add(Row("Incidence", device.incidence(settings.timeThreshold(), settings.windowDuration()).toString()));
+    rows.add(Row("Areas", device.areas(settings.distanceThreshold(), settings.windowDuration()).length.toString()));
+    rows.add(
+        Row("Duration", device.timeTravelled(settings.timeThreshold(), settings.windowDuration()).printFriendly()));
   }
 
   DataRow Row(String label, String value) => DataRow(cells: [

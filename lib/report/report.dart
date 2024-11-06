@@ -31,6 +31,10 @@ class Report {
 
   Report(this.data);
 
+  void addDevice(Device d) => data[d.id] = d;
+
+  void addDeviceLocation(Device d, LatLng? location) => data[d.id]?.addLocation(location);
+
   List<Device?> devices() => data.values.toList();
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);

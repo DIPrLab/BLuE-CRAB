@@ -81,7 +81,7 @@ class MapViewState extends State<MapView> {
                     }),
                     CustomPaint(painter: PolylinePainter(transformer, widget.device, widget.settings)),
                     ...widget.device
-                        .locations()
+                        .locations(widget.settings.windowDuration())
                         .toList()
                         .map((location) => buildMarkerWidget(context, transformer.toOffset(location),
                             Icon(Icons.circle, color: Colors.red, size: 24.0), false))
@@ -105,7 +105,7 @@ class PolylinePainter extends CustomPainter {
     Paint paint = Paint()
       ..color = Colors.red
       ..strokeWidth = 4;
-    device.paths(settings.timeThreshold()).forEach((Path path) {
+    device.paths(settings.timeThreshold(), settings.windowDuration()).forEach((Path path) {
       path.forEachMappedOrderedPair(
           (pc) => generateOffsetLatLng(pc.location), ((offsets) => canvas.drawLine(offsets.$1, offsets.$2, paint)));
     });
