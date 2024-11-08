@@ -41,17 +41,9 @@ class ReportViewState extends State<ReportView> {
     return deviceAValue.compareTo(deviceBValue);
   }
 
-  int byTime(Device a, Device b) {
-    Duration deviceAValue = a.timeTravelled(widget.settings.timeThreshold(), widget.settings.windowDuration());
-    Duration deviceBValue = b.timeTravelled(widget.settings.timeThreshold(), widget.settings.windowDuration());
-    return deviceAValue.compareTo(deviceBValue);
-  }
+  int byTime(Device a, Device b) => a.timeTravelled.compareTo(b.timeTravelled);
 
-  int byIncidence(Device a, Device b) {
-    int deviceAValue = a.incidence(widget.settings.timeThreshold(), widget.settings.windowDuration());
-    int deviceBValue = b.incidence(widget.settings.timeThreshold(), widget.settings.windowDuration());
-    return deviceAValue.compareTo(deviceBValue);
-  }
+  int byIncidence(Device a, Device b) => a.incidence.compareTo(b.incidence);
 
   int byLocation(Device a, Device b) {
     int deviceAValue = a.locations(widget.settings.windowDuration()).length;

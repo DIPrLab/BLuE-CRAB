@@ -7,6 +7,7 @@ import 'package:bluetooth_detector/extensions/ordered_pairs.dart';
 import 'package:bluetooth_detector/assigned_numbers/company_identifiers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:bluetooth_detector/extensions/collections.dart';
+import 'package:bluetooth_detector/settings.dart';
 
 part 'device_cache.dart';
 part 'device_stats.dart';
@@ -23,6 +24,12 @@ class Device {
   String platformName;
   List<int> manufacturer;
   Set<Datum> _dataPoints = {};
+
+  late Duration timeTravelled;
+  late int incidence;
+  late Set<Area> areas;
+  late double distanceTravelled;
+
   Device(this.id, this.name, this.platformName, this.manufacturer);
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
@@ -49,33 +56,6 @@ class Device {
       .map((dataPoint) => dataPoint.location!)
       .toSet();
 
-  int incidence(Duration thresholdTime, Duration windowDuration) =>
-      this
-          .dataPoints(windowDuration)
-          .map((datum) => datum.time)
-          .sorted((a, b) => a.compareTo(b))
-          .orderedPairs()
-          .map((pair) => pair.$2.difference(pair.$1))
-          .where((duration) => duration > thresholdTime)
-          .length +
-      1;
-
-  Set<Area> areas(double thresholdDistance, Duration windowDuration) {
-    Set<Area> result = {};
-    locations(windowDuration).forEach((location) => result
-        .where((area) => area.any((areaLocation) => distanceBetween(location, areaLocation) < thresholdDistance))
-        .forEach((area) => area.add(location)));
-    return result.combineSetsWithCommonElements();
-  }
-
-  Duration timeTravelled(Duration thresholdTime, Duration windowDuration) => this
-      .dataPoints(windowDuration)
-      .map((datum) => datum.time)
-      .sorted()
-      .mapOrderedPairs((pair) => pair.$2.difference(pair.$1))
-      .where((duration) => duration < thresholdTime)
-      .fold(Duration(), (a, b) => a + b);
-
   List<Path> paths(Duration thresholdTime, Duration windowDuration) {
     List<Path> paths = <Path>[];
     List<PathComponent> dataPoints = this
@@ -99,10 +79,4 @@ class Device {
 
     return paths;
   }
-
-  double distanceTravelled(Duration thresholdTime, Duration windowDuration) => paths(thresholdTime, windowDuration)
-      .map((path) => path
-          .mapOrderedPairs((pair) => distanceBetween(pair.$1.location, pair.$2.location))
-          .fold(0.0, (a, b) => a + b))
-      .fold(0.0, (a, b) => a + b);
 }

@@ -10,16 +10,15 @@ extension Cache on Report {
     areaStats = _areaStats(devices, settings);
   }
 
-  Stats _areaStats(Iterable<Device> devices, Settings settings) => Stats.fromData(
-      devices.map((device) => device.areas(settings.distanceThreshold(), settings.windowDuration()).length));
+  Stats _areaStats(Iterable<Device> devices, Settings settings) =>
+      Stats.fromData(devices.map((device) => device.areas.length));
 
   Stats _incidenceStats(Iterable<Device> devices, Settings settings) =>
-      Stats.fromData(devices.map((device) => device.incidence(settings.timeThreshold(), settings.windowDuration())));
+      Stats.fromData(devices.map((device) => device.incidence));
 
-  Stats _timeTravelledStats(Iterable<Device> devices, Settings settings) => Stats.fromData(devices
-      .map((device) => device.timeTravelled(settings.timeThreshold(), settings.windowDuration()))
-      .map((duration) => duration.inSeconds));
+  Stats _timeTravelledStats(Iterable<Device> devices, Settings settings) =>
+      Stats.fromData(devices.map((device) => device.timeTravelled).map((duration) => duration.inSeconds));
 
-  Stats _distanceTravelledStats(Iterable<Device> devices, Settings settings) => Stats.fromData(
-      devices.map((device) => device.distanceTravelled(settings.timeThreshold(), settings.windowDuration())));
+  Stats _distanceTravelledStats(Iterable<Device> devices, Settings settings) =>
+      Stats.fromData(devices.map((device) => device.distanceTravelled));
 }
