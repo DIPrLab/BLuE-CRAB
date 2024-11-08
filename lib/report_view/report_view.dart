@@ -80,9 +80,7 @@ class ReportViewState extends State<ReportView> {
             child: Stack(children: [
               Row(children: [
                 const Spacer(),
-                Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text("Report", textAlign: TextAlign.center, style: TextStyles.title)),
+                Text("Report", textAlign: TextAlign.center, style: TextStyles.title),
                 const Spacer(),
               ]),
               BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
