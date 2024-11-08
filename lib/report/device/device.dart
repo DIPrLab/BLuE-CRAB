@@ -8,6 +8,8 @@ import 'package:bluetooth_detector/assigned_numbers/company_identifiers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:bluetooth_detector/extensions/collections.dart';
 
+part 'device_cache.dart';
+part 'device_stats.dart';
 part 'device.g.dart';
 
 /// Device data type
