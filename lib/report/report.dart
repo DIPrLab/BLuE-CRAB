@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:latlng/latlng.dart';
-import 'package:bluetooth_detector/report/device.dart';
+import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:bluetooth_detector/extensions/stats.dart';

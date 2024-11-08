@@ -8,7 +8,7 @@ import 'package:bluetooth_detector/report_view/report_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:bluetooth_detector/report/device.dart';
+import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:bluetooth_detector/report/report.dart';
 import 'package:bluetooth_detector/report/datum.dart';
 import 'package:bluetooth_detector/settings_view/settings_view.dart';
