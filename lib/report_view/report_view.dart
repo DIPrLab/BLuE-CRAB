@@ -22,88 +22,58 @@ class ReportViewState extends State<ReportView> {
   @override
   void initState() {
     super.initState();
-
     widget.report.refreshCache(widget.settings);
-
-    devices = widget.report
-        .devices()
-        .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
-        .sorted((a, b) =>
-            widget.report.riskScore(a!, widget.settings).compareTo(widget.report.riskScore(b!, widget.settings)))
-        .reversed
-        .toList();
+    sort(byRiskScore);
   }
 
-  void sortByTime() {
-    setState(() => devices = widget.report
-        .devices()
-        .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
-        .sorted((a, b) {
-          Duration deviceAValue = a!.timeTravelled(widget.settings.timeThreshold(), widget.settings.windowDuration());
-          Duration deviceBValue = b!.timeTravelled(widget.settings.timeThreshold(), widget.settings.windowDuration());
-          return deviceAValue.compareTo(deviceBValue);
-        })
-        .reversed
-        .toList());
+  void sort(int sortMethod(Device a, Device b)) => setState(() => devices = widget.report
+      .devices()
+      .where((device) => device != null)
+      .map((device) => device!)
+      .where((device) => widget.report.riskScore(device, widget.settings) > 0)
+      .sorted(sortMethod)
+      .reversed
+      .toList());
+
+  int byRiskScore(Device a, Device b) {
+    num deviceAValue = widget.report.riskScore(a, widget.settings);
+    num deviceBValue = widget.report.riskScore(b, widget.settings);
+    return deviceAValue.compareTo(deviceBValue);
   }
 
-  void sortByIncidence() {
-    setState(() => devices = widget.report
-        .devices()
-        .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
-        .sorted((a, b) {
-          int deviceAValue = a!.incidence(widget.settings.timeThreshold(), widget.settings.windowDuration());
-          int deviceBValue = b!.incidence(widget.settings.timeThreshold(), widget.settings.windowDuration());
-          return deviceAValue.compareTo(deviceBValue);
-        })
-        .reversed
-        .toList());
+  int byTime(Device a, Device b) {
+    Duration deviceAValue = a.timeTravelled(widget.settings.timeThreshold(), widget.settings.windowDuration());
+    Duration deviceBValue = b.timeTravelled(widget.settings.timeThreshold(), widget.settings.windowDuration());
+    return deviceAValue.compareTo(deviceBValue);
   }
 
-  void sortByLocation() {
-    setState(() => devices = widget.report
-        .devices()
-        .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
-        .sorted((a, b) {
-          int deviceAValue = a!.locations(widget.settings.windowDuration()).length;
-          int deviceBValue = b!.locations(widget.settings.windowDuration()).length;
-          return deviceAValue.compareTo(deviceBValue);
-        })
-        .reversed
-        .toList());
+  int byIncidence(Device a, Device b) {
+    int deviceAValue = a.incidence(widget.settings.timeThreshold(), widget.settings.windowDuration());
+    int deviceBValue = b.incidence(widget.settings.timeThreshold(), widget.settings.windowDuration());
+    return deviceAValue.compareTo(deviceBValue);
   }
 
-  void sortByRisk() {
-    setState(() => devices = widget.report
-        .devices()
-        .where((device) => widget.report.riskScore(device!, widget.settings) > 0)
-        .sorted((a, b) {
-          num deviceAValue = widget.report.riskScore(a!, widget.settings);
-          num deviceBValue = widget.report.riskScore(b!, widget.settings);
-          return deviceAValue.compareTo(deviceBValue);
-        })
-        .reversed
-        .toList());
+  int byLocation(Device a, Device b) {
+    int deviceAValue = a.locations(widget.settings.windowDuration()).length;
+    int deviceBValue = b.locations(widget.settings.windowDuration()).length;
+    return deviceAValue.compareTo(deviceBValue);
   }
 
-  Widget sortButton() {
-    return PopupMenuButton<Null>(
-        icon: const Icon(Icons.sort),
-        itemBuilder: (BuildContext context) => [
-              PopupMenuItem(
-                  child: ListTile(title: Text('Sort By Risk', style: TextStyles.normal)),
-                  onTap: (() => setState(() => sortByRisk()))),
-              PopupMenuItem(
-                  child: ListTile(title: Text('Sort By Incidence', style: TextStyles.normal)),
-                  onTap: (() => sortByIncidence())),
-              PopupMenuItem(
-                  child: ListTile(title: Text('Sort By Location', style: TextStyles.normal)),
-                  onTap: (() => setState(() => sortByLocation()))),
-              PopupMenuItem(
-                  child: ListTile(title: Text('Sort By Time', style: TextStyles.normal)),
-                  onTap: (() => setState(() => sortByTime()))),
-            ]);
-  }
+  Widget sortButton() => PopupMenuButton<Null>(
+      icon: const Icon(Icons.sort),
+      itemBuilder: (BuildContext context) => [
+            PopupMenuItem(
+                child: ListTile(title: Text('Sort By Risk', style: TextStyles.normal)),
+                onTap: (() => sort(byRiskScore))),
+            PopupMenuItem(
+                child: ListTile(title: Text('Sort By Incidence', style: TextStyles.normal)),
+                onTap: (() => sort(byIncidence))),
+            PopupMenuItem(
+                child: ListTile(title: Text('Sort By Location', style: TextStyles.normal)),
+                onTap: (() => sort(byLocation))),
+            PopupMenuItem(
+                child: ListTile(title: Text('Sort By Time', style: TextStyles.normal)), onTap: (() => sort(byTime))),
+          ]);
 
   @override
   Widget build(BuildContext context) => Scaffold(
