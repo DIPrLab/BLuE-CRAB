@@ -59,21 +59,17 @@ class ReportViewState extends State<ReportView> {
     return deviceAValue.compareTo(deviceBValue);
   }
 
-  Widget sortButton() => PopupMenuButton<Null>(
+  Widget sortButton() => PopupMenuButton<dynamic>(
       icon: const Icon(Icons.sort),
       itemBuilder: (BuildContext context) => [
-            PopupMenuItem(
-                child: ListTile(title: Text('Sort By Risk', style: TextStyles.normal)),
-                onTap: (() => sort(byRiskScore))),
-            PopupMenuItem(
-                child: ListTile(title: Text('Sort By Incidence', style: TextStyles.normal)),
-                onTap: (() => sort(byIncidence))),
-            PopupMenuItem(
-                child: ListTile(title: Text('Sort By Location', style: TextStyles.normal)),
-                onTap: (() => sort(byLocation))),
-            PopupMenuItem(
-                child: ListTile(title: Text('Sort By Time', style: TextStyles.normal)), onTap: (() => sort(byTime))),
-          ]);
+            ("Risk", byRiskScore),
+            ("Incidence", byIncidence),
+            ("Location", byLocation),
+            ("Time", byTime),
+          ]
+              .map((e) => (ListTile(title: Text("Sort By ${e.$1}")), e.$2))
+              .map((e) => PopupMenuItem(child: e.$1, onTap: () => sort(e.$2)))
+              .toList());
 
   @override
   Widget build(BuildContext context) => Scaffold(
