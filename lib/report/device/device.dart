@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:collection/collection.dart';
 import 'package:latlng/latlng.dart';
 import 'package:bluetooth_detector/report/datum.dart';
@@ -8,7 +6,6 @@ import 'package:bluetooth_detector/extensions/geolocator.dart';
 import 'package:bluetooth_detector/extensions/ordered_pairs.dart';
 import 'package:bluetooth_detector/assigned_numbers/company_identifiers.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:bluetooth_detector/settings.dart';
 import 'package:bluetooth_detector/extensions/collections.dart';
 
 part 'device.g.dart';
