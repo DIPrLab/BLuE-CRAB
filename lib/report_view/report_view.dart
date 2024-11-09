@@ -78,6 +78,10 @@ class ReportViewState extends State<ReportView> {
               BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
               Row(children: [Spacer(), sortButton()])
             ])),
-        Column(children: [...devices.map((device) => DeviceView(device!, widget.settings, report: widget.report))]),
+        Column(
+            children: devices
+                .map((device) => DeviceView(device!, widget.settings, report: widget.report))
+                .map((w) => Padding(padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0), child: w))
+                .toList()),
       ])));
 }
