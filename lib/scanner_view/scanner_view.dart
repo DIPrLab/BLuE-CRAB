@@ -83,7 +83,7 @@ class ScannerViewState extends State<ScannerView> {
           .map((ScanResult e) => Device(e.device.remoteId.toString(), e.advertisementData.advName,
               e.device.platformName, e.advertisementData.manufacturerData.keys.toList()))
           .toList();
-      results.forEach((result) => probe(result.device));
+      results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       if (mounted) {
         setState(() {});
       }
