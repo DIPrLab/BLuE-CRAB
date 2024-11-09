@@ -12,10 +12,6 @@ class DeviceView extends StatelessWidget {
 
   DeviceView(Device this.device, Settings this.settings, {super.key, required this.report});
 
-  Widget DataRow(String label, String value) => value.isEmpty
-      ? SizedBox.shrink()
-      : Text(label.isNotEmpty ? label + ": " + value : value, textAlign: TextAlign.left);
-
   @override
   Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10.0)), color: colors.foreground),
