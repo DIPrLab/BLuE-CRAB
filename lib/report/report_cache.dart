@@ -1,7 +1,12 @@
 part of 'report.dart';
 
 extension Cache on Report {
-  void refreshCache(Settings settings) => updateStatistics(data.entries.map((device) => device.value!), settings);
+  void refreshCache(Settings settings) {
+    updateDeviceStatistics(settings);
+    updateStatistics(data.entries.map((device) => device.value!), settings);
+  }
+
+  void updateDeviceStatistics(Settings settings) => data.values.forEach((d) => d?.updateStatistics(settings));
 
   void updateStatistics(Iterable<Device> devices, Settings settings) {
     timeTravelledStats = _timeTravelledStats(devices, settings);
