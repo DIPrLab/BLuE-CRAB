@@ -11,7 +11,7 @@ class Settings {
   late List<LatLng> safeZones;
 
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
-  Duration scanTime() => Duration(seconds: 1);
+  Duration scanTime() => Duration(seconds: 10);
   Duration timeThreshold() => Duration(seconds: timeThresholdValue.toInt());
   double scanDistance() => 30;
   double distanceThreshold() => distanceThresholdValue;
