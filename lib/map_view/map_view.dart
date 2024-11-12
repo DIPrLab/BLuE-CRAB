@@ -106,8 +106,8 @@ class PolylinePainter extends CustomPainter {
       ..color = Colors.red
       ..strokeWidth = 4;
     device.paths(settings.timeThreshold(), settings.windowDuration()).forEach((Path path) {
-      path.forEachMappedOrderedPair(
-          (pc) => generateOffsetLatLng(pc.location), ((offsets) => canvas.drawLine(offsets.$1, offsets.$2, paint)));
+      path.forEachMappedOrderedPair((pc) => generateOffsetLatLng(pc.location),
+          ((offsets) => canvas.drawLine(offsets.$1 as Offset, offsets.$2 as Offset, paint)));
     });
   }
 
