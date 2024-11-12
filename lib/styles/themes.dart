@@ -9,7 +9,9 @@ class colors {
   static const Color primaryText = Color(0xFFFFFFFF);
   static const Color iconColor = Color(0xFFFFFFFF);
   static const Color secondaryText = Color(0xFFBFC0C0);
-  static const Color altText = Color(0xFFEF8354);
+  static const Color altText = Color(0xFFF6AA1C);
+  static const Color warnText = Color(0xFFBB4430);
+  static const Color safeText = Color(0xFF8CD867);
 
   // static const Color background = Color(0xFF304D6D);
   // static const Color primaryText = Color(0xFFFFFFFF);
