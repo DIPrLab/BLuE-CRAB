@@ -22,22 +22,17 @@ extension Cache on Device {
           .fold(0.0, (a, b) => a + b))
       .fold(0.0, (a, b) => a + b);
 
-  int _incidence(Duration thresholdTime, Duration windowDuration) =>
-      this
-          .dataPoints(windowDuration)
-          .map((datum) => datum.time)
-          .sorted((a, b) => a.compareTo(b))
-          .orderedPairs()
-          .map((pair) => pair.$2.difference(pair.$1))
-          .where((duration) => duration > thresholdTime)
-          .length +
-      1;
-
-  Duration _timeTravelled(Duration thresholdTime, Duration windowDuration) => this
+  List<Duration> _timeClusters(Duration thresholdTime, Duration windowDuration) => this
       .dataPoints(windowDuration)
       .map((datum) => datum.time)
       .sorted()
       .mapOrderedPairs((pair) => pair.$2.difference(pair.$1))
       .where((duration) => duration < thresholdTime)
-      .fold(Duration(), (a, b) => a + b);
+      .toList();
+
+  int _incidence(Duration thresholdTime, Duration windowDuration) =>
+      this._timeClusters(thresholdTime, windowDuration).length;
+
+  Duration _timeTravelled(Duration thresholdTime, Duration windowDuration) =>
+      this._timeClusters(thresholdTime, windowDuration).fold(Duration(), (a, b) => a + b);
 }
