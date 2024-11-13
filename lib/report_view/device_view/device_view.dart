@@ -1,5 +1,6 @@
 import 'package:bluetooth_detector/report_view/device_view/device_detail_view/device_detail_view.dart';
 import 'package:bluetooth_detector/report/report.dart';
+import 'package:bluetooth_detector/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:bluetooth_detector/settings.dart';
@@ -14,10 +15,8 @@ class DeviceView extends StatelessWidget {
 
   Widget Tile(BuildContext context) => ListTile(
       leading: CircleAvatar(backgroundColor: colors.altText, foregroundColor: colors.altText),
-      title: Expanded(
-          child: Text(device.deviceLabel() == device.id ? "" : device.deviceLabel(),
-              maxLines: 2, overflow: TextOverflow.ellipsis)),
-      subtitle: Expanded(child: Text(device.id, maxLines: 2, overflow: TextOverflow.ellipsis)),
+      title: Text(device.deviceLabel() == device.id ? "" : device.deviceLabel(), style: TextStyles.title2),
+      subtitle: Text(device.id, maxLines: 2, overflow: TextOverflow.ellipsis),
       trailing: Icon(Icons.keyboard_arrow_right),
       onTap: () => Navigator.push(context,
           MaterialPageRoute(builder: (context) => SafeArea(child: DeviceDetailView(device, report, settings)))));
