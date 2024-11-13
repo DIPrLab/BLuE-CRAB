@@ -1,8 +1,8 @@
 import 'package:bluetooth_detector/report_view/device_view/device_detail_view/device_detail_view.dart';
 import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/report_view/device_map_view.dart';
+import 'package:bluetooth_detector/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:bluetooth_detector/report/device.dart';
+import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:bluetooth_detector/styles/themes.dart';
 
@@ -13,60 +13,17 @@ class DeviceView extends StatelessWidget {
 
   DeviceView(Device this.device, Settings this.settings, {super.key, required this.report});
 
-  Widget DataRow(String label, String value) {
-    if (value.isEmpty) {
-      return SizedBox.shrink();
-    }
-    String text = label;
-    if (label.isNotEmpty) {
-      text += ": ";
-    }
-    text += value;
-
-    return Text(text, textAlign: TextAlign.left);
-  }
+  Widget Tile(BuildContext context) => ListTile(
+      leading: CircleAvatar(backgroundColor: colors.altText, foregroundColor: colors.altText),
+      title: Text(device.deviceLabel() == device.id ? "" : device.deviceLabel(), style: TextStyles.title2),
+      subtitle: Text(device.id, maxLines: 2, overflow: TextOverflow.ellipsis),
+      trailing: Icon(Icons.keyboard_arrow_right),
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => SafeArea(child: DeviceDetailView(device, report, settings)))));
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-        child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              color: colors.foreground,
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
-            child: Row(children: [
-              Icon(Icons.circle, color: colors.altText),
-              Text("Risk Score" + report.riskScore(device, settings).toString()),
-              Spacer(),
-              Column(children: [
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SafeArea(child: DeviceDetailView(device, report, settings))));
-                  },
-                  icon: Icon(Icons.info_outline),
-                  label: Text("Details"),
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SafeArea(
-                                    child: DeviceMapView(
-                                  this.settings,
-                                  device: device,
-                                  report: report,
-                                ))));
-                  },
-                  icon: Icon(Icons.map),
-                  label: Text("Device Routes"),
-                ),
-              ]),
-            ])));
-  }
+  Widget build(BuildContext context) => Container(
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10.0)), color: colors.foreground),
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+      child: Tile(context));
 }

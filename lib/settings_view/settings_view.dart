@@ -5,7 +5,9 @@ import 'package:bluetooth_detector/styles/styles.dart';
 import 'package:bluetooth_detector/settings_view/LatLngTile.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+part "slider.dart";
+part "section_header.dart";
 
 class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onAddLocation;
@@ -13,22 +15,10 @@ class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
   LocationHeader({required this.onAddLocation});
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-      child: ListTile(
-        leading: IconButton(
-          icon: Icon(
-            Icons.add,
-          ),
-          onPressed: onAddLocation,
-        ),
-        title: Text(
-          "Add New Safe Zone",
-        ),
-      ),
-    ));
-  }
+  Widget build(BuildContext context) => Center(
+      child: Container(
+          child: ListTile(
+              leading: IconButton(icon: Icon(Icons.add), onPressed: onAddLocation), title: Text("Add New Safe Zone"))));
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -44,179 +34,67 @@ class SettingsView extends StatefulWidget {
 }
 
 class SettingsViewState extends State<SettingsView> {
-  void _addLocation() {
-    getLocation().then((location) {
-      setState(() {
+  void _addLocation() => getLocation().then((location) => setState(() {
         widget.settings.safeZones.add(location);
-        save();
-      });
-    });
-  }
-
-  void save() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setDouble("scanTime", widget.settings.scanTime);
-      prefs.setDouble("thresholdTime", widget.settings.thresholdTime);
-      prefs.setDouble("scanDistance", widget.settings.scanTime);
-      prefs.setDouble("thresholdDistance", widget.settings.thresholdTime);
-      prefs.setStringList(
-          "safeZones",
-          widget.settings.safeZones
-              .map((z) =>
-                  z.latitude.degrees.toString() +
-                  "," +
-                  z.longitude.degrees.toString())
-              .toList());
-    });
-  }
+        widget.settings.save();
+      }));
 
   @override
-  void initState() {
-    super.initState();
-  }
+  void initState() => super.initState();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BackButton(
-              onPressed: () => Navigator.pop(context),
-              style: AppButtonStyle.buttonWithoutBackground,
-            ),
-            Text(
-              "Metrics",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30.0),
-              child: Text(
-                "Time",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Row(children: [
-              Text(
-                'Scanning Time',
-              ),
-              Spacer(),
-              Text(
-                widget.settings.scanTime.toInt().toString() + " seconds",
-              ),
-            ]),
-            Slider(
-              min: 0.0,
-              max: 100.0,
-              value: widget.settings.scanTime,
-              onChanged: (newValue) {
-                setState(() {
-                  widget.settings.scanTime = newValue;
-                  widget.settings.thresholdTime = max(
-                      widget.settings.scanTime, widget.settings.thresholdTime);
-                  save();
-                });
-              },
-            ),
-            Row(children: [
-              Text(
-                'Scanning Time threshold',
-              ),
-              Spacer(),
-              Text(
-                widget.settings.thresholdTime.toInt().toString() + " seconds",
-              ),
-            ]),
-            Slider(
-              min: 0.0,
-              max: 100.0,
-              value: widget.settings.thresholdTime,
-              onChanged: (newValue) {
-                setState(() {
-                  widget.settings.thresholdTime = newValue;
-                  widget.settings.scanTime =
-                      min(widget.settings.scanTime, newValue);
-                  save();
-                });
-              },
-            ),
-            Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30.0),
-                child: Text(
-                  "Distance",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                )),
-            Row(children: [
-              Text(
-                'Scanning Distance',
-              ),
-              Spacer(),
-              Text(
-                widget.settings.scanDistance.toInt().toString() + " meters",
-              ),
-            ]),
-            Slider(
-              min: 0.0,
-              max: 100.0,
-              value: widget.settings.scanDistance,
-              onChanged: (newValue) {
-                setState(() {
-                  widget.settings.scanDistance = newValue;
-                  widget.settings.thresholdDistance = max(
-                      widget.settings.scanDistance,
-                      widget.settings.thresholdDistance);
-                  save();
-                });
-              },
-            ),
-            Row(children: [
-              Text(
-                'Scanning Distance threshold',
-              ),
-              Spacer(),
-              Text(
-                widget.settings.thresholdDistance.toInt().toString() +
-                    " meters",
-              ),
-            ]),
-            Slider(
-              min: 0.0,
-              max: 100.0,
-              value: widget.settings.thresholdDistance,
-              onChanged: (newValue) {
-                setState(() {
-                  widget.settings.thresholdDistance = newValue;
-                  widget.settings.scanDistance =
-                      min(widget.settings.scanDistance, newValue);
-                  save();
-                });
-              },
-            ),
-            Flexible(
-                child: SingleChildScrollView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
-                    child: Text(
-                      "Safe Zones",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  LocationHeader(onAddLocation: _addLocation),
-                  ...widget.settings.safeZones.map(
-                    (location) => LatLngTile(location),
-                  ),
-                ]))),
-          ],
-        ),
-      ),
-    ));
-  }
+  Widget build(BuildContext context) => Scaffold(
+      body: SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+                BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
+                header("Discover Services"),
+                SwitchListTile(
+                    title: Text("AutoConnect ${widget.settings.autoConnect ? "On" : "Off"}"),
+                    value: widget.settings.autoConnect,
+                    onChanged: (bool value) => setState(() => widget.settings.autoConnect = value),
+                    secondary: widget.settings.autoConnect ? Icon(Icons.bluetooth) : Icon(Icons.bluetooth_disabled)),
+                header("Location Services"),
+                SwitchListTile(
+                    title: Text("Location ${widget.settings.locationEnabled ? "En" : "Dis"}abled"),
+                    value: widget.settings.locationEnabled,
+                    onChanged: (bool value) => setState(() => widget.settings.locationEnabled = value),
+                    secondary: widget.settings.locationEnabled
+                        ? Icon(Icons.location_searching)
+                        : Icon(Icons.location_disabled)),
+                header("Windowing"),
+                settingsSlider(
+                    "Window Duration",
+                    "${widget.settings.windowDuration().inMinutes.toInt().toString()} minutes",
+                    10.0,
+                    100.0,
+                    widget.settings.windowDurationValue,
+                    ((newValue) => widget.settings.windowDurationValue = newValue)),
+                header("Time"),
+                settingsSlider(
+                    "Scanning Time Threshold",
+                    "${widget.settings.timeThreshold().inSeconds.toString()} seconds",
+                    1.0,
+                    100.0,
+                    widget.settings.timeThresholdValue,
+                    (newValue) => widget.settings.timeThresholdValue = newValue),
+                header("Distance"),
+                settingsSlider(
+                    "Scanning Distance Threshold",
+                    "${widget.settings.distanceThreshold().toInt().toString()} meters",
+                    1.0,
+                    100.0,
+                    widget.settings.distanceThresholdValue,
+                    (newValue) => widget.settings.distanceThresholdValue = newValue),
+                header("Safe Zones"),
+                LocationHeader(onAddLocation: _addLocation),
+                ...widget.settings.safeZones.map((location) => LatLngTile(location)),
+                header("Developer Mode"),
+                SwitchListTile(
+                    title: Text("Developer Mode ${widget.settings.devMode ? "On" : "Off"}"),
+                    value: widget.settings.devMode,
+                    onChanged: ((val) => setState(() => widget.settings.devMode = val)),
+                    secondary: widget.settings.devMode ? Icon(Icons.developer_board) : Icon(Icons.developer_board_off)),
+              ]))));
 }

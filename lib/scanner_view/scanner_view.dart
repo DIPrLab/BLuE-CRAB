@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bluetooth_detector/map_view/map_functions.dart';
 import 'package:bluetooth_detector/map_view/map_view.dart';
 import 'package:bluetooth_detector/map_view/position.dart';
-import 'package:bluetooth_detector/report/file.dart';
+import 'package:bluetooth_detector/filesystem/filesystem.dart';
 import 'package:bluetooth_detector/report_view/report_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:bluetooth_detector/report/device.dart';
+import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/report/datum.dart';
 import 'package:bluetooth_detector/settings_view/settings_view.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:vibration/vibration.dart';
@@ -35,58 +33,40 @@ class ScannerViewState extends State<ScannerView> {
   late StreamSubscription<Position> positionStream;
   Offset? dragStart;
   double scaleStart = 1.0;
-  bool autoConnect = false;
 
   bool isScanning = false;
   late StreamSubscription<bool> isScanningSubscription;
   late StreamSubscription<List<ScanResult>> scanResultsSubscription;
-  List<Device> devices = [];
+  List<ScanResult> devices = [];
 
   late StreamSubscription<DateTime> timeStreamSubscription;
 
   late Stream<DateTime> _timeStream;
 
-  void log() {
-    devices.forEach((Device d) {
-      if (!widget.report.data.keys.contains(d.id)) {
-        widget.report.data[d.id] = d;
-      }
-      widget.report.data[d.id]?.dataPoints.add(Datum(location));
-    });
-  }
-
-  void enableLocationStream() {
-    positionStream = Geolocator.getPositionStream(locationSettings: Controllers.getLocationSettings(30))
-        .listen((Position? position) {
-      setState(() {
-        location = position?.toLatLng();
-      });
-      if (isScanning) {
-        log();
-        rescan();
-      }
-    });
-  }
+  void enableLocationStream() => positionStream = Geolocator.getPositionStream(
+          locationSettings: Controllers.getLocationSettings(widget.settings.scanDistance().toInt()))
+      .listen((Position? position) => setState(() => location = position?.toLatLng()));
 
   void disableLocationStream() {
     positionStream.pause();
-    positionStream.cancel();
+    positionStream.cancel().then((_) => location = null);
   }
 
   @override
   void initState() {
     super.initState();
 
-    enableLocationStream();
+    widget.settings.locationEnabled ? enableLocationStream() : disableLocationStream();
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
-      devices = results
-          .map((ScanResult e) => Device(e.device.remoteId.toString(), e.advertisementData.advName,
-              e.device.platformName, e.advertisementData.manufacturerData.keys.toList()))
-          .toList();
-      results.forEach((result) {
-        probe(result.device);
+      devices = results;
+      results.forEach((d) {
+        Device device = Device(d.device.remoteId.toString(), d.advertisementData.advName, d.device.platformName,
+            d.advertisementData.manufacturerData.keys.toList());
+        widget.report.data.keys.contains(device.id) ? null : widget.report.addDevice(device);
+        widget.report.addDeviceDatum(device, location, d.rssi);
       });
+      results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       if (mounted) {
         setState(() {});
       }
@@ -94,59 +74,32 @@ class ScannerViewState extends State<ScannerView> {
       // Snackbar.show(ABC.b, prettyException("Scan Error:", e), success: false);
     });
 
-    isScanningSubscription = FlutterBluePlus.isScanning.listen((state) {
-      isScanning = state;
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    isScanningSubscription = FlutterBluePlus.isScanning.listen((state) => setState(() => isScanning = state));
 
-    _timeStream = Stream.periodic(Duration(seconds: widget.settings.scanTime.toInt()), (int x) {
-      return DateTime.now();
-    });
-
-    timeStreamSubscription = _timeStream.listen((currentTime) {
-      if (isScanning) {
-        log();
-        rescan();
-      }
-    });
+    _timeStream = Stream.periodic(widget.settings.scanTime(), (int x) => DateTime.now());
+    timeStreamSubscription =
+        _timeStream.listen((currentTime) => isScanning ? widget.report.refreshCache(widget.settings) : null);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: Row(children: [
+  Widget build(BuildContext context) => Scaffold(
+          body: Center(
+              child: Row(children: [
         Spacer(),
-        Column(
-          children: [
-            Spacer(),
-            Row(children: [
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: autoConnectButton(),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: locationButton(),
-              ),
-            ]),
-            Row(children: [
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: settingsButton(),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: scanButton(),
-              ),
-            ]),
-            Spacer(),
-          ],
-        ),
+        Column(children: [
+          Spacer(),
+          Row(
+              children: [
+            settingsButton(),
+            reportViewerButton(),
+          ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
+          Row(
+              children: [
+            // if (widget.settings.devMode) ...[Icon(Icons.abc)],
+            scanButton(),
+          ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
+          Spacer(),
+        ]),
         Spacer(),
-      ])),
-    );
-  }
+      ])));
 }

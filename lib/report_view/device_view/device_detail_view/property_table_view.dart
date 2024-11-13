@@ -1,6 +1,6 @@
 import 'package:bluetooth_detector/report_view/duration.dart';
 import 'package:flutter/material.dart';
-import 'package:bluetooth_detector/report/device.dart';
+import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:bluetooth_detector/report/report.dart';
 
@@ -22,31 +22,21 @@ class PropertyTable extends StatelessWidget {
       rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
     rows.add(Row("Risk Score", report.riskScore(device, settings).toString()));
-    rows.add(Row("Incidence", device.incidence(settings.scanTime.toInt()).toString()));
-    rows.add(Row("Areas", device.areas(settings.thresholdDistance).length.toString()));
-    rows.add(Row("Duration", device.timeTravelled(settings.scanTime.toInt()).printFriendly()));
+    rows.add(Row("Incidence", device.incidence.toString()));
+    rows.add(Row("Areas", device.areas.length.toString()));
+    rows.add(Row("Duration", device.timeTravelled.printFriendly()));
   }
 
-  DataRow Row(String label, String value) {
-    return DataRow(
-      cells: [
+  DataRow Row(String label, String value) => DataRow(cells: [
         DataCell(Text(label, softWrap: true)),
-        DataCell(Text(value, softWrap: true, textAlign: TextAlign.right)),
-      ],
-    );
-  }
+        DataCell(Text(value, softWrap: true, textAlign: TextAlign.right))
+      ]);
 
   @override
-  Widget build(context) {
-    return DataTable(
+  Widget build(context) => DataTable(
       sortAscending: true,
       sortColumnIndex: 1,
       showBottomBorder: false,
-      columns: const [
-        DataColumn(label: Text("")),
-        DataColumn(label: Text(""), numeric: true),
-      ],
-      rows: rows,
-    );
-  }
+      columns: const [DataColumn(label: Text("")), DataColumn(label: Text(""))],
+      rows: rows);
 }

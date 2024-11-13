@@ -1,9 +1,8 @@
-import 'dart:math';
 import 'package:latlng/latlng.dart';
-import 'package:bluetooth_detector/report/device.dart';
+import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:bluetooth_detector/settings.dart';
-import 'package:stats/stats.dart';
+import 'package:bluetooth_detector/extensions/stats.dart';
 
 part 'report.g.dart';
 part 'report_cache.dart';
@@ -30,6 +29,10 @@ class Report {
   late Stats distanceTravelledStats;
 
   Report(this.data);
+
+  void addDevice(Device d) => data[d.id] = d;
+
+  void addDeviceDatum(Device d, LatLng? location, int rssi) => data[d.id]?.addDatum(location, rssi);
 
   List<Device?> devices() => data.values.toList();
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);

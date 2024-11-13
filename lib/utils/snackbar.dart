@@ -13,16 +13,11 @@
 //   static final snackBarKeyB = GlobalKey<ScaffoldMessengerState>();
 //   static final snackBarKeyC = GlobalKey<ScaffoldMessengerState>();
 
-//   static GlobalKey<ScaffoldMessengerState> getSnackbar(ABC abc) {
-//     switch (abc) {
-//       case ABC.a:
-//         return snackBarKeyA;
-//       case ABC.b:
-//         return snackBarKeyB;
-//       case ABC.c:
-//         return snackBarKeyC;
-//     }
-//   }
+//   static GlobalKey<ScaffoldMessengerState> getSnackbar(ABC abc) => abc == ABC.a
+//       ? snackBarKeyA
+//       : abc == ABC.b
+//           ? snackBarKeyB
+//           : snackBarKeyC;
 
 //   static show(ABC abc, String msg, {required bool success}) {
 //     final snackBar = success
@@ -33,12 +28,8 @@
 //   }
 // }
 
-
-// String prettyException(String prefix, dynamic e) {
-//   if (e is FlutterBluePlusException) {
-//     return "$prefix ${e.description}";
-//   } else if (e is PlatformException) {
-//     return "$prefix ${e.message}";
-//   }
-//   return prefix + e.toString();
-// }
+// String prettyException(String prefix, dynamic e) => e is FlutterBluePlusException
+//     ? "$prefix ${e.description}"
+//     : e is PlatformException
+//         ? "$prefix ${e.message}"
+//         : prefix + e.toString();
