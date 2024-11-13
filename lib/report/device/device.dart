@@ -37,7 +37,7 @@ class Device {
   Set<Datum> dataPoints(Duration windowDuration) =>
       _dataPoints.where((datum) => datum.time.isAfter(DateTime.now().subtract(windowDuration))).toSet();
 
-  void addLocation(LatLng? location) => _dataPoints.add(Datum(location));
+  void addDatum(LatLng? location, int rssi) => _dataPoints.add(Datum(location, rssi));
 
   String deviceLabel() => !this.name.isEmpty
       ? this.name

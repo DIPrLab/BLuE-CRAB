@@ -15,11 +15,6 @@ extension Scanner on ScannerViewState {
         continuousUpdates: true, removeIfGone: Duration(seconds: 1), continuousDivisor: Platform.isAndroid ? 8 : 1);
   }
 
-
-  void rescan() => setState(() {
-        stopScan();
-        startScan();
-      });
   Future stopScan() async => FlutterBluePlus.stopScan().then((_) => disableLocationStream());
 
   void probe(BluetoothDevice device) async {

@@ -3,7 +3,6 @@ part of 'package:bluetooth_detector/scanner_view/scanner_view.dart';
 extension Buttons on ScannerViewState {
   Widget reportViewerButton() => FloatingActionButton.large(
       onPressed: () {
-        log();
         widget.report.refreshCache(widget.settings);
         Navigator.push(
             context,
@@ -15,8 +14,8 @@ extension Buttons on ScannerViewState {
   Widget scanButton() => FlutterBluePlus.isScanningNow
       ? FloatingActionButton.large(
           onPressed: () {
-            log();
             stopScan();
+            widget.report.refreshCache(widget.settings);
             write(widget.report);
             Vibration.vibrate(
                 pattern: [250, 100, 100, 100, 100, 100, 250, 100, 500, 250, 250, 100, 750, 500],

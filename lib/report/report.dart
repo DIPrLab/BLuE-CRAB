@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:latlng/latlng.dart';
 import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -33,7 +32,7 @@ class Report {
 
   void addDevice(Device d) => data[d.id] = d;
 
-  void addDeviceLocation(Device d, LatLng? location) => data[d.id]?.addLocation(location);
+  void addDeviceDatum(Device d, LatLng? location, int rssi) => data[d.id]?.addDatum(location, rssi);
 
   List<Device?> devices() => data.values.toList();
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);

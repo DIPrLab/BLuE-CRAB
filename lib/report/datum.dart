@@ -8,9 +8,10 @@ part 'datum.g.dart';
 @JsonSerializable()
 class Datum {
   LatLng? location;
+  int rssi;
   DateTime time = DateTime.now();
 
-  Datum(this.location);
+  Datum(this.location, this.rssi);
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
   Map<String, dynamic> toJson() => _$DatumToJson(this);
 }
