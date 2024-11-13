@@ -81,8 +81,11 @@ class MapViewState extends State<MapView> {
                     }),
                     CustomPaint(painter: PolylinePainter(transformer, widget.device, widget.settings)),
                     ...widget.device
-                        .locations(widget.settings.windowDuration())
-                        .toList()
+                        .paths(widget.settings.timeThreshold(), widget.settings.windowDuration())
+                        .map((e) => e.first.location == e.last.location
+                            ? {e.first.location}
+                            : {e.first.location, e.last.location})
+                        .expand((e) => e)
                         .map((location) => buildMarkerWidget(context, transformer.toOffset(location),
                             Icon(Icons.circle, color: Colors.red, size: 24.0), false))
                         .toList(),
