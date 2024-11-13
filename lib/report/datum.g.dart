@@ -14,12 +14,13 @@ LatLng? fromString(String latlng) {
   return components.length == 2 ? LatLng.degree(components[0], components[1]) : null;
 }
 
-// TODO: Replace 0 on line 19
 Datum _$DatumFromJson(Map<String, dynamic> json) =>
-    Datum(fromString((json['location'] ?? "" as String?)), 0)..time = DateTime.parse(json['time'] as String);
+    Datum(fromString((json['location'] ?? "" as String?)), int.parse(json['rssi']))
+      ..time = DateTime.parse(json['time'] as String);
 
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
       "\"location\"":
           "\"${instance.location?.latitude.degrees.toString()},${instance.location?.longitude.degrees.toString()}\"",
+      "\"rssi\"": "\"${instance.rssi.toString()}\"",
       "\"time\"": "\"${instance.time.toIso8601String()}\"",
     };

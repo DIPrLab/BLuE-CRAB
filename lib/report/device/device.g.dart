@@ -6,13 +6,9 @@ part of 'device.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Device _$DeviceFromJson(Map<String, dynamic> json) => Device(
-      json['id'] as String,
-      json['name'] as String,
-      json['platformName'] as String,
-      (json['manufacturer'] as List<dynamic>).map((e) => (e as num).toInt()).toList(),
-    ).._dataPoints =
-        (json['_dataPoints'] as List<dynamic>).map((e) => Datum.fromJson(e as Map<String, dynamic>)).toSet();
+Device _$DeviceFromJson(Map<String, dynamic> json) => Device(json['id'] as String, json['name'] as String,
+    json['platformName'] as String, (json['manufacturer'] as List<dynamic>).map((e) => (e as num).toInt()).toList())
+  .._dataPoints = (json['_dataPoints'] as List<dynamic>).map((e) => Datum.fromJson(e as Map<String, dynamic>)).toSet();
 
 Map<String, dynamic> _$DeviceToJson(Device instance) => <String, dynamic>{
       "\"id\"": "\"${instance.id}\"",
@@ -20,5 +16,5 @@ Map<String, dynamic> _$DeviceToJson(Device instance) => <String, dynamic>{
       "\"platformName\"": "\"${instance.platformName}\"",
       // "\"markedSafe\"": instance.markedSafe,
       "\"manufacturer\"": instance.manufacturer,
-      "\"dataPoints\"": instance._dataPoints.map((datum) => "${datum.toJson()}").toList(),
+      "\"_dataPoints\"": instance._dataPoints.map((datum) => "${datum.toJson()}").toList(),
     };
