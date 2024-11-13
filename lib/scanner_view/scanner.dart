@@ -1,11 +1,9 @@
 part of 'package:bluetooth_detector/scanner_view/scanner_view.dart';
 
 extension Scanner on ScannerViewState {
-  void dispose() {
-    scanResultsSubscription.cancel();
-    isScanningSubscription.cancel();
-    disableLocationStream();
-  }
+  void dispose() => scanResultsSubscription
+      .cancel()
+      .then((_) => isScanningSubscription.cancel().then((_) => disableLocationStream()));
 
   // android is slow when asking for all advertisements,
   // so instead we only ask for 1/8 of them
