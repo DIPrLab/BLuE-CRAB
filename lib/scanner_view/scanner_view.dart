@@ -96,6 +96,7 @@ class ScannerViewState extends State<ScannerView> {
           Row(
               children: [
             // if (widget.settings.devMode) ...[Icon(Icons.abc)],
+            printButton(),
             scanButton(),
           ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
           Spacer(),

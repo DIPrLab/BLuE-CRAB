@@ -38,6 +38,7 @@ class Device {
       _dataPoints.where((datum) => datum.time.isAfter(DateTime.now().subtract(windowDuration))).toSet();
 
   void addDatum(LatLng? location, int rssi) => _dataPoints.add(Datum(location, rssi));
+  void addActualDatum(Datum datum) => _dataPoints.add(datum);
 
   String deviceLabel() => !this.name.isEmpty
       ? this.name

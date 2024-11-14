@@ -1,5 +1,5 @@
 import 'package:latlng/latlng.dart';
-import 'package:bluetooth_detector/report/device.dart';
+import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:bluetooth_detector/report/datum.dart';
 import 'package:bluetooth_detector/report/report.dart';
 import 'package:bluetooth_detector/report/ble_doubt_report/ble_doubt_device.dart';
@@ -20,9 +20,9 @@ class BleDoubtReport {
       report.data[device.address] = Device(device.address, device.name, "", [device.manufacturer]);
       for (BleDoubtDetection detection in detections) {
         if (detection.mac == device.address) {
-          Datum datum = Datum(LatLng.degree(detection.lat, detection.long));
+          Datum datum = Datum(LatLng.degree(detection.lat, detection.long), detection.rssi);
           datum.time = detection.t;
-          report.data[device.address]?.dataPoints.add(datum);
+          report.data[device.address]?.addActualDatum(datum);
         }
       }
     }

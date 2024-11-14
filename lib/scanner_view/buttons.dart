@@ -1,6 +1,9 @@
 part of 'package:bluetooth_detector/scanner_view/scanner_view.dart';
 
 extension Buttons on ScannerViewState {
+  Widget printButton() =>
+      FloatingActionButton.large(onPressed: () => write(widget.report), child: Icon(Icons.newspaper));
+
   Widget reportViewerButton() => FloatingActionButton.large(
       onPressed: () {
         widget.report.refreshCache(widget.settings);
