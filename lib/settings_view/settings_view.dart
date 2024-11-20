@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bluetooth_detector/map_view/map_functions.dart';
 import 'package:bluetooth_detector/styles/styles.dart';
 import 'package:bluetooth_detector/settings_view/LatLngTile.dart';

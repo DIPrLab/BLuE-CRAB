@@ -12,8 +12,10 @@ import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:bluetooth_detector/report/report.dart';
 import 'package:bluetooth_detector/settings_view/settings_view.dart';
 import 'package:bluetooth_detector/settings.dart';
+import 'package:bluetooth_detector/styles/themes.dart';
 import 'package:vibration/vibration.dart';
 import 'package:latlng/latlng.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 
 part 'package:bluetooth_detector/scanner_view/buttons.dart';
 part 'package:bluetooth_detector/scanner_view/scanner.dart';
@@ -96,6 +98,7 @@ class ScannerViewState extends State<ScannerView> {
           Row(
               children: [
             // if (widget.settings.devMode) ...[Icon(Icons.abc)],
+            notifyButton(),
             scanButton(),
           ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
           Spacer(),
