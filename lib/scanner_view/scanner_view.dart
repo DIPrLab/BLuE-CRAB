@@ -87,9 +87,9 @@ class ScannerViewState extends State<ScannerView> {
   Widget build(BuildContext context) => Scaffold(
           body: Center(
               child: Row(children: [
-        Spacer(),
+        Expanded(child: SizedBox.shrink()),
         Column(children: [
-          Spacer(),
+          Expanded(child: SizedBox.shrink()),
           Row(
               children: [
             settingsButton(),
@@ -97,12 +97,11 @@ class ScannerViewState extends State<ScannerView> {
           ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
           Row(
               children: [
-            // if (widget.settings.devMode) ...[Icon(Icons.abc)],
             notifyButton(),
             scanButton(),
           ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
-          Spacer(),
+          Expanded(child: SizedBox.shrink()),
         ]),
-        Spacer(),
+        Expanded(child: SizedBox.shrink()),
       ])));
 }
