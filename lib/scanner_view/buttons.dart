@@ -2,6 +2,7 @@ part of 'package:bluetooth_detector/scanner_view/scanner_view.dart';
 
 extension Buttons on ScannerViewState {
   Widget reportViewerButton() => FloatingActionButton.large(
+      heroTag: "Report Viewer Button",
       onPressed: () {
         widget.report.refreshCache(widget.settings);
         Navigator.push(
@@ -13,27 +14,33 @@ extension Buttons on ScannerViewState {
 
   Widget scanButton() => FlutterBluePlus.isScanningNow
       ? FloatingActionButton.large(
+          heroTag: "Stop Scanning Button",
           onPressed: () {
             stopScan();
             widget.report.refreshCache(widget.settings);
             write(widget.report);
-            Vibration.vibrate(
-                pattern: [250, 100, 100, 100, 100, 100, 250, 100, 500, 250, 250, 100, 750, 500],
-                intensities: [255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0]);
+            if ((Platform.isAndroid || Platform.isIOS)) {
+              Vibration.vibrate(
+                  pattern: [250, 100, 100, 100, 100, 100, 250, 100, 500, 250, 250, 100, 750, 500],
+                  intensities: [255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0]);
+            }
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))));
           },
           child: const Icon(Icons.stop))
-      : FloatingActionButton.large(onPressed: () => startScan(), child: const Icon(Icons.play_arrow_rounded));
+      : FloatingActionButton.large(
+          heroTag: "Start Scanning Button", onPressed: () => startScan(), child: const Icon(Icons.play_arrow_rounded));
 
   Widget settingsButton() => FloatingActionButton.large(
+      heroTag: "Settings Button",
       onPressed: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => SafeArea(child: SettingsView(widget.settings)))),
       child: const Icon(Icons.settings));
 
   Widget notifyButton() => FloatingActionButton.large(
+      heroTag: "Notify Button",
       onPressed: () => InAppNotification.show(
           context: context,
           child: Container(
