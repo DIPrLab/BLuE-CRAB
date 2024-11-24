@@ -13,32 +13,35 @@ class DeviceDetailView extends StatelessWidget {
 
   DeviceDetailView(this.device, this.report, this.settings);
 
+  Widget header(BuildContext context) => Stack(children: [
+        Row(children: [
+          BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithBackground),
+          Spacer(),
+        ]),
+        Row(children: [Spacer(), Text("Device Details", style: TextStyles.title), Spacer()]),
+      ]);
+
+  Widget mapButton(BuildContext context) => TextButton.icon(
+      onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SafeArea(
+                      child: DeviceMapView(
+                    this.settings,
+                    device: device,
+                    report: report,
+                  )))),
+      icon: Icon(Icons.map),
+      label: Text("Device Routes"));
+
   @override
   Widget build(BuildContext context) => Scaffold(
       body: SingleChildScrollView(
           child: Container(
               padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
               child: Column(children: [
-                Stack(children: [
-                  Row(children: [
-                    BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithBackground),
-                    Spacer(),
-                  ]),
-                  Row(children: [Spacer(), Text("Device Details", style: TextStyles.title), Spacer()]),
-                ]),
+                header(context),
                 PropertyTable(device, report, settings),
-                TextButton.icon(
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SafeArea(
-                                  child: DeviceMapView(
-                                this.settings,
-                                device: device,
-                                report: report,
-                              )))),
-                  icon: Icon(Icons.map),
-                  label: Text("Device Routes"),
-                ),
+                mapButton(context),
               ]))));
 }
