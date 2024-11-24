@@ -1,5 +1,5 @@
 import 'package:bluetooth_detector/report_view/device_view/device_detail_view/property_table_view.dart';
-import 'package:bluetooth_detector/report_view/device_map_view.dart';
+import 'package:bluetooth_detector/report_view/device_view/device_detail_view/device_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:bluetooth_detector/styles/styles.dart';

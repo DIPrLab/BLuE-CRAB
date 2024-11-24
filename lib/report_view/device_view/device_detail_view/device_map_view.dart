@@ -20,23 +20,13 @@ class DeviceMapView extends StatefulWidget {
 
 class DeviceMapViewState extends State<DeviceMapView> {
   @override
-  void initState() {
-    super.initState();
-  }
+  void initState() => super.initState();
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(children: [
-      MapView(
-        widget.device,
-        widget.settings,
-        controller:
-            MapController(location: middlePoint(widget.device.locations(widget.settings.windowDuration()).toList())),
-      ),
-      BackButton(
-        onPressed: () => Navigator.pop(context),
-        style: AppButtonStyle.buttonWithBackground,
-      ),
-    ]);
-  }
+  Widget build(BuildContext context) => Stack(children: [
+        MapView(widget.device, widget.settings,
+            controller: MapController(
+                location: middlePoint(widget.device.locations(widget.settings.windowDuration()).toList()))),
+        BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithBackground),
+      ]);
 }
