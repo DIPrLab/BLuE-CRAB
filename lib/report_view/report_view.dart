@@ -1,3 +1,4 @@
+import 'package:bluetooth_detector/report_view/filter_buttons/filter_buttons.dart';
 import 'package:bluetooth_detector/styles/styles.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -63,25 +64,29 @@ class ReportViewState extends State<ReportView> {
               .map((e) => PopupMenuItem(child: e.$1, onTap: () => sort(e.$2)))
               .toList());
 
+  Widget header(BuildContext context) => Padding(
+      padding: const EdgeInsets.all(4),
+      child: Stack(children: [
+        Row(children: [
+          const Spacer(),
+          Text("Report", textAlign: TextAlign.center, style: TextStyles.title),
+          const Spacer(),
+        ]),
+        BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
+        Row(children: [Spacer(), sortButton()])
+      ]));
+
+  List<Widget> deviceTileList(BuildContext context) => devices
+      .map((device) => DeviceView(device!, widget.settings, report: widget.report))
+      .map((w) => Padding(padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0), child: w))
+      .toList();
+
   @override
   Widget build(BuildContext context) => Scaffold(
           body: SingleChildScrollView(
               child: Column(children: [
-        Padding(
-            padding: const EdgeInsets.all(4),
-            child: Stack(children: [
-              Row(children: [
-                const Spacer(),
-                Text("Report", textAlign: TextAlign.center, style: TextStyles.title),
-                const Spacer(),
-              ]),
-              BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
-              Row(children: [Spacer(), sortButton()])
-            ])),
-        Column(
-            children: devices
-                .map((device) => DeviceView(device!, widget.settings, report: widget.report))
-                .map((w) => Padding(padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0), child: w))
-                .toList()),
+        header(context),
+        FilterButtonBar(widget.settings),
+        Column(children: deviceTileList(context)),
       ])));
 }
