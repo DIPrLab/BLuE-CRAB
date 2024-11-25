@@ -3,6 +3,7 @@ import 'package:bluetooth_detector/report/device/device.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:bluetooth_detector/settings.dart';
 import 'package:bluetooth_detector/extensions/stats.dart';
+import 'package:bluetooth_detector/ble_doubt_report/ble_doubt_report.dart';
 
 part 'report.g.dart';
 part 'report_cache.dart';
