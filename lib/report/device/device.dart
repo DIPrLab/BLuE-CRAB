@@ -39,6 +39,8 @@ class Device {
 
   void addDatum(LatLng? location, int rssi) => _dataPoints.add(Datum(location, rssi));
 
+  void addActualDatum(Datum datum) => _dataPoints.add(datum);
+
   String deviceLabel() => !this.name.isEmpty
       ? this.name
       : !this.platformName.isEmpty
