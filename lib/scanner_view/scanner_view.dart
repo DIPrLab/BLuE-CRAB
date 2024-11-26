@@ -68,7 +68,9 @@ class ScannerViewState extends State<ScannerView> {
         widget.report.data.keys.contains(device.id) ? null : widget.report.addDevice(device);
         widget.report.addDeviceDatum(device, location, d.rssi);
       });
-      results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
+      if (widget.settings.autoConnect) {
+        results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
+      }
       if (mounted) {
         setState(() {});
       }

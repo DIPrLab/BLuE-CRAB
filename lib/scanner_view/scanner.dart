@@ -13,10 +13,6 @@ extension Scanner on ScannerViewState {
 
   Future stopScan() async => FlutterBluePlus.stopScan().then((_) => disableLocationStream());
 
-  void probe(BluetoothDevice device) async {
-    if (widget.settings.autoConnect) {
-      await device.connect(autoConnect: device.isAutoConnectEnabled);
-      await device.discoverServices();
-    }
-  }
+  void probe(BluetoothDevice device) =>
+      device.connect(autoConnect: device.isAutoConnectEnabled).then((_) => device.discoverServices());
 }
