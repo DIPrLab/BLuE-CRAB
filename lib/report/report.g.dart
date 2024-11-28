@@ -13,9 +13,13 @@ Report _$ReportFromJson(Map<String, dynamic> json) {
         .map((k, e) => MapEntry(k, e == null ? null : Device.fromJson(e as Map<String, dynamic>))))
       ..time = DateTime.parse(json['time'] as String);
   } catch (e) {
+    print("Failed to load report as Report");
     try {
       report = BleDoubtReport.fromJson(json).toReport();
-    } catch (e) {}
+    } catch (e) {
+      print("Failed to load report as BleDoubtReport");
+      print("Generating empty report");
+    }
   }
   return report ?? Report({});
 }
