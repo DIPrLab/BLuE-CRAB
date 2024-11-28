@@ -18,6 +18,8 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   void initState() {
     super.initState();
     filterButtons = [
+      WidgetButtonProperties("Time w/ User", () => widget.settings.enableTimeWithUserMetric,
+          () => widget.settings.enableTimeWithUserMetric = !widget.settings.enableTimeWithUserMetric),
       WidgetButtonProperties("Areas", () => widget.settings.enableAreasMetric,
           () => widget.settings.enableAreasMetric = !widget.settings.enableAreasMetric),
       WidgetButtonProperties("Distance w/ User", () => widget.settings.enableDistanceWithUserMetric,
