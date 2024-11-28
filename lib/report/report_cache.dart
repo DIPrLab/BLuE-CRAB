@@ -3,16 +3,17 @@ part of 'report.dart';
 extension Cache on Report {
   void refreshCache(Settings settings) {
     updateDeviceStatistics(settings);
-    updateStatistics(data.entries.map((device) => device.value!), settings);
+    updateStatistics(_data.entries.where((entry) => entry.value != null).map((entry) => entry.value!), settings);
   }
 
-  void updateDeviceStatistics(Settings settings) => data.values.forEach((d) => d?.updateStatistics(settings));
+  void updateDeviceStatistics(Settings settings) => _data.values.forEach((d) => d?.updateStatistics(settings));
 
   void updateStatistics(Iterable<Device> devices, Settings settings) {
     timeTravelledStats = _timeTravelledStats(devices, settings);
     distanceTravelledStats = _distanceTravelledStats(devices, settings);
     incidenceStats = _incidenceStats(devices, settings);
     areaStats = _areaStats(devices, settings);
+    riskScoreStats = _riskScoreStats(devices, settings);
   }
 
   Stats _areaStats(Iterable<Device> devices, Settings settings) =>
@@ -26,4 +27,7 @@ extension Cache on Report {
 
   Stats _distanceTravelledStats(Iterable<Device> devices, Settings settings) =>
       Stats.fromData(devices.map((device) => device.distanceTravelled));
+
+  Stats _riskScoreStats(Iterable<Device> devices, Settings settings) =>
+      Stats.fromData(devices.map((device) => riskScore(device, settings)));
 }

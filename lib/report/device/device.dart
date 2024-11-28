@@ -24,13 +24,16 @@ class Device {
   String platformName;
   List<int> manufacturer;
   Set<Datum> _dataPoints = {};
+  bool isTrusted;
 
   late Duration timeTravelled;
   late int incidence;
   late Set<Area> areas;
   late double distanceTravelled;
 
-  Device(this.id, this.name, this.platformName, this.manufacturer);
+  Device(this.id, this.name, this.platformName, this.manufacturer, {this.isTrusted = false, Set<Datum>? dataPoints}) {
+    _dataPoints = dataPoints ?? {};
+  }
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
