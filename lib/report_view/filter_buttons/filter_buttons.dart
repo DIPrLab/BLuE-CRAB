@@ -27,12 +27,19 @@ class FilterButtonBarState extends State<FilterButtonBar> {
       WidgetButtonProperties("Proximity", () => widget.settings.enableRSSIMetric,
           () => widget.settings.enableRSSIMetric = !widget.settings.enableRSSIMetric),
     ];
+    reorder();
   }
 
-  void reorder(WidgetButtonProperties props) {
-    filterButtons.remove(props);
-    int index = filterButtons.indexWhere((e) => !e.value());
-    filterButtons.insert(index == -1 ? filterButtons.length : index, props);
+  void reorder({WidgetButtonProperties? props}) {
+    if (props != null) {
+      filterButtons.remove(props);
+      filterButtons.insert(0, props);
+    }
+    filterButtons.sort((a, b) => (a.value() && b.value()) || !(a.value() || b.value())
+        ? 0
+        : a.value()
+            ? -1
+            : 1);
   }
 
   Widget filterButton(WidgetButtonProperties props, Settings settings) => TextButton(
@@ -40,7 +47,7 @@ class FilterButtonBarState extends State<FilterButtonBar> {
       onPressed: () => setState(() {
             props.onPressed();
             widget.settings.save();
-            reorder(props);
+            reorder(props: props);
           }),
       style: TextButton.styleFrom(
           backgroundColor: props.value() ? colors.altText : colors.background,
@@ -50,11 +57,15 @@ class FilterButtonBarState extends State<FilterButtonBar> {
               borderRadius: BorderRadius.circular(30.0), side: const BorderSide(color: colors.altText, width: 2.0))));
 
   @override
-  Widget build(BuildContext context) => Row(
-      children: filterButtons
-          .map((props) => filterButton(props, widget.settings))
-          .expand((e) => e != filterButtons.last ? [e, SizedBox(width: 12.0)] : [e])
-          .toList());
+  Widget build(BuildContext context) => SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+              children: filterButtons
+                  .map((props) => filterButton(props, widget.settings))
+                  .expand((e) => e != filterButtons.last ? [e, SizedBox(width: 12.0)] : [e])
+                  .toList())));
 }
 
 class WidgetButtonProperties {
