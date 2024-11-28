@@ -91,16 +91,12 @@ class ScannerViewState extends State<ScannerView> {
         Expanded(child: SizedBox.shrink()),
         Column(children: [
           Expanded(child: SizedBox.shrink()),
-          Row(
-              children: [
-            settingsButton(),
-            reportViewerButton(),
-          ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
-          Row(
-              children: [
-            notifyButton(),
-            scanButton(),
-          ].map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()),
+          ...[
+            [settingsButton(), reportViewerButton()],
+            [notifyButton(), scanButton()]
+          ]
+              .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
+              .toList(),
           Expanded(child: SizedBox.shrink()),
         ]),
         Expanded(child: SizedBox.shrink()),
