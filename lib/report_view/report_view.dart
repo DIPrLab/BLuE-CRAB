@@ -31,7 +31,8 @@ class ReportViewState extends State<ReportView> {
       .devices()
       .where((device) => device != null)
       .map((device) => device!)
-      .where((device) => widget.report.riskScore(device, widget.settings) > 0)
+      .where((device) =>
+          widget.report.riskScore(device, widget.settings) > widget.report.riskScoreStats.tukeyExtremeUpperLimit)
       .sorted(sortMethod)
       .reversed
       .toList());
