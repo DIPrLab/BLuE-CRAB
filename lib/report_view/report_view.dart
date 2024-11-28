@@ -57,6 +57,7 @@ class ReportViewState extends State<ReportView> {
             ("Incidence", byIncidence),
             ("Location", byLocation),
             ("Time", byTime),
+            ("Areas", byArea),
           ]
               .map((e) => (ListTile(title: Text("Sort By ${e.$1}")), e.$2))
               .map((e) => PopupMenuItem(child: e.$1, onTap: () => sort(e.$2)))
