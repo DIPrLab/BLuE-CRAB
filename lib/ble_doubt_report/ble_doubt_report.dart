@@ -16,16 +16,14 @@ class BleDoubtReport {
   Report toReport() {
     Report report = Report({});
 
-    for (BleDoubtDevice device in devices) {
-      report.data[device.address] = Device(device.address, device.name, "", [device.manufacturer]);
-      for (BleDoubtDetection detection in detections) {
-        if (detection.mac == device.address) {
-          Datum datum = Datum(LatLng.degree(detection.lat, detection.long), detection.rssi);
-          datum.time = detection.t;
-          report.data[device.address]?.addActualDatum(datum);
-        }
-      }
-    }
+    devices.forEach((device) {
+      report.addDevice(Device(device.address, device.name, "", [device.manufacturer],
+          dataPoints: detections
+              .where((detection) => detection.mac == device.address)
+              .map((detection) =>
+                  Datum(LatLng.degree(detection.lat, detection.long), detection.rssi)..time = detection.t)
+              .toSet()));
+    });
 
     return report;
   }
