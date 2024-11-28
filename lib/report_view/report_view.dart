@@ -36,21 +36,19 @@ class ReportViewState extends State<ReportView> {
       .reversed
       .toList());
 
-  int byRiskScore(Device a, Device b) {
-    num deviceAValue = widget.report.riskScore(a, widget.settings);
-    num deviceBValue = widget.report.riskScore(b, widget.settings);
-    return deviceAValue.compareTo(deviceBValue);
-  }
+  int byRiskScore(Device a, Device b) =>
+      widget.report.riskScore(a, widget.settings).compareTo(widget.report.riskScore(b, widget.settings));
+
+  int byArea(Device a, Device b) => a.areas.length.compareTo(b.areas.length);
 
   int byTime(Device a, Device b) => a.timeTravelled.compareTo(b.timeTravelled);
 
   int byIncidence(Device a, Device b) => a.incidence.compareTo(b.incidence);
 
-  int byLocation(Device a, Device b) {
-    int deviceAValue = a.locations(widget.settings.windowDuration()).length;
-    int deviceBValue = b.locations(widget.settings.windowDuration()).length;
-    return deviceAValue.compareTo(deviceBValue);
-  }
+  int byLocation(Device a, Device b) => a
+      .locations(widget.settings.windowDuration())
+      .length
+      .compareTo(b.locations(widget.settings.windowDuration()).length);
 
   Widget sortButton() => PopupMenuButton<dynamic>(
       icon: const Icon(Icons.sort),
