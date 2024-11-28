@@ -90,6 +90,9 @@ flutter:
 
   assets:
     - assets/
+    - assets/bledoubt_logs/
+    - assets/bledoubt_logs/airtag_experiments/
+    - assets/bledoubt_logs/validation/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
