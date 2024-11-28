@@ -62,12 +62,11 @@ class ScannerViewState extends State<ScannerView> {
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
       devices = results;
-      results.forEach((d) {
-        Device device = Device(d.device.remoteId.toString(), d.advertisementData.advName, d.device.platformName,
-            d.advertisementData.manufacturerData.keys.toList());
-        widget.report.data.keys.contains(device.id) ? null : widget.report.addDevice(device);
-        widget.report.addDeviceDatum(device, location, d.rssi);
-      });
+      results.forEach((d) => widget.report.addDatumToDevice(
+          Device(d.device.remoteId.toString(), d.advertisementData.advName, d.device.platformName,
+              d.advertisementData.manufacturerData.keys.toList()),
+          location,
+          d.rssi));
       if (widget.settings.autoConnect) {
         results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       }
