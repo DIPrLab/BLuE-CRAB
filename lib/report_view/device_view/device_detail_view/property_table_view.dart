@@ -10,6 +10,8 @@ class PropertyTable extends StatelessWidget {
   final Settings settings;
   List<DataRow> rows = [];
 
+  String printDistance(double m) => (m / 1000).toStringAsFixed(2) + " km";
+
   PropertyTable(this.device, this.report, this.settings, {super.key}) {
     rows.add(Row("UUID", device.id.toString()));
     if (!device.name.isEmpty) {
@@ -21,10 +23,11 @@ class PropertyTable extends StatelessWidget {
     if (!device.manufacturer.isEmpty) {
       rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
-    rows.add(Row("Risk Score", report.riskScore(device, settings).toString()));
+    // rows.add(Row("Risk Score", report.riskScore(device, settings).toString()));
     rows.add(Row("Incidence", device.incidence.toString()));
-    rows.add(Row("Areas", device.areas.length.toString()));
+    rows.add(Row("Areas", 1.toString()));
     rows.add(Row("Duration", device.timeTravelled.printFriendly()));
+    rows.add(Row("Distance", printDistance(device.distanceTravelled)));
   }
 
   DataRow Row(String label, String value) => DataRow(cells: [

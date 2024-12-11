@@ -16,6 +16,8 @@ import 'package:bluetooth_detector/styles/themes.dart';
 import 'package:vibration/vibration.dart';
 import 'package:latlng/latlng.dart';
 import 'package:in_app_notification/in_app_notification.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:bluetooth_detector/styles/styles.dart';
 
 part 'package:bluetooth_detector/scanner_view/buttons.dart';
 part 'package:bluetooth_detector/scanner_view/scanner.dart';
@@ -91,12 +93,25 @@ class ScannerViewState extends State<ScannerView> {
         Expanded(child: SizedBox.shrink()),
         Column(children: [
           Expanded(child: SizedBox.shrink()),
+          Expanded(child: SizedBox.shrink()),
+          Text("BL(u)E CRAB",
+              // style: GoogleFonts.nothingYouCouldDo(
+              // style: GoogleFonts.sniglet(
+              // style: GoogleFonts.caprasimo(
+              // style: GoogleFonts.mogra(
+              style: GoogleFonts.irishGrover(textStyle: TextStyles.splashText)),
+          Expanded(child: SizedBox.shrink()),
           ...[
             [settingsButton(), reportViewerButton()],
-            [notifyButton(), scanButton()]
+            [widget.settings.devMode ? notifyButton() : null, scanButton()]
           ]
-              .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
+              .map((row) => Row(
+                  children: row
+                      .where((widget) => widget != null)
+                      .map((e) => Padding(padding: EdgeInsets.all(16.0), child: e))
+                      .toList()))
               .toList(),
+          Expanded(child: SizedBox.shrink()),
           Expanded(child: SizedBox.shrink()),
         ]),
         Expanded(child: SizedBox.shrink()),

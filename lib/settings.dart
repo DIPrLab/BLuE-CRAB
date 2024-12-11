@@ -19,6 +19,7 @@ class Settings {
   late double timeThresholdValue;
   late double distanceThresholdValue;
 
+  // Change windowDuration to 24 hours
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
   Duration scanTime() => Duration(seconds: 10);
   Duration timeThreshold() => Duration(seconds: timeThresholdValue.toInt());

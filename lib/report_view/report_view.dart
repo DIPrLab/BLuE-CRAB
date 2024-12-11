@@ -86,7 +86,7 @@ class ReportViewState extends State<ReportView> {
           body: SingleChildScrollView(
               child: Column(children: [
         header(context),
-        FilterButtonBar(widget.settings),
+        FilterButtonBar(widget.settings, setState),
         Column(children: deviceTileList(context)),
       ])));
 }

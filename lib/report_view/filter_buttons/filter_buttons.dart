@@ -3,9 +3,10 @@ import 'package:bluetooth_detector/settings.dart';
 import 'package:bluetooth_detector/styles/themes.dart';
 
 class FilterButtonBar extends StatefulWidget {
-  FilterButtonBar(Settings this.settings, {super.key});
+  FilterButtonBar(Settings this.settings, Function this.notify, {super.key});
 
   final Settings settings;
+  final Function notify;
 
   @override
   FilterButtonBarState createState() => FilterButtonBarState();
@@ -46,7 +47,7 @@ class FilterButtonBarState extends State<FilterButtonBar> {
 
   Widget filterButton(WidgetButtonProperties props, Settings settings) => TextButton(
       child: Text(props.label, style: TextStyle(color: Colors.white)),
-      onPressed: () => setState(() {
+      onPressed: () => widget.notify(() {
             props.onPressed();
             widget.settings.save();
             reorder(props: props);

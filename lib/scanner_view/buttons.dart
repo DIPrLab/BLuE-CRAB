@@ -1,43 +1,65 @@
 part of 'package:bluetooth_detector/scanner_view/scanner_view.dart';
 
 extension Buttons on ScannerViewState {
-  Widget reportViewerButton() => FloatingActionButton.large(
-      heroTag: "Report Viewer Button",
-      onPressed: () {
-        widget.report.refreshCache(widget.settings);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))));
-      },
-      child: const Icon(Icons.newspaper));
+  Widget reportViewerButton() => Column(children: [
+        Padding(
+            padding: EdgeInsets.all(16.0),
+            child: FloatingActionButton.large(
+                heroTag: "Report Viewer Button",
+                onPressed: () {
+                  widget.report.refreshCache(widget.settings);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))));
+                },
+                child: const Icon(Icons.newspaper))),
+        Text("Report")
+      ]);
 
   Widget scanButton() => FlutterBluePlus.isScanningNow
-      ? FloatingActionButton.large(
-          heroTag: "Stop Scanning Button",
-          onPressed: () {
-            stopScan();
-            widget.report.refreshCache(widget.settings);
-            write(widget.report);
-            if ((Platform.isAndroid || Platform.isIOS)) {
-              Vibration.vibrate(
-                  pattern: [250, 100, 100, 100, 100, 100, 250, 100, 500, 250, 250, 100, 750, 500],
-                  intensities: [255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0]);
-            }
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))));
-          },
-          child: const Icon(Icons.stop))
-      : FloatingActionButton.large(
-          heroTag: "Start Scanning Button", onPressed: () => startScan(), child: const Icon(Icons.play_arrow_rounded));
+      ? Column(children: [
+          Padding(
+              padding: EdgeInsets.all(16.0),
+              child: FloatingActionButton.large(
+                  heroTag: "Stop Scanning Button",
+                  onPressed: () {
+                    stopScan();
+                    widget.report.refreshCache(widget.settings);
+                    write(widget.report);
+                    if ((Platform.isAndroid || Platform.isIOS)) {
+                      Vibration.vibrate(
+                          pattern: [250, 100, 100, 100, 100, 100, 250, 100, 500, 250, 250, 100, 750, 500],
+                          intensities: [255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0]);
+                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))));
+                  },
+                  child: const Icon(Icons.stop))),
+          Text("Stop Scanning")
+        ])
+      : Column(children: [
+          Padding(
+              padding: EdgeInsets.all(16.0),
+              child: FloatingActionButton.large(
+                  heroTag: "Start Scanning Button",
+                  onPressed: () => startScan(),
+                  child: const Icon(Icons.play_arrow_rounded))),
+          Text("Start Scanning")
+        ]);
 
-  Widget settingsButton() => FloatingActionButton.large(
-      heroTag: "Settings Button",
-      onPressed: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SafeArea(child: SettingsView(widget.settings)))),
-      child: const Icon(Icons.settings));
+  Widget settingsButton() => Column(children: [
+        Padding(
+            padding: EdgeInsets.all(16.0),
+            child: FloatingActionButton.large(
+                heroTag: "Settings Button",
+                onPressed: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => SafeArea(child: SettingsView(widget.settings)))),
+                child: const Icon(Icons.settings))),
+        Text("Settings")
+      ]);
 
   Widget notifyButton() => FloatingActionButton.large(
       heroTag: "Notify Button",

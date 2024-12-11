@@ -37,8 +37,8 @@ class Device {
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
-  Set<Datum> dataPoints(Duration windowDuration) =>
-      _dataPoints.where((datum) => datum.time.isAfter(DateTime.now().subtract(windowDuration))).toSet();
+  Set<Datum> dataPoints(Duration windowDuration) => _dataPoints;
+  // _dataPoints.where((datum) => datum.time.isAfter(DateTime.now().subtract(windowDuration))).toSet();
 
   void addDatum(LatLng? location, int rssi) => _dataPoints.add(Datum(location, rssi));
 
