@@ -46,10 +46,8 @@ class ReportViewState extends State<ReportView> {
 
   int byIncidence(Device a, Device b) => a.incidence.compareTo(b.incidence);
 
-  int byLocation(Device a, Device b) => a
-      .locations(widget.settings.windowDuration())
-      .length
-      .compareTo(b.locations(widget.settings.windowDuration()).length);
+  int byLocation(Device a, Device b) =>
+      a.locations(widget.settings).length.compareTo(b.locations(widget.settings).length);
 
   Widget sortButton() => PopupMenuButton<dynamic>(
       icon: const Icon(Icons.sort),

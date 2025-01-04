@@ -2,14 +2,14 @@ part of 'device.dart';
 
 extension DeviceCache on Device {
   void updateStatistics(Settings settings) {
-    areas = _areas(settings.distanceThreshold(), settings.windowDuration());
-    distanceTravelled = _distanceTravelled(settings.timeThreshold(), settings.windowDuration());
-    incidence = _incidence(settings.timeThreshold(), settings.windowDuration());
-    timeTravelled = _timeTravelled(settings.timeThreshold(), settings.windowDuration());
+    areas = _areas(settings);
+    distanceTravelled = _distanceTravelled(settings);
+    incidence = _incidence(settings);
+    timeTravelled = _timeTravelled(settings);
   }
 
-  List<Duration> _timeClusterPrefix(Duration thresholdTime, Duration windowDuration) => this
-      .dataPoints(windowDuration)
+  List<Duration> _timeClusterPrefix(Settings settings) => this
+      .dataPoints(settings)
       .map((datum) => datum.time)
       .sorted()
       .mapOrderedPairs((pair) => pair.$2.difference(pair.$1))
