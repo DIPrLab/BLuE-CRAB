@@ -13,3 +13,15 @@ Future<Report> readReport() async {
     return Report({});
   }
 }
+
+Future<Report> readBundleReport() async {
+  try {
+    return rootBundle
+        .loadString('assets/bledoubt_logs/validation/bledoubt_log_a_modified.json')
+        .then((input) => Report.fromJson(jsonDecode(input)));
+  } catch (e) {
+    print(e);
+    printWarning("Failed to load report");
+    return Report({});
+  }
+}
