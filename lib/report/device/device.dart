@@ -7,7 +7,6 @@ import 'package:bluetooth_detector/extensions/ordered_pairs.dart';
 import 'package:bluetooth_detector/assigned_numbers/company_identifiers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:bluetooth_detector/extensions/collections.dart';
-import 'package:bluetooth_detector/extensions/geolocator.dart';
 import 'package:bluetooth_detector/settings.dart';
 
 part 'device_cache.dart';
