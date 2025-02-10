@@ -13,3 +13,13 @@ Future<Report> readReport() async {
     return Report({});
   }
 }
+
+void shareReport() {
+  _localReportFile.then((file) {
+    file.exists().then((exists) {
+      if (exists) {
+        Share.shareXFiles([XFile(file.path)], text: "Here is the report file.").then((_) {});
+      }
+    });
+  });
+}

@@ -23,7 +23,7 @@ part 'package:bluetooth_detector/scanner_view/scanner.dart';
 class ScannerView extends StatefulWidget {
   ScannerView(Report this.report, Settings this.settings, {super.key});
 
-  final Report report;
+  Report report;
   final Settings settings;
 
   @override
@@ -93,7 +93,8 @@ class ScannerViewState extends State<ScannerView> {
           Expanded(child: SizedBox.shrink()),
           ...[
             [settingsButton(), reportViewerButton()],
-            [notifyButton(), scanButton()]
+            [notifyButton(), scanButton()],
+            [shareButton(), deleteReportButton()]
           ]
               .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
               .toList(),

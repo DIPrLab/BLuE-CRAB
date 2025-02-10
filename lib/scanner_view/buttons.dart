@@ -1,6 +1,21 @@
 part of 'package:bluetooth_detector/scanner_view/scanner_view.dart';
 
 extension Buttons on ScannerViewState {
+  Widget deleteReportButton() => FloatingActionButton.large(
+      heroTag: "Delete Report",
+      onPressed: () {
+        widget.report = Report({});
+        write(Report({}));
+      },
+      child: const Icon(Icons.delete));
+
+  Widget shareButton() => FloatingActionButton.large(
+      heroTag: "Share",
+      onPressed: () {
+        shareReport();
+      },
+      child: const Icon(Icons.share));
+
   Widget reportViewerButton() => FloatingActionButton.large(
       heroTag: "Report Viewer Button",
       onPressed: () {
