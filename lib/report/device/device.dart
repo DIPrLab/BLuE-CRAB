@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:latlng/latlng.dart';
+import 'package:flutter/foundation.dart';
 import 'package:bluetooth_detector/report/datum.dart';
 import 'package:bluetooth_detector/report/report.dart';
 import 'package:bluetooth_detector/extensions/geolocator.dart';
@@ -38,7 +39,7 @@ class Device {
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
   Set<Datum> dataPoints(Settings settings) => _dataPoints
-      .where((datum) => datum.time.isAfter(DateTime.now().subtract(settings.windowDuration())))
+      .where((datum) => kDebugMode ? true : datum.time.isAfter(DateTime.now().subtract(settings.windowDuration())))
       .where((datum) => datum.location == null
           ? true
           : !settings.safeZones

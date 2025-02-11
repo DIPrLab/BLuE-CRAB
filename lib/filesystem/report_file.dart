@@ -5,9 +5,14 @@ Future<File> get _localReportFile async => _localFileDirectory.then((dir) => Fil
 void write(Report report) async => _localReportFile.then((file) => file.writeAsString("${report.toJson().toString()}"));
 
 Future<Report> readReport() async {
+  String jsonData = "";
+  if (kDebugMode) {
+    jsonData = await rootBundle.loadString('assets/bledoubt_logs/validation/bledoubt_log_a.json');
+  } else {
+    jsonData = await _localReportFile.then((file) => file.readAsString());
+  }
   try {
-    return await _localReportFile
-        .then((file) => file.readAsString().then((fileData) => Report.fromJson(jsonDecode(fileData))));
+    return Report.fromJson(jsonDecode(jsonData));
   } catch (e) {
     printWarning("Failed to load report");
     return Report({});
