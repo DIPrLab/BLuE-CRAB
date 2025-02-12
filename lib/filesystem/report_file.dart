@@ -19,23 +19,5 @@ Future<Report> readReport() async {
   }
 }
 
-void shareReport() {
-  _localReportFile.then((file) {
-    file.exists().then((exists) {
-      if (exists) {
-        Share.shareXFiles([XFile(file.path)], text: "Here is the report file.").then((_) {});
-      }
-    });
-  });
-}
-
-Future<Map<String, dynamic>> loadJsonFromAssets() async {
-  try {
-    final path = 'assets/sample.json';
-    final String jsonString = await rootBundle.loadString(path);
-    final Map<String, dynamic> jsonData = json.decode(jsonString);
-    return jsonData;
-  } catch (e) {
-    throw Exception("Error loading JSON: $e");
-  }
-}
+void shareReport() => _localReportFile
+    .then((file) => Share.shareXFiles([XFile(file.path)], text: "Here is the report file.").then((_) {}));

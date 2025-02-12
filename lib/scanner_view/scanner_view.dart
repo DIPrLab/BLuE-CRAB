@@ -81,8 +81,8 @@ class ScannerViewState extends State<ScannerView> {
     isScanningSubscription = FlutterBluePlus.isScanning.listen((state) => setState(() => isScanning = state));
 
     _timeStream = Stream.periodic(widget.settings.scanTime(), (int x) => DateTime.now());
-    timeStreamSubscription = _timeStream
-        .listen((currentTime) => isScanning ? Isolate.run(() => widget.report.refreshCache(widget.settings)) : null);
+    timeStreamSubscription =
+        _timeStream.listen((currentTime) => isScanning ? widget.report.refreshCache(widget.settings) : null);
   }
 
   @override
