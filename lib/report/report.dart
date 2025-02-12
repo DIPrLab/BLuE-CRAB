@@ -39,6 +39,13 @@ class Report {
     _data[d.id]?.addDatum(location, rssi);
   }
 
+  void combine(Report report) => report._data.forEach((id, d) {
+        if (d != null) {
+          _data[id]?.combine(d);
+          _data[d.id] = d;
+        }
+      });
+
   List<Device?> devices() => _data.values.toList();
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
