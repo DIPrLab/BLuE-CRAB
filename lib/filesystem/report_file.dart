@@ -27,4 +27,13 @@ void shareReport() {
       }
     });
   });
+Future<Map<String, dynamic>> loadJsonFromAssets() async {
+  try {
+    final path = 'assets/sample.json';
+    final String jsonString = await rootBundle.loadString(path);
+    final Map<String, dynamic> jsonData = json.decode(jsonString);
+    return jsonData;
+  } catch (e) {
+    throw Exception("Error loading JSON: $e");
+  }
 }

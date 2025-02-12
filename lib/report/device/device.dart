@@ -90,4 +90,9 @@ class Device {
 
     return paths;
   }
+
+  Device combine(Device device) {
+    _dataPoints.addAll(device._dataPoints);
+    return this;
+  }
 }

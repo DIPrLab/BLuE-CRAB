@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'package:bluetooth_detector/report_view/filter_buttons/filter_buttons.dart';
 import 'package:bluetooth_detector/styles/styles.dart';
 import 'package:collection/collection.dart';
@@ -23,7 +24,7 @@ class ReportViewState extends State<ReportView> {
   @override
   void initState() {
     super.initState();
-    widget.report.refreshCache(widget.settings);
+    Isolate.run(() => widget.report.refreshCache(widget.settings));
     sort(byRiskScore);
   }
 
