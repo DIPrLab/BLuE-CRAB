@@ -27,6 +27,8 @@ void shareReport() {
       }
     });
   });
+}
+
 Future<Map<String, dynamic>> loadJsonFromAssets() async {
   try {
     final path = 'assets/sample.json';

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:bluetooth_detector/bluetooth_disabled_view/bluetooth_disabled_view.dart';
@@ -57,8 +58,8 @@ class _SplashScreen extends State<SplashScreen> {
   void dispose() => super.dispose();
 
   Future<void> _loadData() async {
+    // Isolate.run(() => readReport().then((savedReport) => report.merge(savedReport)));
     await readSettings().then((settings) => this.settings = settings);
-    await readReport().then((savedReport) => report = savedReport);
     await Future.delayed(Duration(seconds: 2), () {});
 
     Navigator.push(context, MaterialPageRoute(builder: (context) => SafeArea(child: HomePage(report, settings))));
