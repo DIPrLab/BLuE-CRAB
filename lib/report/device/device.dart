@@ -90,5 +90,8 @@ class Device {
     return paths;
   }
 
-  void combine(Device device) => device._dataPoints.forEach((Datum d) => _dataPoints.add(d));
+  Device combine(Device device) {
+    _dataPoints.addAll(device._dataPoints);
+    return this;
+  }
 }
