@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "bc-light.jpg",
+      "filename" : "bc2.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "bc-dark.jpg",
+      "filename" : "bc1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "bc 1.png",
+      "filename" : "bc3.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
