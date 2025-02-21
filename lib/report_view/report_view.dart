@@ -1,12 +1,11 @@
-import 'dart:isolate';
-import 'package:bluetooth_detector/report_view/filter_buttons/filter_buttons.dart';
-import 'package:bluetooth_detector/styles/styles.dart';
+import 'package:blue_crab/report_view/filter_buttons/filter_buttons.dart';
+import 'package:blue_crab/styles/styles.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:bluetooth_detector/report_view/device_view/device_view.dart';
-import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/report/device/device.dart';
-import 'package:bluetooth_detector/settings.dart';
+import 'package:blue_crab/report_view/device_view/device_view.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/settings.dart';
 
 class ReportView extends StatefulWidget {
   ReportView(Settings this.settings, {super.key, required this.report});
@@ -19,7 +18,7 @@ class ReportView extends StatefulWidget {
 }
 
 class ReportViewState extends State<ReportView> {
-  late List<Device?> devices;
+  late List<Device> devices;
 
   @override
   void initState() {
@@ -30,8 +29,6 @@ class ReportViewState extends State<ReportView> {
 
   void sort(int sortMethod(Device a, Device b)) => setState(() => devices = widget.report
       .devices()
-      .where((device) => device != null)
-      .map((device) => device!)
       .where((device) =>
           widget.report.riskScore(device, widget.settings) > widget.report.riskScoreStats.tukeyExtremeUpperLimit)
       .sorted(sortMethod)
@@ -76,7 +73,7 @@ class ReportViewState extends State<ReportView> {
       ]));
 
   List<Widget> deviceTileList(BuildContext context) => devices
-      .map((device) => DeviceView(device!, widget.settings, report: widget.report))
+      .map((device) => DeviceView(device, widget.settings, report: widget.report))
       .map((w) => Padding(padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0), child: w))
       .toList();
 

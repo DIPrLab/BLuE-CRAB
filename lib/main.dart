@@ -1,22 +1,15 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:bluetooth_detector/bluetooth_disabled_view/bluetooth_disabled_view.dart';
-import 'package:bluetooth_detector/scanner_view/scanner_view.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:bluetooth_detector/styles/styles.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/filesystem/filesystem.dart';
-import 'package:bluetooth_detector/settings.dart';
-import 'package:bluetooth_detector/styles/themes.dart';
+import 'package:blue_crab/bluetooth_disabled_view/bluetooth_disabled_view.dart';
+import 'package:blue_crab/scanner_view/scanner_view.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/filesystem/filesystem.dart';
+import 'package:blue_crab/settings.dart';
+import 'package:blue_crab/styles/themes.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
-void main() {
-  FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
-  runApp(const App());
-}
+void main() => runApp(const App());
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -110,8 +103,7 @@ class _HomePage extends State<HomePage> {
 
   Future<void> _loadData() async {
     readReport().then((savedReport) => widget.report.combine(savedReport));
-    await readSettings().then((settings) => widget.settings = settings);
-    await Future.delayed(Duration(seconds: 2), () {});
+    readSettings().then((settings) => widget.settings = settings);
   }
 
   @override

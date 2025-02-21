@@ -1,4 +1,4 @@
-import 'package:bluetooth_detector/map_view/position.dart';
+import 'package:blue_crab/map_view/position.dart';
 import 'package:collection/collection.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlng/latlng.dart';

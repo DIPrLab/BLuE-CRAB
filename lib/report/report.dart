@@ -1,9 +1,9 @@
 import 'package:latlng/latlng.dart';
-import 'package:bluetooth_detector/report/device/device.dart';
+import 'package:blue_crab/report/device/device.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:bluetooth_detector/settings.dart';
-import 'package:bluetooth_detector/extensions/stats.dart';
-import 'package:bluetooth_detector/ble_doubt_report/ble_doubt_report.dart';
+import 'package:blue_crab/settings.dart';
+import 'package:blue_crab/extensions/stats.dart';
+import 'package:blue_crab/ble_doubt_report/ble_doubt_report.dart';
 
 part 'report.g.dart';
 part 'report_cache.dart';
@@ -42,7 +42,7 @@ class Report {
   void combine(Report report) =>
       report._data.forEach((id, d) => _data.update(id, (device) => device..combine(d), ifAbsent: () => d));
 
-  List<Device?> devices() => _data.values.toList();
+  List<Device> devices() => _data.values.toList();
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 }

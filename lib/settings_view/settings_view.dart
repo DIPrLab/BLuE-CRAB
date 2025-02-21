@@ -1,7 +1,7 @@
-import 'package:bluetooth_detector/map_view/map_functions.dart';
-import 'package:bluetooth_detector/styles/styles.dart';
-import 'package:bluetooth_detector/settings_view/LatLngTile.dart';
-import 'package:bluetooth_detector/settings.dart';
+import 'package:blue_crab/map_view/map_functions.dart';
+import 'package:blue_crab/styles/styles.dart';
+import 'package:blue_crab/settings_view/LatLngTile.dart';
+import 'package:blue_crab/settings.dart';
 import 'package:flutter/material.dart';
 
 part "slider.dart";

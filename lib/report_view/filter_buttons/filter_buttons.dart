@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bluetooth_detector/settings.dart';
-import 'package:bluetooth_detector/styles/themes.dart';
+import 'package:blue_crab/settings.dart';
+import 'package:blue_crab/styles/themes.dart';
 
 class FilterButtonBar extends StatefulWidget {
   FilterButtonBar(Settings this.settings, {super.key});
@@ -29,14 +29,14 @@ class FilterButtonBarState extends State<FilterButtonBar> {
       WidgetButtonProperties("Proximity", () => widget.settings.enableRSSIMetric,
           () => widget.settings.enableRSSIMetric = !widget.settings.enableRSSIMetric),
     ];
-    reorder();
+    reorder([]);
   }
 
-  void reorder({WidgetButtonProperties? props}) {
-    if (props != null) {
+  void reorder(List<WidgetButtonProperties> propList) {
+    propList.forEach((props) {
       filterButtons.remove(props);
       filterButtons.insert(0, props);
-    }
+    });
     filterButtons.sort((a, b) => (a.value() && b.value()) || !(a.value() || b.value())
         ? 0
         : a.value()
@@ -49,7 +49,7 @@ class FilterButtonBarState extends State<FilterButtonBar> {
       onPressed: () => setState(() {
             props.onPressed();
             widget.settings.save();
-            reorder(props: props);
+            reorder([props]);
           }),
       style: TextButton.styleFrom(
           backgroundColor: props.value() ? colors.altText : colors.background,

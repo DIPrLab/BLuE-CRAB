@@ -1,4 +1,4 @@
-part of 'package:bluetooth_detector/scanner_view/scanner_view.dart';
+part of 'scanner_view.dart';
 
 extension Buttons on ScannerViewState {
   Widget deleteReportButton() => FloatingActionButton.large(

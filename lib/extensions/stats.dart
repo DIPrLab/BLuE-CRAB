@@ -1,4 +1,4 @@
-import 'package:bluetooth_detector/extensions/collections.dart';
+import 'package:blue_crab/extensions/collections.dart';
 
 class Stats {
   final List<num> input;

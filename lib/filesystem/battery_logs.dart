@@ -1,4 +1,4 @@
-part of "package:bluetooth_detector/filesystem/filesystem.dart";
+part of "package:blue_crab/filesystem/filesystem.dart";
 
 Future<File> get _localBatteryLog async => _localFileDirectory.then((dir) => File("${dir.path}/battery_log.json"));
 

@@ -1,12 +1,12 @@
 part of 'device.dart';
 
 extension DeviceCache on Device {
-  void updateStatistics(Settings settings) {
-    areas = _areas(settings);
-    distanceTravelled = _distanceTravelled(settings);
-    incidence = _incidence(settings);
-    timeTravelled = _timeTravelled(settings);
-  }
+  void updateStatistics(Settings settings) => [
+        () => distanceTravelled = _distanceTravelled(settings),
+        () => timeTravelled = _timeTravelled(settings),
+        () => incidence = _incidence(settings),
+        () => areas = _areas(settings),
+      ].forEach((f) => f());
 
   List<Duration> _timeClusterPrefix(Settings settings) => this
       .dataPoints(settings)

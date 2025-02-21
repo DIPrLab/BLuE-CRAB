@@ -1,25 +1,24 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
-import 'package:bluetooth_detector/map_view/map_view.dart';
-import 'package:bluetooth_detector/map_view/position.dart';
-import 'package:bluetooth_detector/filesystem/filesystem.dart';
-import 'package:bluetooth_detector/report_view/report_view.dart';
+import 'package:blue_crab/map_view/map_view.dart';
+import 'package:blue_crab/map_view/position.dart';
+import 'package:blue_crab/filesystem/filesystem.dart';
+import 'package:blue_crab/report_view/report_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:bluetooth_detector/report/device/device.dart';
-import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/settings_view/settings_view.dart';
-import 'package:bluetooth_detector/settings.dart';
-import 'package:bluetooth_detector/styles/themes.dart';
+import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/settings_view/settings_view.dart';
+import 'package:blue_crab/settings.dart';
+import 'package:blue_crab/styles/themes.dart';
 import 'package:vibration/vibration.dart';
 import 'package:latlng/latlng.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
-part 'package:bluetooth_detector/scanner_view/buttons.dart';
-part 'package:bluetooth_detector/scanner_view/scanner.dart';
+part 'buttons.dart';
+part 'scanner.dart';
 
 class ScannerView extends StatefulWidget {
   ScannerView(Report this.report, Settings this.settings, {super.key});

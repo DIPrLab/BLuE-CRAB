@@ -1,11 +1,11 @@
-import 'package:bluetooth_detector/map_view/map_functions.dart';
-import 'package:bluetooth_detector/map_view/map_view.dart';
-import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/styles/styles.dart';
-import 'package:bluetooth_detector/report/device/device.dart';
+import 'package:blue_crab/map_view/map_functions.dart';
+import 'package:blue_crab/map_view/map_view.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/styles/styles.dart';
+import 'package:blue_crab/report/device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:map/map.dart';
-import 'package:bluetooth_detector/settings.dart';
+import 'package:blue_crab/settings.dart';
 
 class DeviceMapView extends StatefulWidget {
   final Device device;
@@ -25,7 +25,7 @@ class DeviceMapViewState extends State<DeviceMapView> {
   @override
   Widget build(BuildContext context) => Stack(children: [
         MapView(widget.device, widget.settings,
-            controller: MapController(location: middlePoint(widget.device.locations(widget.settings).toList()))),
+            MapController(location: middlePoint(widget.device.locations(widget.settings).toList()))),
         BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithBackground),
       ]);
 }

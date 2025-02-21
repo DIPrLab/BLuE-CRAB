@@ -1,4 +1,4 @@
-part of 'package:bluetooth_detector/map_view/map_view.dart';
+part of 'map_view.dart';
 
 extension Controllers on MapViewState {
   static LocationSettings getLocationSettings(int distanceFilter) => Platform.isAndroid
@@ -24,7 +24,7 @@ extension Controllers on MapViewState {
           : LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: distanceFilter);
 
   void onDoubleTap(MapTransformer transformer, Offset position) =>
-      setState(() => transformer.setZoomInPlace(clamp(widget.controller!.zoom + 0.5, 2, 18), position));
+      setState(() => transformer.setZoomInPlace(clamp(widget.controller.zoom + 0.5, 2, 18), position));
 
   void onScaleStart(ScaleStartDetails details) {
     dragStart = details.focalPoint;
@@ -36,9 +36,9 @@ extension Controllers on MapViewState {
     scaleStart = details.scale;
 
     if (scaleDiff > 0) {
-      setState(() => widget.controller!.zoom += 0.02);
+      setState(() => widget.controller.zoom += 0.02);
     } else if (scaleDiff < 0) {
-      setState(() => widget.controller!.zoom -= 0.02);
+      setState(() => widget.controller.zoom -= 0.02);
     } else {
       final now = details.focalPoint;
       final diff = now - dragStart!;

@@ -1,4 +1,4 @@
-package com.example.bluetooth_detector
+package com.example.blue_crab
 
 import io.flutter.embedding.android.FlutterActivity
 

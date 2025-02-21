@@ -1,8 +1,8 @@
-import 'package:bluetooth_detector/report_view/duration.dart';
+import 'package:blue_crab/report_view/duration.dart';
 import 'package:flutter/material.dart';
-import 'package:bluetooth_detector/report/device/device.dart';
-import 'package:bluetooth_detector/settings.dart';
-import 'package:bluetooth_detector/report/report.dart';
+import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/settings.dart';
+import 'package:blue_crab/report/report.dart';
 
 class PropertyTable extends StatelessWidget {
   final Device device;

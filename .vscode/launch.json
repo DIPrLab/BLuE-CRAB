@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "bluetooth_detector",
+            "name": "blue_crab",
             "request": "launch",
             "type": "dart"
         },

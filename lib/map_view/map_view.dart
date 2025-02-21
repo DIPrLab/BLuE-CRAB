@@ -1,20 +1,20 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:bluetooth_detector/extensions/ordered_pairs.dart';
-import 'package:bluetooth_detector/map_view/build_marker_widget.dart';
-import 'package:bluetooth_detector/map_view/tile_servers.dart';
-import 'package:bluetooth_detector/report/device/device.dart';
-import 'package:bluetooth_detector/report/report.dart';
+import 'package:blue_crab/extensions/ordered_pairs.dart';
+import 'package:blue_crab/map_view/build_marker_widget.dart';
+import 'package:blue_crab/map_view/tile_servers.dart';
+import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/report/report.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlng/latlng.dart';
 import 'package:map/map.dart';
-import 'package:bluetooth_detector/settings.dart';
+import 'package:blue_crab/settings.dart';
 
-part 'package:bluetooth_detector/map_view/map_view_controllers.dart';
+part 'map_view_controllers.dart';
 
 double clamp(double x, double min, double max) => x < min
     ? min
@@ -24,10 +24,10 @@ double clamp(double x, double min, double max) => x < min
 
 class MapView extends StatefulWidget {
   final Device device;
-  MapController? controller;
+  MapController controller;
   final Settings settings;
 
-  MapView(this.device, this.settings, {super.key, this.controller});
+  MapView(this.device, this.settings, this.controller, {super.key});
 
   @override
   MapViewState createState() => MapViewState();
@@ -48,7 +48,7 @@ class MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) => Scaffold(
       body: MapLayout(
-          controller: widget.controller!,
+          controller: widget.controller,
           builder: (context, transformer) => GestureDetector(
               behavior: HitTestBehavior.opaque,
               onDoubleTapDown: (details) => onDoubleTap(transformer, details.localPosition),
@@ -58,9 +58,8 @@ class MapViewState extends State<MapView> {
                   behavior: HitTestBehavior.opaque,
                   onPointerSignal: (event) {
                     if (event is PointerScrollEvent) {
-                      transformer.setZoomInPlace(
-                          clamp(widget.controller!.zoom + event.scrollDelta.dy / -1000.0, 2, 18), event.localPosition);
-                      setState(() {});
+                      setState(() => transformer.setZoomInPlace(
+                          clamp(widget.controller.zoom + event.scrollDelta.dy / -1000.0, 2, 18), event.localPosition));
                     }
                   },
                   child: Stack(children: [
@@ -104,15 +103,16 @@ class PolylinePainter extends CustomPainter {
   Offset generateOffsetLatLng(LatLng coordinate) => transformer.toOffset(coordinate);
 
   @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 4;
-    device.paths(settings).forEach((Path path) {
-      path.forEachMappedOrderedPair((pc) => generateOffsetLatLng(pc.location),
-          ((offsets) => canvas.drawLine(offsets.$1 as Offset, offsets.$2 as Offset, paint)));
-    });
-  }
+  void paint(Canvas canvas, Size size) => device.paths(settings).forEach((Path path) {
+        path.forEachMappedOrderedPair(
+            (pc) => generateOffsetLatLng(pc.location),
+            ((offsets) => canvas.drawLine(
+                offsets.$1 as Offset,
+                offsets.$2 as Offset,
+                Paint()
+                  ..color = Colors.red
+                  ..strokeWidth = 4)));
+      });
 
   // Since this Sky painter has no fields, it always paints
   // the same thing and semantics information is the same.

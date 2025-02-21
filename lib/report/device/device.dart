@@ -1,14 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:latlng/latlng.dart';
 import 'package:flutter/foundation.dart';
-import 'package:bluetooth_detector/report/datum.dart';
-import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/extensions/geolocator.dart';
-import 'package:bluetooth_detector/extensions/ordered_pairs.dart';
-import 'package:bluetooth_detector/assigned_numbers/company_identifiers.dart';
+import 'package:blue_crab/report/datum.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/extensions/geolocator.dart';
+import 'package:blue_crab/extensions/ordered_pairs.dart';
+import 'package:blue_crab/assigned_numbers/company_identifiers.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:bluetooth_detector/extensions/collections.dart';
-import 'package:bluetooth_detector/settings.dart';
+import 'package:blue_crab/extensions/collections.dart';
+import 'package:blue_crab/settings.dart';
 
 part 'device_cache.dart';
 part 'device_stats.dart';

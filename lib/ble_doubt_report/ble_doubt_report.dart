@@ -1,9 +1,9 @@
 import 'package:latlng/latlng.dart';
-import 'package:bluetooth_detector/report/device/device.dart';
-import 'package:bluetooth_detector/report/datum.dart';
-import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/ble_doubt_report/ble_doubt_device.dart';
-import 'package:bluetooth_detector/ble_doubt_report/ble_doubt_detection.dart';
+import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/report/datum.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/ble_doubt_report/ble_doubt_device.dart';
+import 'package:blue_crab/ble_doubt_report/ble_doubt_detection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'ble_doubt_report.g.dart';
