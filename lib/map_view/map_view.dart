@@ -24,7 +24,7 @@ double clamp(double x, double min, double max) => x < min
 
 class MapView extends StatefulWidget {
   final Device device;
-  MapController controller;
+  final MapController controller;
   final Settings settings;
 
   MapView(this.device, this.settings, this.controller, {super.key});
@@ -40,9 +40,6 @@ class MapViewState extends State<MapView> {
   @override
   void initState() {
     super.initState();
-
-    widget.controller =
-        widget.controller ?? MapController(location: LatLng.degree(45.511280676982636, -122.68334923167914));
   }
 
   @override

@@ -23,7 +23,7 @@ part 'scanner.dart';
 class ScannerView extends StatefulWidget {
   ScannerView(Report this.report, Settings this.settings, {super.key});
 
-  Report report;
+  final Report report;
   final Settings settings;
 
   @override
