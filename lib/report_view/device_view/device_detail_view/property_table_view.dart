@@ -22,6 +22,8 @@ class PropertyTable extends StatelessWidget {
       rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
     rows.add(Row("Risk Score", report.riskScore(device, settings).toString()));
+    rows.add(Row("Time Travelled", device.timeTravelled.toString()));
+    rows.add(Row("Distance Travelled", device.distanceTravelled.toString()));
     rows.add(Row("Incidence", device.incidence.toString()));
     rows.add(Row("Areas", device.areas.length.toString()));
     rows.add(Row("Duration", device.timeTravelled.printFriendly()));
