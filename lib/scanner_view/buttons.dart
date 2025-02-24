@@ -36,9 +36,7 @@ extension Buttons on ScannerViewState {
             widget.report.refreshCache(widget.settings);
             write(widget.report);
             if ((Platform.isAndroid || Platform.isIOS)) {
-              Vibration.vibrate(
-                  pattern: [250, 100, 100, 100, 100, 100, 250, 100, 500, 250, 250, 100, 750, 500],
-                  intensities: [255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0, 255, 0]);
+              Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
             }
             Navigator.push(
                 context,
