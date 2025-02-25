@@ -38,13 +38,7 @@ class TestingSuite {
     DateTime init = timeStamps.first;
     DateTime start = init.add(Settings.shared.minScanDuration);
     DateTime end = timeStamps.last;
-    timeStamps = timeStamps
-        .where((ts) =>
-            ts == end ||
-            (ts.isAfter(start) && ts.difference(init).inSeconds % Settings.shared.scanInterval.inSeconds == 0))
-        .toList()
-        .toList()
-      ..sort();
+    timeStamps = generateTimestamps(start, end, Settings.shared.scanInterval);
     print(timeStamps.toString());
     timeStamps.forEach((ts) {
       Map<String, Device> deviceEntries = {};
@@ -54,6 +48,9 @@ class TestingSuite {
         Set<Datum> dataPoints = d.dataPoints(testing: true).where((dp) => dp.time.isBefore(ts)).toSet();
         deviceEntries[d.id] = Device(d.id, d.name, d.platformName, d.manufacturer, dataPoints: dataPoints);
       });
+      if (deviceEntries.length < 2) {
+        return;
+      }
       Report r = Report(deviceEntries);
       r.refreshCache();
       Set<Device> devicesToFlag = filteredDevices.where((d) {
