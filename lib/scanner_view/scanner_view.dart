@@ -93,8 +93,8 @@ class ScannerViewState extends State<ScannerView> {
           ...[
             [settingsButton(), reportViewerButton()],
             [notifyButton(), scanButton()],
-            [shareButton(), deleteReportButton()],
-            [testButton()],
+            if (Settings.shared.devMode) [shareButton(), deleteReportButton()],
+            if (Settings.shared.devMode) [testButton()],
           ]
               .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
               .toList(),

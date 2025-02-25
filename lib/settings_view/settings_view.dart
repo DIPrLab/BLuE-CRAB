@@ -23,7 +23,9 @@ class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class SettingsView extends StatefulWidget {
-  SettingsView({super.key});
+  final VoidCallback? notify;
+
+  SettingsView({super.key, this.notify});
 
   @override
   SettingsViewState createState() => SettingsViewState();
@@ -97,7 +99,10 @@ class SettingsViewState extends State<SettingsView> {
                 SwitchListTile(
                     title: Text("Developer Mode ${Settings.shared.devMode ? "On" : "Off"}"),
                     value: Settings.shared.devMode,
-                    onChanged: ((val) => setState(() => Settings.shared.devMode = val)),
+                    onChanged: ((val) {
+                      setState(() => Settings.shared.devMode = val);
+                      widget.notify?.call();
+                    }),
                     secondary: Settings.shared.devMode ? Icon(Icons.developer_board) : Icon(Icons.developer_board_off)),
               ]))));
 }
