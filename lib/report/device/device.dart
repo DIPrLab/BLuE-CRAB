@@ -40,9 +40,9 @@ class Device {
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
-  Set<Datum> dataPoints() => _dataPoints
-      .where(
-          (datum) => kDebugMode ? true : datum.time.isAfter(DateTime.now().subtract(Settings.shared.windowDuration())))
+  Set<Datum> dataPoints({bool testing = false}) => _dataPoints
+      .where((datum) =>
+          kDebugMode || testing ? true : datum.time.isAfter(DateTime.now().subtract(Settings.shared.windowDuration())))
       .where((datum) => datum.location == null
           ? true
           : !Settings.shared.safeZones.any(
