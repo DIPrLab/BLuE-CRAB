@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlng/latlng.dart';
 import 'package:map/map.dart';
-import 'package:blue_crab/settings.dart';
 
 part 'map_view_controllers.dart';
 

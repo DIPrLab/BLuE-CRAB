@@ -5,7 +5,6 @@ import 'package:blue_crab/bluetooth_disabled_view/bluetooth_disabled_view.dart';
 import 'package:blue_crab/scanner_view/scanner_view.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
-import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/styles/themes.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 

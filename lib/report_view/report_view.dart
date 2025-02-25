@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:blue_crab/report_view/device_view/device_view.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/settings.dart';
 
 class ReportView extends StatefulWidget {
   ReportView({super.key, required this.report});
@@ -22,6 +21,7 @@ class ReportViewState extends State<ReportView> {
   @override
   void initState() {
     super.initState();
+    // TODO: Get rid of this
     widget.report.refreshCache();
     sort(byRiskScore);
   }

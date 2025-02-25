@@ -3,7 +3,6 @@ import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/styles/themes.dart';
 
 class DeviceView extends StatelessWidget {
