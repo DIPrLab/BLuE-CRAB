@@ -26,7 +26,6 @@ class Device {
   List<int> manufacturer;
   Set<Datum> _dataPoints = {};
   bool isTrusted;
-  DateTime lastUpdated = DateTime(0);
 
   late Duration timeTravelled;
   late int incidence;
@@ -47,12 +46,9 @@ class Device {
               .any((safeLocation) => distanceBetween(datum.location!, safeLocation) < settings.distanceThreshold()))
       .toSet();
 
-  void addDatum(LatLng? location, int rssi) => addActualDatum(Datum(location, rssi));
+  void addDatum(LatLng? location, int rssi) => _dataPoints.add(Datum(location, rssi));
 
-  void addActualDatum(Datum datum) {
-    lastUpdated = DateTime.now();
-    _dataPoints.add(datum);
-  }
+  void addActualDatum(Datum datum) => _dataPoints.add(datum);
 
   String deviceLabel() => !this.name.isEmpty
       ? this.name
@@ -96,7 +92,6 @@ class Device {
   }
 
   Device combine(Device device) {
-    lastUpdated = DateTime.now();
     _dataPoints.addAll(device._dataPoints);
     return this;
   }

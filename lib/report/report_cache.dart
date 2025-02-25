@@ -4,11 +4,9 @@ extension Cache on Report {
   void refreshCache(Settings settings) {
     updateDeviceStatistics(settings);
     updateStatistics(_data.entries.map((entry) => entry.value), settings);
-    lastUpdated = DateTime.now();
   }
 
-  void updateDeviceStatistics(Settings settings) =>
-      _data.values.where((d) => d.lastUpdated.isAfter(lastUpdated)).forEach((d) => d.updateStatistics(settings));
+  void updateDeviceStatistics(Settings settings) => _data.values.forEach((d) => d.updateStatistics(settings));
 
   void updateStatistics(Iterable<Device> devices, Settings settings) {
     areaStats = _areaStats(devices, settings);
