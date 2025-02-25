@@ -21,8 +21,6 @@ class ReportViewState extends State<ReportView> {
   @override
   void initState() {
     super.initState();
-    // TODO: Get rid of this
-    widget.report.refreshCache();
     sort(byRiskScore);
   }
 
