@@ -2,6 +2,17 @@ import 'package:latlng/latlng.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings {
+  // The singleton instance
+  static final Settings shared = Settings._internal();
+
+  // Private constructor
+  Settings._internal() {
+    loadData();
+  }
+
+  // Factory constructor that returns the shared instance
+  factory Settings() => shared;
+
   late bool devMode;
   late bool autoConnect;
   late bool locationEnabled;
@@ -25,7 +36,7 @@ class Settings {
   double scanDistance() => 30;
   double distanceThreshold() => distanceThresholdValue;
 
-  void loadData() async => SharedPreferences.getInstance().then((prefs) {
+  void loadData() => SharedPreferences.getInstance().then((prefs) {
         devMode = prefs.getBool("devMode") ?? false;
         autoConnect = prefs.getBool("autoConnect") ?? false;
         locationEnabled = prefs.getBool("locationEnabled") ?? true;
