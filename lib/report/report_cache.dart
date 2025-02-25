@@ -9,11 +9,11 @@ extension Cache on Report {
   void updateDeviceStatistics(Settings settings) => _data.values.forEach((d) => d.updateStatistics(settings));
 
   void updateStatistics(Iterable<Device> devices, Settings settings) {
-    areaStats = _areaStats(devices, settings);
+    timeTravelledStats = _timeTravelledStats(devices, settings);
     distanceTravelledStats = _distanceTravelledStats(devices, settings);
     incidenceStats = _incidenceStats(devices, settings);
+    areaStats = _areaStats(devices, settings);
     riskScoreStats = _riskScoreStats(devices, settings);
-    timeTravelledStats = _timeTravelledStats(devices, settings);
   }
 
   Stats _areaStats(Iterable<Device> devices, Settings settings) =>
