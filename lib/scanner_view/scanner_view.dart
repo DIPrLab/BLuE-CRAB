@@ -93,9 +93,8 @@ class ScannerViewState extends State<ScannerView> {
           Expanded(child: SizedBox.shrink()),
           ...[
             [settingsButton(), reportViewerButton()],
-            [notifyButton(), scanButton()],
             if (Settings.shared.devMode) [shareButton(), deleteReportButton()],
-            if (Settings.shared.devMode) [testButton()],
+            [if (Settings.shared.devMode) testButton(), scanButton()],
           ]
               .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
               .toList(),
