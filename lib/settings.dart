@@ -30,6 +30,8 @@ class Settings {
   late double timeThresholdValue;
   late double distanceThresholdValue;
 
+  bool recentlyChanged = false;
+
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
   Duration scanTime() => Duration(seconds: 10);
   Duration timeThreshold() => Duration(seconds: timeThresholdValue.toInt());

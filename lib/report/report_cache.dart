@@ -7,8 +7,12 @@ extension Cache on Report {
     lastUpdated = DateTime.now();
   }
 
-  void updateDeviceStatistics(Settings settings) =>
-      _data.values.where((d) => d.lastUpdated.isAfter(lastUpdated)).forEach((d) => d.updateStatistics());
+  void updateDeviceStatistics(Settings settings) {
+    Iterable<Device> devices =
+        Settings.shared.recentlyChanged ? _data.values : _data.values.where((d) => d.lastUpdated.isAfter(lastUpdated));
+    devices.forEach((d) => d.updateStatistics());
+    Settings.shared.recentlyChanged = false;
+  }
 
   void updateStatistics(Iterable<Device> devices, Settings settings) {
     timeTravelledStats = _timeTravelledStats(devices, settings);

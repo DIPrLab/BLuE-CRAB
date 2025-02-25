@@ -23,9 +23,7 @@ class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class SettingsView extends StatefulWidget {
-  SettingsView(Settings this.settings, {super.key});
-
-  final Settings settings;
+  SettingsView({super.key});
 
   @override
   SettingsViewState createState() => SettingsViewState();
@@ -33,8 +31,9 @@ class SettingsView extends StatefulWidget {
 
 class SettingsViewState extends State<SettingsView> {
   void _addLocation() => getLocation().then((location) => setState(() {
-        widget.settings.safeZones.add(location);
-        widget.settings.save();
+        Settings.shared.recentlyChanged = true;
+        Settings.shared.safeZones.add(location);
+        Settings.shared.save();
       }));
 
   @override
@@ -49,50 +48,56 @@ class SettingsViewState extends State<SettingsView> {
                 BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
                 header("Discover Services"),
                 SwitchListTile(
-                    title: Text("AutoConnect ${widget.settings.autoConnect ? "On" : "Off"}"),
-                    value: widget.settings.autoConnect,
-                    onChanged: (bool value) => setState(() => widget.settings.autoConnect = value),
-                    secondary: widget.settings.autoConnect ? Icon(Icons.bluetooth) : Icon(Icons.bluetooth_disabled)),
+                    title: Text("AutoConnect ${Settings.shared.autoConnect ? "On" : "Off"}"),
+                    value: Settings.shared.autoConnect,
+                    onChanged: (bool value) => setState(() => Settings.shared.autoConnect = value),
+                    secondary: Settings.shared.autoConnect ? Icon(Icons.bluetooth) : Icon(Icons.bluetooth_disabled)),
                 header("Location Services"),
                 SwitchListTile(
-                    title: Text("Location ${widget.settings.locationEnabled ? "En" : "Dis"}abled"),
-                    value: widget.settings.locationEnabled,
-                    onChanged: (bool value) => setState(() => widget.settings.locationEnabled = value),
-                    secondary: widget.settings.locationEnabled
+                    title: Text("Location ${Settings.shared.locationEnabled ? "En" : "Dis"}abled"),
+                    value: Settings.shared.locationEnabled,
+                    onChanged: (bool value) => setState(() => Settings.shared.locationEnabled = value),
+                    secondary: Settings.shared.locationEnabled
                         ? Icon(Icons.location_searching)
                         : Icon(Icons.location_disabled)),
                 header("Windowing"),
                 settingsSlider(
                     "Window Duration",
-                    "${widget.settings.windowDuration().inMinutes.toInt().toString()} minutes",
+                    "${Settings.shared.windowDuration().inMinutes.toInt().toString()} minutes",
                     10.0,
                     100.0,
-                    widget.settings.windowDurationValue,
-                    ((newValue) => widget.settings.windowDurationValue = newValue)),
+                    Settings.shared.windowDurationValue, ((newValue) {
+                  Settings.shared.recentlyChanged = true;
+                  Settings.shared.windowDurationValue = newValue;
+                })),
                 header("Time"),
                 settingsSlider(
                     "Scanning Time Threshold",
-                    "${widget.settings.timeThreshold().inSeconds.toString()} seconds",
+                    "${Settings.shared.timeThreshold().inSeconds.toString()} seconds",
                     1.0,
                     100.0,
-                    widget.settings.timeThresholdValue,
-                    (newValue) => widget.settings.timeThresholdValue = newValue),
+                    Settings.shared.timeThresholdValue, (newValue) {
+                  Settings.shared.recentlyChanged = true;
+                  Settings.shared.timeThresholdValue = newValue;
+                }),
                 header("Distance"),
                 settingsSlider(
                     "Scanning Distance Threshold",
-                    "${widget.settings.distanceThreshold().toInt().toString()} meters",
+                    "${Settings.shared.distanceThreshold().toInt().toString()} meters",
                     1.0,
                     100.0,
-                    widget.settings.distanceThresholdValue,
-                    (newValue) => widget.settings.distanceThresholdValue = newValue),
+                    Settings.shared.distanceThresholdValue, (newValue) {
+                  Settings.shared.recentlyChanged = true;
+                  Settings.shared.distanceThresholdValue = newValue;
+                }),
                 header("Safe Zones"),
                 LocationHeader(onAddLocation: _addLocation),
-                ...widget.settings.safeZones.map((location) => LatLngTile(location)),
+                ...Settings.shared.safeZones.map((location) => LatLngTile(location)),
                 header("Developer Mode"),
                 SwitchListTile(
-                    title: Text("Developer Mode ${widget.settings.devMode ? "On" : "Off"}"),
-                    value: widget.settings.devMode,
-                    onChanged: ((val) => setState(() => widget.settings.devMode = val)),
-                    secondary: widget.settings.devMode ? Icon(Icons.developer_board) : Icon(Icons.developer_board_off)),
+                    title: Text("Developer Mode ${Settings.shared.devMode ? "On" : "Off"}"),
+                    value: Settings.shared.devMode,
+                    onChanged: ((val) => setState(() => Settings.shared.devMode = val)),
+                    secondary: Settings.shared.devMode ? Icon(Icons.developer_board) : Icon(Icons.developer_board_off)),
               ]))));
 }
