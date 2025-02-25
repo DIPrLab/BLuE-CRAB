@@ -1,6 +1,13 @@
 part of 'scanner_view.dart';
 
 extension Buttons on ScannerViewState {
+  Widget testButton() => FloatingActionButton.large(
+      heroTag: "Test Report",
+      onPressed: () {
+        TestingSuite(widget.report)..test();
+      },
+      child: const Icon(Icons.science));
+
   Widget deleteReportButton() => FloatingActionButton.large(
       heroTag: "Delete Report",
       onPressed: () {

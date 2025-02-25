@@ -5,6 +5,7 @@ import 'package:blue_crab/map_view/map_view.dart';
 import 'package:blue_crab/map_view/position.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/report_view/report_view.dart';
+import 'package:blue_crab/testing_suite/testing_suite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
@@ -92,7 +93,8 @@ class ScannerViewState extends State<ScannerView> {
           ...[
             [settingsButton(), reportViewerButton()],
             [notifyButton(), scanButton()],
-            [shareButton(), deleteReportButton()]
+            [shareButton(), deleteReportButton()],
+            [testButton()],
           ]
               .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
               .toList(),

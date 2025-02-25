@@ -2,19 +2,19 @@ part of 'report.dart';
 
 extension Cache on Report {
   void refreshCache() {
-    updateDeviceStatistics();
-    updateStatistics(_data.entries.map((entry) => entry.value));
+    _updateDeviceStatistics();
+    _updateStatistics(data.entries.map((entry) => entry.value));
     lastUpdated = DateTime.now();
   }
 
-  void updateDeviceStatistics() {
+  void _updateDeviceStatistics() {
     Iterable<Device> devices =
-        Settings.shared.recentlyChanged ? _data.values : _data.values.where((d) => d.lastUpdated.isAfter(lastUpdated));
+        Settings.shared.recentlyChanged ? data.values : data.values.where((d) => d.lastUpdated.isAfter(lastUpdated));
     devices.forEach((d) => d.updateStatistics());
     Settings.shared.recentlyChanged = false;
   }
 
-  void updateStatistics(Iterable<Device> devices) {
+  void _updateStatistics(Iterable<Device> devices) {
     timeTravelledStats = _timeTravelledStats(devices);
     distanceTravelledStats = _distanceTravelledStats(devices);
     incidenceStats = _incidenceStats(devices);

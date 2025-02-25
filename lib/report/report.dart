@@ -22,7 +22,7 @@ class PathComponent {
 @JsonSerializable()
 class Report {
   DateTime time = DateTime.now();
-  Map<String, Device> _data;
+  Map<String, Device> data;
 
   late Stats timeTravelledStats;
   late Stats incidenceStats;
@@ -31,19 +31,19 @@ class Report {
   late Stats riskScoreStats;
   DateTime lastUpdated = DateTime(0);
 
-  Report(this._data);
+  Report(this.data);
 
-  Device? getDevice(String id) => _data[id];
-  void addDevice(Device d) => _data.keys.contains(d.id) ? null : _data[d.id] = d;
+  Device? getDevice(String id) => data[id];
+  void addDevice(Device d) => data.keys.contains(d.id) ? null : data[d.id] = d;
   void addDatumToDevice(Device d, LatLng? location, int rssi) {
     addDevice(d);
-    _data[d.id]?.addDatum(location, rssi);
+    data[d.id]?.addDatum(location, rssi);
   }
 
   void combine(Report report) =>
-      report._data.forEach((id, d) => _data.update(id, (device) => device..combine(d), ifAbsent: () => d));
+      report.data.forEach((id, d) => data.update(id, (device) => device..combine(d), ifAbsent: () => d));
 
-  List<Device> devices() => _data.values.toList();
+  List<Device> devices() => data.values.toList();
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 }
