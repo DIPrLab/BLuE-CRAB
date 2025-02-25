@@ -21,6 +21,6 @@ extension DeviceStats on Device {
 
   Duration _timeTravelled(Settings settings) => this
       ._timeClusterPrefix(settings)
-      .where((duration) => duration <= settings.timeThreshold())
+      .where((duration) => duration < settings.timeThreshold())
       .fold(Duration(), (a, b) => a + b);
 }
