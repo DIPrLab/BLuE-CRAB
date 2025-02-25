@@ -26,7 +26,7 @@ class Device {
   List<int> manufacturer;
   Set<Datum> _dataPoints = {};
   bool isTrusted;
-  DateTime lastUpdated = DateTime(0);
+  DateTime lastUpdated = DateTime.now();
 
   late Duration timeTravelled;
   late int incidence;

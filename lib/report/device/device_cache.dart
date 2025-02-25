@@ -6,7 +6,6 @@ extension DeviceCache on Device {
         () => timeTravelled = _timeTravelled(Settings.shared),
         () => incidence = _incidence(Settings.shared),
         () => areas = _areas(Settings.shared),
-        () => print("Updated Statistics"),
       ].forEach((f) => f());
 
   List<Duration> _timeClusterPrefix(Settings settings) => this
