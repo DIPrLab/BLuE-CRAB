@@ -35,7 +35,6 @@ class Device {
 
   Device(this.id, this.name, this.platformName, this.manufacturer, {this.isTrusted = false, Set<Datum>? dataPoints}) {
     _dataPoints = dataPoints ?? {};
-    updateStatistics();
   }
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
