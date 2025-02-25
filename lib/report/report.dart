@@ -29,6 +29,7 @@ class Report {
   late Stats areaStats;
   late Stats distanceTravelledStats;
   late Stats riskScoreStats;
+  late DateTime lastUpdated = DateTime.now();
 
   Report(this._data);
 
