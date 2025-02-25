@@ -20,11 +20,9 @@ extension Buttons on ScannerViewState {
   Widget reportViewerButton() => FloatingActionButton.large(
       heroTag: "Report Viewer Button",
       onPressed: () {
-        widget.report.refreshCache(widget.settings);
+        widget.report.refreshCache();
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))));
+            context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
       },
       child: const Icon(Icons.newspaper));
 
@@ -33,15 +31,13 @@ extension Buttons on ScannerViewState {
           heroTag: "Stop Scanning Button",
           onPressed: () {
             stopScan();
-            widget.report.refreshCache(widget.settings);
+            widget.report.refreshCache();
             write(widget.report);
             if ((Platform.isAndroid || Platform.isIOS)) {
               Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
             }
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))));
+                context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
           },
           child: const Icon(Icons.stop))
       : FloatingActionButton.large(
@@ -64,8 +60,6 @@ extension Buttons on ScannerViewState {
                       Padding(padding: EdgeInsets.symmetric(vertical: 16.0), child: Text("Risky Devices Detected!"))),
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)),
           onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SafeArea(child: ReportView(widget.settings, report: widget.report))))),
+              context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))))),
       child: const Icon(Icons.notifications));
 }

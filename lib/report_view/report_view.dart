@@ -8,10 +8,9 @@ import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/settings.dart';
 
 class ReportView extends StatefulWidget {
-  ReportView(Settings this.settings, {super.key, required this.report});
+  ReportView({super.key, required this.report});
 
   final Report report;
-  final Settings settings;
 
   @override
   ReportViewState createState() => ReportViewState();
@@ -23,20 +22,18 @@ class ReportViewState extends State<ReportView> {
   @override
   void initState() {
     super.initState();
-    widget.report.refreshCache(widget.settings);
+    widget.report.refreshCache();
     sort(byRiskScore);
   }
 
   void sort(int sortMethod(Device a, Device b)) => setState(() => devices = widget.report
       .devices()
-      .where((device) =>
-          widget.report.riskScore(device, widget.settings) > widget.report.riskScoreStats.tukeyExtremeUpperLimit)
+      .where((device) => widget.report.riskScore(device) > widget.report.riskScoreStats.tukeyExtremeUpperLimit)
       .sorted(sortMethod)
       .reversed
       .toList());
 
-  int byRiskScore(Device a, Device b) =>
-      widget.report.riskScore(a, widget.settings).compareTo(widget.report.riskScore(b, widget.settings));
+  int byRiskScore(Device a, Device b) => widget.report.riskScore(a).compareTo(widget.report.riskScore(b));
 
   int byArea(Device a, Device b) => a.areas.length.compareTo(b.areas.length);
 
@@ -44,8 +41,7 @@ class ReportViewState extends State<ReportView> {
 
   int byIncidence(Device a, Device b) => a.incidence.compareTo(b.incidence);
 
-  int byLocation(Device a, Device b) =>
-      a.locations(widget.settings).length.compareTo(b.locations(widget.settings).length);
+  int byLocation(Device a, Device b) => a.locations().length.compareTo(b.locations().length);
 
   Widget sortButton() => PopupMenuButton<dynamic>(
       icon: const Icon(Icons.sort),
@@ -73,7 +69,7 @@ class ReportViewState extends State<ReportView> {
       ]));
 
   List<Widget> deviceTileList(BuildContext context) => devices
-      .map((device) => DeviceView(device, widget.settings, report: widget.report))
+      .map((device) => DeviceView(device, report: widget.report))
       .map((w) => Padding(padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0), child: w))
       .toList();
 
@@ -82,7 +78,7 @@ class ReportViewState extends State<ReportView> {
           body: SingleChildScrollView(
               child: Column(children: [
         header(context),
-        FilterButtonBar(widget.settings),
+        FilterButtonBar(),
         Column(children: deviceTileList(context)),
       ])));
 }

@@ -40,12 +40,13 @@ class Device {
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
-  Set<Datum> dataPoints(Settings settings) => _dataPoints
-      .where((datum) => kDebugMode ? true : datum.time.isAfter(DateTime.now().subtract(settings.windowDuration())))
+  Set<Datum> dataPoints() => _dataPoints
+      .where(
+          (datum) => kDebugMode ? true : datum.time.isAfter(DateTime.now().subtract(Settings.shared.windowDuration())))
       .where((datum) => datum.location == null
           ? true
-          : !settings.safeZones
-              .any((safeLocation) => distanceBetween(datum.location!, safeLocation) < settings.distanceThreshold()))
+          : !Settings.shared.safeZones.any(
+              (safeLocation) => distanceBetween(datum.location!, safeLocation) < Settings.shared.distanceThreshold()))
       .toSet();
 
   void addDatum(LatLng? location, int rssi) => addActualDatum(Datum(location, rssi));
@@ -66,16 +67,16 @@ class Device {
   Iterable<String> manufacturers() =>
       manufacturer.map((e) => company_identifiers[e.toRadixString(16).toUpperCase().padLeft(4, "0")] ?? "Unknown");
 
-  Set<LatLng> locations(Settings settings) => this
-      .dataPoints(settings)
+  Set<LatLng> locations() => this
+      .dataPoints()
       .where((dataPoint) => dataPoint.location != null)
       .map((dataPoint) => dataPoint.location!)
       .toSet();
 
-  List<Path> paths(Settings settings) {
+  List<Path> paths() {
     List<Path> paths = <Path>[];
     List<PathComponent> dataPoints = this
-        .dataPoints(settings)
+        .dataPoints()
         .where((dataPoint) => dataPoint.location != null)
         .map((datum) => PathComponent(datum.time, datum.location!))
         .sorted((a, b) => a.time.compareTo(b.time));
@@ -86,7 +87,7 @@ class Device {
       DateTime time1 = paths.isEmpty ? DateTime(1970) : paths.last.last.time;
       DateTime time2 = curr.time;
       Duration time = time2.difference(time1);
-      if (time < settings.timeThreshold()) {
+      if (time < Settings.shared.timeThreshold()) {
         paths.last.add(curr);
       } else {
         paths.add([curr]);

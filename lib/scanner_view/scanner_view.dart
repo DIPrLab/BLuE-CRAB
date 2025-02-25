@@ -21,10 +21,9 @@ part 'buttons.dart';
 part 'scanner.dart';
 
 class ScannerView extends StatefulWidget {
-  ScannerView(Report this.report, Settings this.settings, {super.key});
+  ScannerView(Report this.report, {super.key});
 
   Report report;
-  final Settings settings;
 
   @override
   ScannerViewState createState() => ScannerViewState();
@@ -46,7 +45,7 @@ class ScannerViewState extends State<ScannerView> {
   late Stream<DateTime> _timeStream;
 
   void enableLocationStream() => positionStream = Geolocator.getPositionStream(
-          locationSettings: Controllers.getLocationSettings(widget.settings.scanDistance().toInt()))
+          locationSettings: Controllers.getLocationSettings(Settings.shared.scanDistance().toInt()))
       .listen((Position? position) => setState(() => location = position?.toLatLng()));
 
   void disableLocationStream() {
@@ -58,7 +57,7 @@ class ScannerViewState extends State<ScannerView> {
   void initState() {
     super.initState();
 
-    widget.settings.locationEnabled ? enableLocationStream() : disableLocationStream();
+    Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream();
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
       devices = results;
@@ -67,7 +66,7 @@ class ScannerViewState extends State<ScannerView> {
               d.advertisementData.manufacturerData.keys.toList()),
           location,
           d.rssi));
-      if (widget.settings.autoConnect) {
+      if (Settings.shared.autoConnect) {
         results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       }
       if (mounted) {
@@ -79,9 +78,8 @@ class ScannerViewState extends State<ScannerView> {
 
     isScanningSubscription = FlutterBluePlus.isScanning.listen((state) => setState(() => isScanning = state));
 
-    _timeStream = Stream.periodic(widget.settings.scanTime(), (int x) => DateTime.now());
-    timeStreamSubscription =
-        _timeStream.listen((currentTime) => isScanning ? widget.report.refreshCache(widget.settings) : null);
+    _timeStream = Stream.periodic(Settings.shared.scanTime(), (int x) => DateTime.now());
+    timeStreamSubscription = _timeStream.listen((currentTime) => isScanning ? widget.report.refreshCache() : null);
   }
 
   @override

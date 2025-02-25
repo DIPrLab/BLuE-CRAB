@@ -5,14 +5,12 @@ import 'package:blue_crab/styles/styles.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:map/map.dart';
-import 'package:blue_crab/settings.dart';
 
 class DeviceMapView extends StatefulWidget {
   final Device device;
   final Report report;
-  final Settings settings;
 
-  DeviceMapView(Settings this.settings, {super.key, required this.device, required this.report});
+  DeviceMapView({super.key, required this.device, required this.report});
 
   @override
   DeviceMapViewState createState() => DeviceMapViewState();
@@ -24,8 +22,7 @@ class DeviceMapViewState extends State<DeviceMapView> {
 
   @override
   Widget build(BuildContext context) => Stack(children: [
-        MapView(widget.device, widget.settings,
-            MapController(location: middlePoint(widget.device.locations(widget.settings).toList()))),
+        MapView(widget.device, MapController(location: middlePoint(widget.device.locations().toList()))),
         BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithBackground),
       ]);
 }

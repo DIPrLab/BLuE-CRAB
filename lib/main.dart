@@ -35,7 +35,6 @@ class HomePage extends StatefulWidget {
   HomePage({super.key});
 
   Report report = Report({});
-  late Settings settings;
 
   @override
   _HomePage createState() => _HomePage();
@@ -57,7 +56,7 @@ class _HomePage extends State<HomePage> {
 
   Future<void> _loadData() async {
     readReport().then((savedReport) => widget.report.combine(savedReport));
-    readSettings().then((settings) => widget.settings = settings);
+    readSettings();
   }
 
   @override
@@ -66,7 +65,7 @@ class _HomePage extends State<HomePage> {
           debugShowCheckedModeBanner: false,
           home: SafeArea(
               child: _adapterState == BluetoothAdapterState.on
-                  ? ScannerView(widget.report, widget.settings)
+                  ? ScannerView(widget.report)
                   : BluetoothOffView(adapterState: _adapterState)),
           theme: Themes.darkMode));
 }

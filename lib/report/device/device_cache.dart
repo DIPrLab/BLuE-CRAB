@@ -2,14 +2,14 @@ part of 'device.dart';
 
 extension DeviceCache on Device {
   void updateStatistics() => [
-        () => distanceTravelled = _distanceTravelled(Settings.shared),
-        () => timeTravelled = _timeTravelled(Settings.shared),
-        () => incidence = _incidence(Settings.shared),
-        () => areas = _areas(Settings.shared),
+        () => distanceTravelled = _distanceTravelled(),
+        () => timeTravelled = _timeTravelled(),
+        () => incidence = _incidence(),
+        () => areas = _areas(),
       ].forEach((f) => f());
 
-  List<Duration> _timeClusterPrefix(Settings settings) => this
-      .dataPoints(settings)
+  List<Duration> _timeClusterPrefix() => this
+      .dataPoints()
       .map((datum) => datum.time)
       .sorted()
       .mapOrderedPairs((pair) => pair.$2.difference(pair.$1))

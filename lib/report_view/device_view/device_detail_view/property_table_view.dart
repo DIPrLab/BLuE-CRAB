@@ -7,10 +7,9 @@ import 'package:blue_crab/report/report.dart';
 class PropertyTable extends StatelessWidget {
   final Device device;
   final Report report;
-  final Settings settings;
   List<DataRow> rows = [];
 
-  PropertyTable(this.device, this.report, this.settings, {super.key}) {
+  PropertyTable(this.device, this.report, {super.key}) {
     rows.add(Row("UUID", device.id.toString()));
     if (!device.name.isEmpty) {
       rows.add(Row("Name", device.name));
@@ -21,7 +20,7 @@ class PropertyTable extends StatelessWidget {
     if (!device.manufacturer.isEmpty) {
       rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
-    rows.add(Row("Risk Score", report.riskScore(device, settings).toString()));
+    rows.add(Row("Risk Score", report.riskScore(device).toString()));
     rows.add(Row("Time Travelled", device.timeTravelled.toString()));
     rows.add(Row("Distance Travelled", device.distanceTravelled.toString()));
     rows.add(Row("Incidence", device.incidence.toString()));

@@ -9,7 +9,7 @@ extension Scanner on ScannerViewState {
   // so instead we only ask for 1/8 of them
   Future startScan() async => FlutterBluePlus.startScan(
           continuousUpdates: true, removeIfGone: Duration(seconds: 1), continuousDivisor: Platform.isAndroid ? 8 : 1)
-      .then((_) => widget.settings.locationEnabled ? enableLocationStream() : disableLocationStream());
+      .then((_) => Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream());
 
   Future stopScan() async => FlutterBluePlus.stopScan().then((_) => disableLocationStream());
 

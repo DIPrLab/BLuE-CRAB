@@ -25,9 +25,8 @@ double clamp(double x, double min, double max) => x < min
 class MapView extends StatefulWidget {
   final Device device;
   final MapController controller;
-  final Settings settings;
 
-  MapView(this.device, this.settings, this.controller, {super.key});
+  MapView(this.device, this.controller, {super.key});
 
   @override
   MapViewState createState() => MapViewState();
@@ -75,9 +74,9 @@ class MapViewState extends State<MapView> {
 
                       return CachedNetworkImage(imageUrl: mapbox(z, x, y), fit: BoxFit.cover);
                     }),
-                    CustomPaint(painter: PolylinePainter(transformer, widget.device, widget.settings)),
+                    CustomPaint(painter: PolylinePainter(transformer, widget.device)),
                     ...widget.device
-                        .paths(widget.settings)
+                        .paths()
                         .map((e) => e.first.location == e.last.location
                             ? {e.first.location}
                             : {e.first.location, e.last.location})
@@ -89,10 +88,9 @@ class MapViewState extends State<MapView> {
 }
 
 class PolylinePainter extends CustomPainter {
-  PolylinePainter(this.transformer, this.device, this.settings);
+  PolylinePainter(this.transformer, this.device);
 
   Device device;
-  Settings settings;
   final MapTransformer transformer;
 
   Offset generateOffsetPosition(Position p) => transformer.toOffset(LatLng.degree(p.latitude, p.longitude));
@@ -100,7 +98,7 @@ class PolylinePainter extends CustomPainter {
   Offset generateOffsetLatLng(LatLng coordinate) => transformer.toOffset(coordinate);
 
   @override
-  void paint(Canvas canvas, Size size) => device.paths(settings).forEach((Path path) {
+  void paint(Canvas canvas, Size size) => device.paths().forEach((Path path) {
         path.forEachMappedOrderedPair(
             (pc) => generateOffsetLatLng(pc.location),
             ((offsets) => canvas.drawLine(

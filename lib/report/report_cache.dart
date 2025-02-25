@@ -1,39 +1,36 @@
 part of 'report.dart';
 
 extension Cache on Report {
-  void refreshCache(Settings settings) {
-    updateDeviceStatistics(settings);
-    updateStatistics(_data.entries.map((entry) => entry.value), settings);
+  void refreshCache() {
+    updateDeviceStatistics();
+    updateStatistics(_data.entries.map((entry) => entry.value));
     lastUpdated = DateTime.now();
   }
 
-  void updateDeviceStatistics(Settings settings) {
+  void updateDeviceStatistics() {
     Iterable<Device> devices =
         Settings.shared.recentlyChanged ? _data.values : _data.values.where((d) => d.lastUpdated.isAfter(lastUpdated));
     devices.forEach((d) => d.updateStatistics());
     Settings.shared.recentlyChanged = false;
   }
 
-  void updateStatistics(Iterable<Device> devices, Settings settings) {
-    timeTravelledStats = _timeTravelledStats(devices, settings);
-    distanceTravelledStats = _distanceTravelledStats(devices, settings);
-    incidenceStats = _incidenceStats(devices, settings);
-    areaStats = _areaStats(devices, settings);
-    riskScoreStats = _riskScoreStats(devices, settings);
+  void updateStatistics(Iterable<Device> devices) {
+    timeTravelledStats = _timeTravelledStats(devices);
+    distanceTravelledStats = _distanceTravelledStats(devices);
+    incidenceStats = _incidenceStats(devices);
+    areaStats = _areaStats(devices);
+    riskScoreStats = _riskScoreStats(devices);
   }
 
-  Stats _areaStats(Iterable<Device> devices, Settings settings) =>
-      Stats.fromData(devices.map((device) => device.areas.length));
+  Stats _areaStats(Iterable<Device> devices) => Stats.fromData(devices.map((device) => device.areas.length));
 
-  Stats _incidenceStats(Iterable<Device> devices, Settings settings) =>
-      Stats.fromData(devices.map((device) => device.incidence));
+  Stats _incidenceStats(Iterable<Device> devices) => Stats.fromData(devices.map((device) => device.incidence));
 
-  Stats _timeTravelledStats(Iterable<Device> devices, Settings settings) =>
+  Stats _timeTravelledStats(Iterable<Device> devices) =>
       Stats.fromData(devices.map((device) => device.timeTravelled).map((duration) => duration.inSeconds));
 
-  Stats _distanceTravelledStats(Iterable<Device> devices, Settings settings) =>
+  Stats _distanceTravelledStats(Iterable<Device> devices) =>
       Stats.fromData(devices.map((device) => device.distanceTravelled));
 
-  Stats _riskScoreStats(Iterable<Device> devices, Settings settings) =>
-      Stats.fromData(devices.map((device) => riskScore(device, settings)));
+  Stats _riskScoreStats(Iterable<Device> devices) => Stats.fromData(devices.map((device) => riskScore(device)));
 }

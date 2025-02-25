@@ -3,9 +3,7 @@ import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/styles/themes.dart';
 
 class FilterButtonBar extends StatefulWidget {
-  FilterButtonBar(Settings this.settings, {super.key});
-
-  final Settings settings;
+  FilterButtonBar({super.key});
 
   @override
   FilterButtonBarState createState() => FilterButtonBarState();
@@ -18,16 +16,16 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   void initState() {
     super.initState();
     filterButtons = [
-      WidgetButtonProperties("Time w/ User", () => widget.settings.enableTimeWithUserMetric,
-          () => widget.settings.enableTimeWithUserMetric = !widget.settings.enableTimeWithUserMetric),
-      WidgetButtonProperties("Areas", () => widget.settings.enableAreasMetric,
-          () => widget.settings.enableAreasMetric = !widget.settings.enableAreasMetric),
-      WidgetButtonProperties("Distance w/ User", () => widget.settings.enableDistanceWithUserMetric,
-          () => widget.settings.enableDistanceWithUserMetric = !widget.settings.enableDistanceWithUserMetric),
-      WidgetButtonProperties("Incidence", () => widget.settings.enableIncidenceMetric,
-          () => widget.settings.enableIncidenceMetric = !widget.settings.enableIncidenceMetric),
-      WidgetButtonProperties("Proximity", () => widget.settings.enableRSSIMetric,
-          () => widget.settings.enableRSSIMetric = !widget.settings.enableRSSIMetric),
+      WidgetButtonProperties("Time w/ User", () => Settings.shared.enableTimeWithUserMetric,
+          () => Settings.shared.enableTimeWithUserMetric = !Settings.shared.enableTimeWithUserMetric),
+      WidgetButtonProperties("Areas", () => Settings.shared.enableAreasMetric,
+          () => Settings.shared.enableAreasMetric = !Settings.shared.enableAreasMetric),
+      WidgetButtonProperties("Distance w/ User", () => Settings.shared.enableDistanceWithUserMetric,
+          () => Settings.shared.enableDistanceWithUserMetric = !Settings.shared.enableDistanceWithUserMetric),
+      WidgetButtonProperties("Incidence", () => Settings.shared.enableIncidenceMetric,
+          () => Settings.shared.enableIncidenceMetric = !Settings.shared.enableIncidenceMetric),
+      WidgetButtonProperties("Proximity", () => Settings.shared.enableRSSIMetric,
+          () => Settings.shared.enableRSSIMetric = !Settings.shared.enableRSSIMetric),
     ];
     reorder([]);
   }
@@ -44,11 +42,11 @@ class FilterButtonBarState extends State<FilterButtonBar> {
             : 1);
   }
 
-  Widget filterButton(WidgetButtonProperties props, Settings settings) => TextButton(
+  Widget filterButton(WidgetButtonProperties props) => TextButton(
       child: Text(props.label, style: TextStyle(color: Colors.white)),
       onPressed: () => setState(() {
             props.onPressed();
-            widget.settings.save();
+            Settings.shared.save();
             reorder([props]);
           }),
       style: TextButton.styleFrom(
@@ -65,7 +63,7 @@ class FilterButtonBarState extends State<FilterButtonBar> {
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
               children: filterButtons
-                  .map((props) => filterButton(props, widget.settings))
+                  .map((props) => filterButton(props))
                   .expand((e) => e != filterButtons.last ? [e, SizedBox(width: 12.0)] : [e])
                   .toList())));
 }

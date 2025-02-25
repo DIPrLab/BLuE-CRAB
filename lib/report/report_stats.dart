@@ -2,7 +2,7 @@ part of 'report.dart';
 
 extension Statistics on Report {
   // TODO: Remove fold method and replace with device caching
-  num riskScore(Device device, Settings settings) => [
+  num riskScore(Device device) => [
         (device.timeTravelled.inSeconds, timeTravelledStats),
         (device.incidence, incidenceStats),
         (device.areas.length, areaStats),
