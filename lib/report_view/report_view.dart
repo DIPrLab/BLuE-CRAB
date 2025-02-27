@@ -26,7 +26,7 @@ class ReportViewState extends State<ReportView> {
 
   void sort(int sortMethod(Device a, Device b)) => setState(() => devices = widget.report
       .devices()
-      .where((device) => widget.report.riskScore(device) > widget.report.riskScoreStats.tukeyExtremeUpperLimit)
+      .where((device) => widget.report.riskScore(device) > widget.report.riskScoreStats.tukeyMildUpperLimit)
       .sorted(sortMethod)
       .reversed
       .toList());

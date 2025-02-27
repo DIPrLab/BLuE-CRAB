@@ -12,7 +12,9 @@ class DeviceView extends StatelessWidget {
   DeviceView(Device this.device, {super.key, required this.report});
 
   Widget Tile(BuildContext context) => ListTile(
-      leading: CircleAvatar(backgroundColor: colors.altText, foregroundColor: colors.altText),
+      leading: (report.riskScore(device) > report.riskScoreStats.tukeyExtremeUpperLimit)
+          ? CircleAvatar(backgroundColor: colors.warnText, foregroundColor: colors.warnText)
+          : CircleAvatar(backgroundColor: colors.altText, foregroundColor: colors.altText),
       title: Text(device.deviceLabel() == device.id ? "" : device.deviceLabel(), style: TextStyles.title2),
       subtitle: Text(device.id, maxLines: 2, overflow: TextOverflow.ellipsis),
       trailing: Icon(Icons.keyboard_arrow_right),
