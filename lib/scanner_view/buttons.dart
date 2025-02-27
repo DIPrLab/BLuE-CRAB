@@ -27,7 +27,9 @@ extension Buttons on ScannerViewState {
   Widget reportViewerButton() => FloatingActionButton.large(
       heroTag: "Report Viewer Button",
       onPressed: () {
-        widget.report.refreshCache();
+        if (!updating) {
+          widget.report.refreshCache();
+        }
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
       },
@@ -38,7 +40,9 @@ extension Buttons on ScannerViewState {
           heroTag: "Stop Scanning Button",
           onPressed: () {
             stopScan();
-            widget.report.refreshCache();
+            if (!updating) {
+              widget.report.refreshCache();
+            }
             write(widget.report);
             if ((Platform.isAndroid || Platform.isIOS)) {
               Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);

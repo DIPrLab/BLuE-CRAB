@@ -35,6 +35,7 @@ class ScannerViewState extends State<ScannerView> {
   late StreamSubscription<Position> positionStream;
   Offset? dragStart;
   double scaleStart = 1.0;
+  bool updating = false;
 
   bool isScanning = false;
   late StreamSubscription<bool> isScanningSubscription;
@@ -80,8 +81,16 @@ class ScannerViewState extends State<ScannerView> {
     isScanningSubscription = FlutterBluePlus.isScanning.listen((state) => setState(() => isScanning = state));
 
     _timeStream = Stream.periodic(Settings.shared.scanTime(), (int x) => DateTime.now());
-    timeStreamSubscription = _timeStream
-        .listen((currentTime) => isScanning && !Settings.shared.devMode ? widget.report.refreshCache() : null);
+    timeStreamSubscription = _timeStream.listen((currentTime) {
+      if (isScanning && !Settings.shared.devMode && !updating) {
+        updating = true;
+        widget.report.refreshCache();
+        updating = false;
+      } else {
+        print("Skipping this update, already one in progress");
+      }
+      ;
+    });
   }
 
   @override
