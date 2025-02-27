@@ -47,18 +47,29 @@ class SettingsViewState extends State<SettingsView> {
           child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
+                BackButton(
+                    onPressed: (() {
+                      Settings.shared.save();
+                      Navigator.pop(context);
+                    }),
+                    style: AppButtonStyle.buttonWithoutBackground),
                 header("Discover Services"),
                 SwitchListTile(
                     title: Text("AutoConnect ${Settings.shared.autoConnect ? "On" : "Off"}"),
                     value: Settings.shared.autoConnect,
-                    onChanged: (bool value) => setState(() => Settings.shared.autoConnect = value),
+                    onChanged: ((bool value) {
+                      setState(() => Settings.shared.autoConnect = value);
+                      Settings.shared.save();
+                    }),
                     secondary: Settings.shared.autoConnect ? Icon(Icons.bluetooth) : Icon(Icons.bluetooth_disabled)),
                 header("Location Services"),
                 SwitchListTile(
                     title: Text("Location ${Settings.shared.locationEnabled ? "En" : "Dis"}abled"),
                     value: Settings.shared.locationEnabled,
-                    onChanged: (bool value) => setState(() => Settings.shared.locationEnabled = value),
+                    onChanged: ((bool value) {
+                      setState(() => Settings.shared.locationEnabled = value);
+                      Settings.shared.save();
+                    }),
                     secondary: Settings.shared.locationEnabled
                         ? Icon(Icons.location_searching)
                         : Icon(Icons.location_disabled)),
@@ -102,6 +113,7 @@ class SettingsViewState extends State<SettingsView> {
                     onChanged: ((val) {
                       setState(() => Settings.shared.devMode = val);
                       widget.notify?.call();
+                      Settings.shared.save();
                     }),
                     secondary: Settings.shared.devMode ? Icon(Icons.developer_board) : Icon(Icons.developer_board_off)),
               ]))));
