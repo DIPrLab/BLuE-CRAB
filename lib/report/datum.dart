@@ -9,9 +9,12 @@ part 'datum.g.dart';
 class Datum {
   LatLng? location;
   int rssi;
-  DateTime time = DateTime.now();
+  late DateTime time;
 
-  Datum(this.location, this.rssi);
+  Datum(this.location, this.rssi) {
+    DateTime now = DateTime.now();
+    time = DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
+  }
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
   Map<String, dynamic> toJson() => _$DatumToJson(this);
 }
