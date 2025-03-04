@@ -62,20 +62,24 @@ class Settings {
       });
 
   void save() => SharedPreferences.getInstance().then((prefs) {
-        prefs.setBool("devMode", devMode);
-        prefs.setBool("autoConnect", autoConnect);
-        prefs.setBool("locationEnabled", locationEnabled);
+        [
+          ("devMode", devMode),
+          ("autoConnect", autoConnect),
+          ("locationEnabled", locationEnabled),
+          ("enableAreasMetric", enableAreasMetric),
+          ("enableDistanceWithUserMetric", enableDistanceWithUserMetric),
+          ("enableIncidenceMetric", enableIncidenceMetric),
+          ("enableRSSIMetric", enableRSSIMetric),
+          ("enableTimeWithUserMetric", enableTimeWithUserMetric),
+        ].forEach((s) => prefs.setBool(s.$1, s.$2));
+
+        [
+          ("windowDurationValue", windowDurationValue),
+          ("timeThresholdValue", timeThresholdValue),
+          ("distanceThresholdValue", distanceThresholdValue),
+        ].forEach((s) => prefs.setDouble(s.$1, s.$2));
+
         prefs.setStringList("safeZones",
             safeZones.map((z) => "${z.latitude.degrees.toString()},${z.longitude.degrees.toString()}").toList());
-
-        prefs.setBool("enableAreasMetric", enableAreasMetric);
-        prefs.setBool("enableDistanceWithUserMetric", enableDistanceWithUserMetric);
-        prefs.setBool("enableIncidenceMetric", enableIncidenceMetric);
-        prefs.setBool("enableRSSIMetric", enableRSSIMetric);
-        prefs.setBool("enableTimeWithUserMetric", enableTimeWithUserMetric);
-
-        prefs.setDouble("windowDurationValue", windowDurationValue);
-        prefs.setDouble("timeThresholdValue", timeThresholdValue);
-        prefs.setDouble("distanceThresholdValue", distanceThresholdValue);
       });
 }
