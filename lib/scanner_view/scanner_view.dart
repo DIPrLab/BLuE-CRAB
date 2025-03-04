@@ -84,8 +84,6 @@ class ScannerViewState extends State<ScannerView> {
         updating = true;
         widget.report.refreshCache();
         updating = false;
-      } else {
-        print("Skipping this update, already one in progress");
       }
     });
   }
