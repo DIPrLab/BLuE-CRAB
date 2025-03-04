@@ -39,11 +39,10 @@ extension Buttons on ScannerViewState {
       ? FloatingActionButton.large(
           heroTag: "Stop Scanning Button",
           onPressed: () {
-            stopScan();
+            stopScan().then((_) => write(widget.report));
             if (!updating) {
               widget.report.refreshCache();
             }
-            write(widget.report);
             if ((Platform.isAndroid || Platform.isIOS)) {
               Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
             }
