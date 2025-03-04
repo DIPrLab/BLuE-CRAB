@@ -40,7 +40,6 @@ class ScannerViewState extends State<ScannerView> {
   bool isScanning = false;
   late StreamSubscription<bool> isScanningSubscription;
   late StreamSubscription<List<ScanResult>> scanResultsSubscription;
-  List<ScanResult> devices = [];
 
   late StreamSubscription<DateTime> timeStreamSubscription;
 
@@ -62,7 +61,6 @@ class ScannerViewState extends State<ScannerView> {
     Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream();
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
-      devices = results;
       results.forEach((d) => widget.report.addDatumToDevice(
           Device(d.device.remoteId.toString(), d.advertisementData.advName, d.device.platformName,
               d.advertisementData.manufacturerData.keys.toList()),
