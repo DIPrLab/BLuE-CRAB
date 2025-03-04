@@ -49,11 +49,9 @@ class Device {
               (safeLocation) => distanceBetween(datum.location!, safeLocation) < Settings.shared.distanceThreshold()))
       .toSet();
 
-  void addDatum(LatLng? location, int rssi) => addActualDatum(Datum(location, rssi));
-
-  void addActualDatum(Datum datum) {
+  void addDatum(LatLng? location, int rssi) {
     lastUpdated = DateTime.now();
-    _dataPoints.add(datum);
+    _dataPoints.add(Datum(location, rssi));
   }
 
   String deviceLabel() => !this.name.isEmpty
