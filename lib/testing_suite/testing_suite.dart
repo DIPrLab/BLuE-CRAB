@@ -1,10 +1,26 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/report/datum.dart';
 import 'package:blue_crab/settings.dart';
+import 'package:blue_crab/filesystem/filesystem.dart';
+
+class SQLData {
+  List<String> _headers;
+  List<List<num>> _rows = [];
+
+  SQLData(this._headers);
+
+  void addRow(List<num> row) => _rows.add(row);
+  List<List<num>> getRows() => _rows;
+
+  String toString() => [_headers.join(","), _rows.map((row) => row.join(",")).join("\n")].join("\n");
+}
 
 class TestingSuite {
-  final Report report;
+  Report report;
   Set<Device> flaggedDevices = {};
   Map<DateTime, Set<Device>> flaggedDevicesWithTimeStamps = {};
   late List<DateTime> timeStamps;
@@ -34,12 +50,49 @@ class TestingSuite {
     return timestampSet.toList()..sort();
   }
 
-  void test() {
+  void test() async {
+    Directory dir = await localFileDirectory;
+    List<(File, File)> files = [
+      "bledoubt_log_a",
+      "bledoubt_log_b",
+      "bledoubt_log_c",
+      "bledoubt_log_d",
+      "bledoubt_log_e",
+      "bledoubt_log_f",
+      "bledoubt_log_g",
+      "bledoubt_log_h",
+      "bledoubt_log_i",
+      "bledoubt_log_j",
+      "bledoubt_log_k",
+      "bledoubt_log_l",
+      "bledoubt_log_m",
+      "bledoubt_log_n",
+    ]
+        .map((filename) => ((
+              File([dir.path, filename + ".json"].join("/")),
+              File([dir.path, filename + "_results" + ".csv"].join("/"))
+            )))
+        .toList();
+    files.forEach((testCase) => runTest(testCase.$1, testCase.$2));
+  }
+
+  void runTest(File inputFile, File outputFile) async {
+    String jsonData = await inputFile.readAsString();
+    // print(jsonData);
+    this.report = Report.fromJson(jsonDecode(jsonData));
     DateTime init = timeStamps.first;
     DateTime start = init.add(Settings.shared.minScanDuration);
     DateTime end = timeStamps.last;
+    SQLData sql = SQLData([
+      "SECONDS_SINCE_INIT",
+      "DEVICE_COUNT",
+      "DATAPOINT_COUNT",
+      "RISKY_DEVICE_COUNT",
+      "HIGH_RISK_DEVICE_COUNT",
+      "LOW_RISK_DEVICE_COUNT"
+    ]);
     timeStamps = generateTimestamps(start, end, Settings.shared.scanInterval);
-    print(timeStamps.toString());
+    // print(timeStamps.toString());
     timeStamps.forEach((ts) {
       Map<String, Device> deviceEntries = {};
       Set<Device> filteredDevices =
@@ -52,30 +105,49 @@ class TestingSuite {
         return;
       }
       Report r = Report(deviceEntries);
+      // Stopwatch sw = Stopwatch()..start();
       r.refreshCache();
-      Set<Device> devicesToFlag = filteredDevices.where((d) {
-        bool a = !flaggedDevices.contains(d);
-        bool b = r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit;
-        return a && b;
-      }).toSet();
-      if (!devicesToFlag.isEmpty) {
-        if (devicesToFlag.length > 10) {
-          Duration d = ts.difference(init);
-          print("Scanned " +
-              devicesToFlag.length.toString() +
-              " devices after " +
-              d.inHours.toString() +
-              " hours and " +
-              (d - Duration(hours: d.inHours)).inMinutes.toString() +
-              " minutes");
-        }
-        flaggedDevices.addAll(devicesToFlag);
-        flaggedDevicesWithTimeStamps[ts] = devicesToFlag;
-      }
+      // sw.stop();
+      sql.addRow([
+        // Time since starting scan
+        ts.difference(init).inSeconds,
+        // Number of devices in Report
+        r.devices().length,
+        // Number of data points in Report
+        r.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b),
+        // Number of risky devices
+        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length,
+        // Number of high-risk devices
+        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
+        // Number of low-risk devices
+        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length -
+            r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
+      ]);
+      // Set<Device> devicesToFlag = filteredDevices.where((d) {
+      //   bool a = !flaggedDevices.contains(d);
+      //   bool b = r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit;
+      //   return a && b;
+      // }).toSet();
+      // if (!devicesToFlag.isEmpty) {
+      //   if (devicesToFlag.length > 10) {
+      //     Duration d = ts.difference(init);
+      //     print("Scanned " +
+      //         devicesToFlag.length.toString() +
+      //         " devices after " +
+      //         d.inHours.toString() +
+      //         " hours and " +
+      //         (d - Duration(hours: d.inHours)).inMinutes.toString() +
+      //         " minutes");
+      //   }
+      //   flaggedDevices.addAll(devicesToFlag);
+      //   flaggedDevicesWithTimeStamps[ts] = devicesToFlag;
+      // }
     });
-    flaggedDevicesWithTimeStamps.forEach(
-        (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
-    print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
+    // flaggedDevicesWithTimeStamps.forEach(
+    //     (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
+    // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
+    print("Printing " + sql.getRows().length.toString());
+    outputFile.writeAsString(sql.toString());
   }
 }
 

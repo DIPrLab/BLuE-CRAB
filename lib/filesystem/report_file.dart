@@ -1,6 +1,6 @@
 part of "package:blue_crab/filesystem/filesystem.dart";
 
-Future<File> get _localReportFile async => _localFileDirectory.then((dir) => File("${dir.path}/reports.json"));
+Future<File> get _localReportFile async => localFileDirectory.then((dir) => File("${dir.path}/reports.json"));
 
 void write(Report report) async => _localReportFile.then((file) => file.writeAsString("${report.toJson().toString()}"));
 

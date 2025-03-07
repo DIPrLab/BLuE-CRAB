@@ -12,7 +12,7 @@ import 'package:flutter/services.dart' show rootBundle;
 part "package:blue_crab/filesystem/report_file.dart";
 part "package:blue_crab/filesystem/battery_logs.dart";
 
-Future<Directory> get _localFileDirectory async => await getApplicationDocumentsDirectory();
+Future<Directory> get localFileDirectory async => await getApplicationDocumentsDirectory();
 
 Future<Settings> readSettings() async {
   Settings settings = Settings();

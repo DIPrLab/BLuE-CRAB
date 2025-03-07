@@ -31,8 +31,8 @@ class Settings {
   late double distanceThresholdValue;
 
   bool recentlyChanged = false;
-  Duration minScanDuration = Duration(minutes: 10);
-  Duration scanInterval = Duration(minutes: 10);
+  Duration minScanDuration = Duration(minutes: 1);
+  Duration scanInterval = Duration(minutes: 1);
 
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
   Duration scanTime() => Duration(seconds: 10);
