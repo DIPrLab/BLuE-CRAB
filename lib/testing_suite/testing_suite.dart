@@ -48,35 +48,33 @@ class TestingSuite {
       .toList()
     ..sort();
 
-  void test() async {
-    Directory dir = await localFileDirectory;
-    List<(File, File)> files = [
-      "bledoubt_log_a",
-      "bledoubt_log_b",
-      "bledoubt_log_c",
-      "bledoubt_log_d",
-      "bledoubt_log_e",
-      "bledoubt_log_f",
-      "bledoubt_log_g",
-      "bledoubt_log_h",
-      "bledoubt_log_i",
-      "bledoubt_log_j",
-      "bledoubt_log_k",
-      "bledoubt_log_l",
-      "bledoubt_log_m",
-      "bledoubt_log_n",
-    ]
-        .map((filename) => ((
-              File([dir.path, filename + ".json"].join("/")),
-              File([dir.path, filename + "_results" + ".csv"].join("/"))
-            )))
-        .toList();
-    files.forEach((testCase) => runTest(testCase.$1, testCase.$2));
+  void test() {
+    localFileDirectory.then((dir) => [
+          "bledoubt_log_a",
+          "bledoubt_log_b",
+          "bledoubt_log_c",
+          "bledoubt_log_d",
+          "bledoubt_log_e",
+          "bledoubt_log_f",
+          "bledoubt_log_g",
+          "bledoubt_log_h",
+          "bledoubt_log_i",
+          "bledoubt_log_j",
+          "bledoubt_log_k",
+          "bledoubt_log_l",
+          "bledoubt_log_m",
+          "bledoubt_log_n",
+        ]
+            .map((filename) => (
+                  File([dir.path, "${filename}.json"].join("/")),
+                  File([dir.path, "${filename}_results.csv"].join("/")),
+                  File([dir.path, "${filename}_log.txt"].join("/"))
+                ))
+            .forEach((fileSet) => runTest(fileSet.$1, fileSet.$2, fileSet.$3)));
   }
 
-  void runTest(File inputFile, File outputFile) async {
+  void runTest(File inputFile, File csvFile, File logFile) async {
     String jsonData = await inputFile.readAsString();
-    // print(jsonData);
     this.report = Report.fromJson(jsonDecode(jsonData));
     DateTime init = timeStamps.first;
     DateTime start = init.add(Settings.shared.minScanDuration);
@@ -145,7 +143,7 @@ class TestingSuite {
     //     (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
     // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
     print("Printing " + sql.getRows().length.toString());
-    outputFile.writeAsString(sql.toString());
+    csvFile.writeAsString(sql.toString());
   }
 }
 
