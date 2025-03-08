@@ -3,15 +3,14 @@ import 'dart:io';
 
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
-import 'package:blue_crab/report/datum.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
 
-class SQLData {
+class CSVData {
   List<String> _headers;
   List<List<num>> _rows = [];
 
-  SQLData(this._headers);
+  CSVData(this._headers);
 
   void addRow(List<num> row) => _rows.add(row);
   List<List<num>> getRows() => _rows;
@@ -20,14 +19,14 @@ class SQLData {
 }
 
 class TestingSuite {
-  Report report;
-  Set<Device> flaggedDevices = {};
-  Map<DateTime, Set<Device>> flaggedDevicesWithTimeStamps = {};
-  late List<DateTime> timeStamps;
+  // Report report;
+  // Set<Device> flaggedDevices = {};
+  // Map<DateTime, Set<Device>> flaggedDevicesWithTimeStamps = {};
+  // late List<DateTime> timeStamps;
 
-  TestingSuite(this.report) {
-    timeStamps = getTimestamps();
-  }
+  // TestingSuite(this.report) {
+  //   timeStamps = getTimestamps();
+  // }
 
   List<DateTime> generateTimestamps(DateTime start, DateTime end, Duration interval) {
     List<DateTime> timestamps = [start];
@@ -41,7 +40,7 @@ class TestingSuite {
     return timestamps;
   }
 
-  List<DateTime> getTimestamps() => report
+  List<DateTime> getTimestamps(Report report) => report
       .devices()
       .map((d) => d.dataPoints(testing: true).map((d) => d.time).toSet())
       .fold(Set<DateTime>(), (a, b) => a..addAll(b))
@@ -73,12 +72,8 @@ class TestingSuite {
             .forEach((fileSet) => runTest(fileSet.$1, fileSet.$2, fileSet.$3)));
   }
 
-  void runTest(File inputFile, File csvFile, File logFile) async {
-    this.report = Report.fromJson(jsonDecode(await inputFile.readAsString()));
-    DateTime init = timeStamps.first;
-    DateTime start = init.add(Settings.shared.minScanDuration);
-    DateTime end = timeStamps.last;
-    SQLData sql = SQLData([
+  void runTest(File inputFile, File csvFile, File logFile) {
+    CSVData csv = CSVData([
       "SECONDS_SINCE_INIT",
       "DEVICE_COUNT",
       "DATAPOINT_COUNT",
@@ -86,71 +81,73 @@ class TestingSuite {
       "HIGH_RISK_DEVICE_COUNT",
       "LOW_RISK_DEVICE_COUNT"
     ]);
-    timeStamps = generateTimestamps(start, end, Settings.shared.scanInterval);
-    // print(timeStamps.toString());
-    timeStamps.forEach((ts) {
-      Map<String, Device> deviceEntries = {};
-      Set<Device> filteredDevices =
-          report.devices().where((d) => d.dataPoints(testing: true).any((dp) => dp.time.isBefore(ts))).toSet();
-      filteredDevices.forEach((d) {
-        Set<Datum> dataPoints = d.dataPoints(testing: true).where((dp) => dp.time.isBefore(ts)).toSet();
-        deviceEntries[d.id] = Device(d.id, d.name, d.platformName, d.manufacturer, dataPoints: dataPoints);
-      });
-      if (deviceEntries.length < 2) {
-        return;
-      }
-      Report r = Report(deviceEntries);
-      // Stopwatch sw = Stopwatch()..start();
-      r.refreshCache();
-      // sw.stop();
-      sql.addRow([
-        // Time since starting scan
-        ts.difference(init).inSeconds,
-        // Number of devices in Report
-        r.devices().length,
-        // Number of data points in Report
-        r.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b),
-        // Number of risky devices
-        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length,
-        // Number of high-risk devices
-        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
-        // Number of low-risk devices
-        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length -
-            r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
-      ]);
-      // Set<Device> devicesToFlag = filteredDevices.where((d) {
-      //   bool a = !flaggedDevices.contains(d);
-      //   bool b = r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit;
-      //   return a && b;
-      // }).toSet();
-      // if (!devicesToFlag.isEmpty) {
-      //   if (devicesToFlag.length > 10) {
-      //     Duration d = ts.difference(init);
-      //     print("Scanned " +
-      //         devicesToFlag.length.toString() +
-      //         " devices after " +
-      //         d.inHours.toString() +
-      //         " hours and " +
-      //         (d - Duration(hours: d.inHours)).inMinutes.toString() +
-      //         " minutes");
-      //   }
-      //   flaggedDevices.addAll(devicesToFlag);
-      //   flaggedDevicesWithTimeStamps[ts] = devicesToFlag;
-      // }
+    inputFile.readAsString().then((jsonData) {
+      Report report = Report.fromJson(jsonDecode(jsonData));
+      List<DateTime> timeStamps = getTimestamps(report);
+      generateTimestamps(
+              timeStamps.first.add(Settings.shared.minScanDuration), timeStamps.last, Settings.shared.scanInterval)
+          .forEach((ts) => logDataAtTime(report, csv, ts, timeStamps.first));
+      // flaggedDevicesWithTimeStamps.forEach(
+      //     (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
+      // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
+      print("Printing " + csv.getRows().length.toString());
+      csvFile.writeAsString(csv.toString());
     });
-    // flaggedDevicesWithTimeStamps.forEach(
-    //     (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
-    // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
-    print("Printing " + sql.getRows().length.toString());
-    csvFile.writeAsString(sql.toString());
+  }
+
+  void logDataAtTime(Report report, CSVData sql, DateTime ts, DateTime init) {
+    Map<String, Device> deviceEntries = {};
+    report.devices().where((d) => d.dataPoints(testing: true).any((dp) => dp.time.isBefore(ts))).forEach((d) {
+      deviceEntries[d.id] = Device(d.id, d.name, d.platformName, d.manufacturer,
+          dataPoints: d.dataPoints(testing: true).where((dp) => dp.time.isBefore(ts)).toSet());
+    });
+    if (deviceEntries.length < 2) {
+      return;
+    }
+    Report r = Report(deviceEntries);
+    r.refreshCache();
+    sql.addRow([
+      // Time since starting scan
+      ts.difference(init).inSeconds,
+      // Number of devices in Report
+      r.devices().length,
+      // Number of data points in Report
+      r.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b),
+      // Number of risky devices
+      r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length,
+      // Number of high-risk devices
+      r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
+      // Number of low-risk devices
+      r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length -
+          r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
+    ]);
+    // Set<Device> devicesToFlag = filteredDevices.where((d) {
+    //   bool a = !flaggedDevices.contains(d);
+    //   bool b = r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit;
+    //   return a && b;
+    // }).toSet();
+    // if (!devicesToFlag.isEmpty) {
+    //   if (devicesToFlag.length > 10) {
+    //     Duration d = ts.difference(init);
+    //     print("Scanned " +
+    //         devicesToFlag.length.toString() +
+    //         " devices after " +
+    //         d.inHours.toString() +
+    //         " hours and " +
+    //         (d - Duration(hours: d.inHours)).inMinutes.toString() +
+    //         " minutes");
+    //   }
+    //   flaggedDevices.addAll(devicesToFlag);
+    //   flaggedDevicesWithTimeStamps[ts] = devicesToFlag;
+    // }
   }
 }
 
-class FlaggedDevice {
-  Device device;
-  late DateTime time;
+// class FlaggedDevice {
+//   Device device;
+//   late DateTime time;
 
-  FlaggedDevice(this.device) {
-    this.time = DateTime.now();
-  }
-}
+//   FlaggedDevice(this.device) {
+//     this.time = DateTime.now();
+//   }
+// }

@@ -4,7 +4,7 @@ extension Buttons on ScannerViewState {
   Widget testButton() => FloatingActionButton.large(
       heroTag: "Test Report",
       onPressed: () {
-        TestingSuite(widget.report)..test();
+        TestingSuite()..test();
       },
       child: const Icon(Icons.science));
 
