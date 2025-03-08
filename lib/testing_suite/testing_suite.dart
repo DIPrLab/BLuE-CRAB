@@ -18,6 +18,18 @@ class CSVData {
   String toString() => [_headers.join(","), _rows.map((row) => row.join(",")).join("\n")].join("\n");
 }
 
+class CSVData2 {
+  List<String> _headers;
+  List<List<String>> _rows = [];
+
+  CSVData2(this._headers);
+
+  void addRow(List<String> row) => _rows.add(row);
+  List<List<String>> getRows() => _rows;
+
+  String toString() => [_headers.join(","), _rows.map((row) => row.join(",")).join("\n")].join("\n");
+}
+
 class TestingSuite {
   // Report report;
   // Set<Device> flaggedDevices = {};
@@ -92,10 +104,29 @@ class TestingSuite {
       // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
       print("Printing " + csv.getRows().length.toString());
       csvFile.writeAsString(csv.toString());
+      logFile.writeAsString(getDeviceMetrics(report).toString());
     });
   }
 
-  void logDataAtTime(Report report, CSVData sql, DateTime ts, DateTime init) {
+  CSVData2 getDeviceMetrics(Report report) {
+    CSVData2 csv = CSVData2(["DEVICE_MAC", "TIME_WITH_USER", "INCIDENCE", "AREAS", "DISTANCE_WITH_USER"]);
+    Map<String, Device> deviceEntries = {};
+    report.devices().forEach((d) {
+      deviceEntries[d.id] =
+          Device(d.id, d.name, d.platformName, d.manufacturer, dataPoints: d.dataPoints(testing: true).toSet());
+    });
+    Report r = Report(deviceEntries)..refreshCache();
+    r.devices().forEach((d) => csv.addRow([
+          d.id,
+          d.timeTravelled.inSeconds.toString(),
+          d.incidence.toString(),
+          d.areas.length.toString(),
+          d.distanceTravelled.toString()
+        ]));
+    return csv;
+  }
+
+  void logDataAtTime(Report report, CSVData csv, DateTime ts, DateTime init) {
     Map<String, Device> deviceEntries = {};
     report.devices().where((d) => d.dataPoints(testing: true).any((dp) => dp.time.isBefore(ts))).forEach((d) {
       deviceEntries[d.id] = Device(d.id, d.name, d.platformName, d.manufacturer,
@@ -106,7 +137,7 @@ class TestingSuite {
     }
     Report r = Report(deviceEntries);
     r.refreshCache();
-    sql.addRow([
+    csv.addRow([
       // Time since starting scan
       ts.difference(init).inSeconds,
       // Number of devices in Report
