@@ -41,14 +41,12 @@ class TestingSuite {
     return timestamps;
   }
 
-  List<DateTime> getTimestamps() {
-    Set<DateTime> timestampSet = report
-        .devices()
-        .map((d) => d.dataPoints(testing: true).map((d) => d.time).toSet())
-        .fold({}, (a, b) => b..addAll(a));
-
-    return timestampSet.toList()..sort();
-  }
+  List<DateTime> getTimestamps() => report
+      .devices()
+      .map((d) => d.dataPoints(testing: true).map((d) => d.time).toSet())
+      .fold(Set<DateTime>(), (a, b) => a..addAll(b))
+      .toList()
+    ..sort();
 
   void test() async {
     Directory dir = await localFileDirectory;
