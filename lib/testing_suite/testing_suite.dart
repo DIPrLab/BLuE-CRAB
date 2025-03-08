@@ -74,8 +74,7 @@ class TestingSuite {
   }
 
   void runTest(File inputFile, File csvFile, File logFile) async {
-    String jsonData = await inputFile.readAsString();
-    this.report = Report.fromJson(jsonDecode(jsonData));
+    this.report = Report.fromJson(jsonDecode(await inputFile.readAsString()));
     DateTime init = timeStamps.first;
     DateTime start = init.add(Settings.shared.minScanDuration);
     DateTime end = timeStamps.last;
