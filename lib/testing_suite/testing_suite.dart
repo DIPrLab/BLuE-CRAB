@@ -47,28 +47,30 @@ class TestingSuite {
     ..sort();
 
   void test() {
-    localFileDirectory.then((dir) => [
-          "bledoubt_log_a",
-          "bledoubt_log_b",
-          "bledoubt_log_c",
-          "bledoubt_log_d",
-          "bledoubt_log_e",
-          "bledoubt_log_f",
-          "bledoubt_log_g",
-          "bledoubt_log_h",
-          "bledoubt_log_i",
-          "bledoubt_log_j",
-          "bledoubt_log_k",
-          "bledoubt_log_l",
-          "bledoubt_log_m",
-          "bledoubt_log_n",
-        ]
-            .map((filename) => (
-                  File([dir.path, "${filename}.json"].join("/")),
-                  File([dir.path, "${filename}_results.csv"].join("/")),
-                  File([dir.path, "${filename}_log.txt"].join("/"))
-                ))
-            .forEach((fileSet) => runTest(fileSet.$1, fileSet.$2, fileSet.$3)));
+    localFileDirectory
+        .then((dir) => [
+              "bledoubt_log_a",
+              "bledoubt_log_b",
+              "bledoubt_log_c",
+              "bledoubt_log_d",
+              "bledoubt_log_e",
+              "bledoubt_log_f",
+              "bledoubt_log_g",
+              "bledoubt_log_h",
+              "bledoubt_log_i",
+              "bledoubt_log_j",
+              "bledoubt_log_k",
+              "bledoubt_log_l",
+              "bledoubt_log_m",
+              "bledoubt_log_n",
+            ]
+                .map((filename) => (
+                      File([dir.path, "${filename}.json"].join("/")),
+                      File([dir.path, "${filename}_results.csv"].join("/")),
+                      File([dir.path, "${filename}_log.txt"].join("/"))
+                    ))
+                .forEach((fileSet) => runTest(fileSet.$1, fileSet.$2, fileSet.$3)))
+        .then((_) => print("Done!"));
   }
 
   void runTest(File inputFile, File csvFile, File logFile) {
