@@ -89,7 +89,6 @@ class TestingSuite {
       // flaggedDevicesWithTimeStamps.forEach(
       //     (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
       // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
-      print("Printing " + csv.getRows().length.toString());
       csvFile.writeAsString(csv.toString());
       logFile.writeAsString(getDeviceMetrics(report).toString());
     });
