@@ -8,24 +8,11 @@ import 'package:blue_crab/filesystem/filesystem.dart';
 
 class CSVData {
   List<String> _headers;
-  List<List<num>> _rows = [];
+  List<List<String>> _rows = [];
 
   CSVData(this._headers);
 
-  void addRow(List<num> row) => _rows.add(row);
-  List<List<num>> getRows() => _rows;
-
-  String toString() => [_headers.join(","), _rows.map((row) => row.join(",")).join("\n")].join("\n");
-}
-
-class CSVData2 {
-  List<String> _headers;
-  List<List<String>> _rows = [];
-
-  CSVData2(this._headers);
-
   void addRow(List<String> row) => _rows.add(row);
-  List<List<String>> getRows() => _rows;
 
   String toString() => [_headers.join(","), _rows.map((row) => row.join(",")).join("\n")].join("\n");
 }
@@ -108,21 +95,15 @@ class TestingSuite {
     });
   }
 
-  CSVData2 getDeviceMetrics(Report report) {
-    CSVData2 csv = CSVData2(["DEVICE_MAC", "TIME_WITH_USER", "INCIDENCE", "AREAS", "DISTANCE_WITH_USER"]);
+  CSVData getDeviceMetrics(Report report) {
+    CSVData csv = CSVData(["DEVICE_MAC", "TIME_WITH_USER", "INCIDENCE", "AREAS", "DISTANCE_WITH_USER"]);
     Map<String, Device> deviceEntries = {};
     report.devices().forEach((d) {
       deviceEntries[d.id] =
           Device(d.id, d.name, d.platformName, d.manufacturer, dataPoints: d.dataPoints(testing: true).toSet());
     });
     Report r = Report(deviceEntries)..refreshCache();
-    r.devices().forEach((d) => csv.addRow([
-          d.id,
-          d.timeTravelled.inSeconds.toString(),
-          d.incidence.toString(),
-          d.areas.length.toString(),
-          d.distanceTravelled.toString()
-        ]));
+    r.devices().forEach((d) => csv.addRow([d.id, ...r.riskScores(d).map((e) => e.toString())]));
     return csv;
   }
 
@@ -151,7 +132,7 @@ class TestingSuite {
       // Number of low-risk devices
       r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length -
           r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
-    ]);
+    ].map((e) => e.toString()).toList());
     // Set<Device> devicesToFlag = filteredDevices.where((d) {
     //   bool a = !flaggedDevices.contains(d);
     //   bool b = r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit;
