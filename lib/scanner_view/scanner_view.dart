@@ -5,6 +5,7 @@ import 'package:blue_crab/map_view/map_view.dart';
 import 'package:blue_crab/map_view/position.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/report_view/report_view.dart';
+import 'package:blue_crab/styles/styles.dart';
 import 'package:blue_crab/testing_suite/testing_suite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -14,6 +15,7 @@ import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/settings_view/settings_view.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/styles/themes.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:vibration/vibration.dart';
 import 'package:latlng/latlng.dart';
 import 'package:in_app_notification/in_app_notification.dart';
@@ -119,6 +121,13 @@ class ScannerViewState extends State<ScannerView> {
               child: Row(children: [
         Expanded(child: SizedBox.shrink()),
         Column(children: [
+          Expanded(child: SizedBox.shrink()),
+          Text("BL(u)E CRAB",
+              // style: GoogleFonts.nothingYouCouldDo(
+              // style: GoogleFonts.sniglet(
+              // style: GoogleFonts.caprasimo(
+              // style: GoogleFonts.mogra(
+              style: GoogleFonts.irishGrover(textStyle: TextStyles.splashText)),
           Expanded(child: SizedBox.shrink()),
           ...buttonList()
               .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
