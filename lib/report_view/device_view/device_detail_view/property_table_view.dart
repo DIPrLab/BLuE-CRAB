@@ -1,3 +1,4 @@
+import 'package:blue_crab/extensions/date_time.dart';
 import 'package:blue_crab/report_view/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:blue_crab/report/device/device.dart';
@@ -20,8 +21,8 @@ class PropertyTable extends StatelessWidget {
       rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
     rows.add(Row("Risk Score", report.riskScore(device).toString()));
-    rows.add(Row("Time Travelled", device.timeTravelled.toString()));
-    rows.add(Row("Distance Travelled", device.distanceTravelled.toString()));
+    rows.add(Row("Time Travelled", device.timeTravelled.toReadableString()));
+    rows.add(Row("Distance Travelled", device.distanceTravelled.round().toString() + " meters"));
     rows.add(Row("Incidence", device.incidence.toString()));
     rows.add(Row("Areas", device.areas.length.toString()));
     rows.add(Row("Duration", device.timeTravelled.printFriendly()));
