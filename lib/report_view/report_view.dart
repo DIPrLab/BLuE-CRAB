@@ -1,4 +1,5 @@
 import 'package:blue_crab/report_view/filter_buttons/filter_buttons.dart';
+import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,9 @@ class ReportViewState extends State<ReportView> {
 
   void sort(int sortMethod(Device a, Device b)) => setState(() => devices = widget.report
       .devices()
-      .where((device) => widget.report.riskScore(device) > widget.report.riskScoreStats.tukeyMildUpperLimit)
+      .where((device) => (Settings.shared.demoMode)
+          ? true
+          : widget.report.riskScore(device) > widget.report.riskScoreStats.tukeyMildUpperLimit)
       .sorted(sortMethod)
       .reversed
       .toList());
@@ -76,7 +79,7 @@ class ReportViewState extends State<ReportView> {
           body: SingleChildScrollView(
               child: Column(children: [
         header(context),
-        FilterButtonBar(),
+        FilterButtonBar(notify: () => setState(() {})),
         Column(children: deviceTileList(context)),
       ])));
 }

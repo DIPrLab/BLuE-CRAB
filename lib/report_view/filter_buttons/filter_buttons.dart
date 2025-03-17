@@ -3,7 +3,9 @@ import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/styles/themes.dart';
 
 class FilterButtonBar extends StatefulWidget {
-  FilterButtonBar({super.key});
+  final VoidCallback? notify;
+
+  FilterButtonBar({super.key, this.notify});
 
   @override
   FilterButtonBarState createState() => FilterButtonBarState();
@@ -16,16 +18,26 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   void initState() {
     super.initState();
     filterButtons = [
-      WidgetButtonProperties("Time w/ User", () => Settings.shared.enableTimeWithUserMetric,
-          () => Settings.shared.enableTimeWithUserMetric = !Settings.shared.enableTimeWithUserMetric),
-      WidgetButtonProperties("Areas", () => Settings.shared.enableAreasMetric,
-          () => Settings.shared.enableAreasMetric = !Settings.shared.enableAreasMetric),
-      WidgetButtonProperties("Distance w/ User", () => Settings.shared.enableDistanceWithUserMetric,
-          () => Settings.shared.enableDistanceWithUserMetric = !Settings.shared.enableDistanceWithUserMetric),
-      WidgetButtonProperties("Incidence", () => Settings.shared.enableIncidenceMetric,
-          () => Settings.shared.enableIncidenceMetric = !Settings.shared.enableIncidenceMetric),
-      WidgetButtonProperties("Proximity", () => Settings.shared.enableRSSIMetric,
-          () => Settings.shared.enableRSSIMetric = !Settings.shared.enableRSSIMetric),
+      WidgetButtonProperties("Time w/ User", () => Settings.shared.enableTimeWithUserMetric, () {
+        Settings.shared.enableTimeWithUserMetric = !Settings.shared.enableTimeWithUserMetric;
+        widget.notify?.call();
+      }),
+      WidgetButtonProperties("Areas", () => Settings.shared.enableAreasMetric, () {
+        Settings.shared.enableAreasMetric = !Settings.shared.enableAreasMetric;
+        widget.notify?.call();
+      }),
+      WidgetButtonProperties("Distance w/ User", () => Settings.shared.enableDistanceWithUserMetric, () {
+        Settings.shared.enableDistanceWithUserMetric = !Settings.shared.enableDistanceWithUserMetric;
+        widget.notify?.call();
+      }),
+      WidgetButtonProperties("Incidence", () => Settings.shared.enableIncidenceMetric, () {
+        Settings.shared.enableIncidenceMetric = !Settings.shared.enableIncidenceMetric;
+        widget.notify?.call();
+      }),
+      WidgetButtonProperties("Proximity", () => Settings.shared.enableRSSIMetric, () {
+        Settings.shared.enableRSSIMetric = !Settings.shared.enableRSSIMetric;
+        widget.notify?.call();
+      }),
     ];
     reorder([]);
   }
