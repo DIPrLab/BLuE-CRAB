@@ -84,11 +84,13 @@ class ScannerViewState extends State<ScannerView> {
     Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream();
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
-      results.forEach((d) => widget.report.addDatumToDevice(
-          Device(d.device.remoteId.toString(), d.advertisementData.advName, d.device.platformName,
-              d.advertisementData.manufacturerData.keys.toList()),
-          location,
-          d.rssi));
+      results
+          .map((sr) => (
+                Device(sr.device.remoteId.toString(), sr.advertisementData.advName, sr.device.platformName,
+                    sr.advertisementData.manufacturerData.keys.toList()),
+                sr.rssi
+              ))
+          .forEach((d) => widget.report.addDatumToDevice(d.$1, location, d.$2));
       if (Settings.shared.autoConnect) {
         results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       }
