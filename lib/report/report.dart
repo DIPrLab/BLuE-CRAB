@@ -1,7 +1,5 @@
-import 'package:blue_crab/report/calculators/calculators.dart';
-import 'package:blue_crab/report/calculators/permissive.dart';
-import 'package:blue_crab/report/calculators/iqr.dart';
-import 'package:blue_crab/report/calculators/k-means.dart';
+import 'package:blue_crab/report/classifiers/classifier.dart';
+import 'package:blue_crab/report/classifiers/classifiers.dart';
 import 'package:latlng/latlng.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -37,9 +35,7 @@ class Report {
   Set<String> riskyDevices = {};
   Classifier c = Permissive();
 
-  Report(this.data) {
-    riskyDevices = c.getRiskyDeviceIDs(this);
-  }
+  Report(this.data);
 
   Device? getDevice(String id) => data[id];
   void addDevice(Device d) {
