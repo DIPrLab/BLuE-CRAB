@@ -45,6 +45,32 @@ class ScannerViewState extends State<ScannerView> {
 
   late Stream<DateTime> _timeStream;
 
+  List<List<Widget>> buttonList() {
+    List<List<Widget>> result = [];
+    if (Settings.shared.devMode) {
+      print("Loading Dev Mode Panel");
+      result = [
+        [settingsButton(), reportViewerButton()],
+        [shareButton(), deleteReportButton()],
+        [testButton(), scanButton()],
+      ];
+    } else if (Settings.shared.demoMode) {
+      print("Loading Demo Mode Panel");
+      result = [
+        [settingsButton(), reportViewerButton()],
+        [loadReportButton(), deleteReportButton()],
+        [scanButton()],
+      ];
+    } else {
+      print("Loading Default Panel");
+      result = [
+        [settingsButton(), reportViewerButton()],
+        [scanButton()],
+      ];
+    }
+    return result;
+  }
+
   void enableLocationStream() => positionStream = Geolocator.getPositionStream(
           locationSettings: Controllers.getLocationSettings(Settings.shared.scanDistance().toInt()))
       .listen((Position? position) => location = position?.toLatLng());
@@ -95,11 +121,7 @@ class ScannerViewState extends State<ScannerView> {
         Expanded(child: SizedBox.shrink()),
         Column(children: [
           Expanded(child: SizedBox.shrink()),
-          ...[
-            [settingsButton(), reportViewerButton()],
-            if (Settings.shared.devMode) [shareButton(), deleteReportButton()],
-            [if (Settings.shared.devMode) testButton(), scanButton()],
-          ]
+          ...buttonList()
               .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
               .toList(),
           Expanded(child: SizedBox.shrink()),
