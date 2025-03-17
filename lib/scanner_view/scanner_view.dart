@@ -47,24 +47,25 @@ class ScannerViewState extends State<ScannerView> {
 
   late Stream<DateTime> _timeStream;
 
-  List<List<Widget>> buttonList() {
-    List<List<Widget>> result = [];
+  List<List<(Widget, String)>> buttonList() {
+    List<List<(Widget, String)>> result = [
+      [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+      [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+    ];
     if (Settings.shared.devMode) {
       result = [
-        [settingsButton(), reportViewerButton()],
-        [shareButton(), deleteReportButton()],
-        [testButton(), scanButton()],
+        [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+        [(shareButton(), "Share Report"), (deleteReportButton(), "Delete Data")],
+        [
+          (testButton(), "Run Tests"),
+          (scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")
+        ],
       ];
     } else if (Settings.shared.demoMode) {
       result = [
-        [settingsButton(), reportViewerButton()],
-        [loadReportButton(), deleteReportButton()],
-        [scanButton()],
-      ];
-    } else {
-      result = [
-        [settingsButton(), reportViewerButton()],
-        [scanButton()],
+        [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+        [(loadReportButton(), "Load Sample Data"), (deleteReportButton(), "Delete Data")],
+        [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
       ];
     }
     return result;
@@ -130,7 +131,10 @@ class ScannerViewState extends State<ScannerView> {
               style: GoogleFonts.irishGrover(textStyle: TextStyles.splashText)),
           Expanded(child: SizedBox.shrink()),
           ...buttonList()
-              .map((row) => Row(children: row.map((e) => Padding(padding: EdgeInsets.all(16.0), child: e)).toList()))
+              .map((row) => Row(
+                  children: row
+                      .map((e) => Column(children: [Padding(padding: EdgeInsets.all(16.0), child: e.$1), Text(e.$2)]))
+                      .toList()))
               .toList(),
           Expanded(child: SizedBox.shrink()),
         ]),
