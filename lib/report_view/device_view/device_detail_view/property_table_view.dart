@@ -20,7 +20,7 @@ class PropertyTable extends StatelessWidget {
     if (!device.manufacturer.isEmpty) {
       rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
-    rows.add(Row("Risk Score", report.riskScore(device).toString()));
+    // rows.add(Row("Risk Score", report.riskScore(device).toString()));
     rows.add(Row("Time Travelled", device.timeTravelled.toReadableString()));
     rows.add(Row("Distance Travelled", device.distanceTravelled.round().toString() + " meters"));
     rows.add(Row("Incidence", device.incidence.toString()));
