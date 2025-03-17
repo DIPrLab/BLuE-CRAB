@@ -34,7 +34,12 @@ class Report {
   Report(this.data);
 
   Device? getDevice(String id) => data[id];
-  void addDevice(Device d) => data.keys.contains(d.id) ? null : data[d.id] = d;
+  void addDevice(Device d) {
+    if (!data.keys.contains(d.id)) {
+      data[d.id] = d;
+    }
+  }
+
   void addDatumToDevice(Device d, LatLng? location, int rssi) {
     addDevice(d);
     data[d.id]?.addDatum(location, rssi);
