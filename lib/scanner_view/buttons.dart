@@ -16,6 +16,16 @@ extension Buttons on ScannerViewState {
       },
       child: const Icon(Icons.delete));
 
+  Widget loadReportButton() => FloatingActionButton.large(
+      heroTag: "Load Sample Report",
+      onPressed: () {
+        readReport().then((report) {
+          widget.report.combine(report);
+          write(widget.report);
+        });
+      },
+      child: const Icon(Icons.upload));
+
   Widget shareButton() => FloatingActionButton.large(
       heroTag: "Share",
       onPressed: () {
