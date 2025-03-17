@@ -1,5 +1,5 @@
 extension OrderedPairs<T> on List<T> {
-  List<(T, T)> orderedPairs() => List.generate(length - 1, (i) => (this[i], this[i + 1]));
+  List<(T, T)> orderedPairs() => (length < 2) ? [] : List.generate(length - 1, (i) => (this[i], this[i + 1]));
 
   List<E> mapOrderedPairs<E>(E Function((T, T)) toElement) => this.orderedPairs().map<E>(toElement).toList();
 
