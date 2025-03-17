@@ -5,7 +5,7 @@ Future<File> get _localReportFile async => localFileDirectory.then((dir) => File
 void write(Report report) async => _localReportFile.then((file) => file.writeAsString("${report.toJson().toString()}"));
 
 Future<Report> readReport() => (kDebugMode
-            ? rootBundle.loadString('assets/bledoubt_logs/bledoubt_log_l.json')
+            ? rootBundle.loadString('assets/bledoubt_logs/bledoubt_log_d.json')
             : _localReportFile.then((file) => file.readAsString()))
         .then((jsonData) {
       try {
