@@ -54,13 +54,13 @@ class ScannerViewState extends State<ScannerView> {
         [shareButton(), deleteReportButton()],
         [testButton(), scanButton()],
       ];
-    } else if (Settings.shared.demoMode) {
-      print("Loading Demo Mode Panel");
-      result = [
-        [settingsButton(), reportViewerButton()],
-        [loadReportButton(), deleteReportButton()],
-        [scanButton()],
-      ];
+      // } else if (Settings.shared.demoMode) {
+      //   print("Loading Demo Mode Panel");
+      //   result = [
+      //     [settingsButton(), reportViewerButton()],
+      //     [loadReportButton(), deleteReportButton()],
+      //     [scanButton()],
+      //   ];
     } else {
       print("Loading Default Panel");
       result = [

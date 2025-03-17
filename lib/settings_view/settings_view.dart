@@ -107,15 +107,30 @@ class SettingsViewState extends State<SettingsView> {
                 header("Safe Zones"),
                 LocationHeader(onAddLocation: _addLocation),
                 ...Settings.shared.safeZones.map((location) => LatLngTile(location)),
-                header("Developer Mode"),
+                header("Mode"),
                 SwitchListTile(
                     title: Text("Developer Mode ${Settings.shared.devMode ? "On" : "Off"}"),
                     value: Settings.shared.devMode,
                     onChanged: ((val) {
-                      setState(() => Settings.shared.devMode = val);
+                      setState(() {
+                        Settings.shared.devMode = val;
+                        // Settings.shared.demoMode = Settings.shared.devMode == true ? false : Settings.shared.demoMode;
+                      });
                       widget.notify?.call();
                       Settings.shared.save();
                     }),
-                    secondary: Settings.shared.devMode ? Icon(Icons.developer_board) : Icon(Icons.developer_board_off)),
+                    secondary: Icon(Icons.circle, color: Settings.shared.devMode ? Colors.green : Colors.red)),
+                // SwitchListTile(
+                //     title: Text("Demo Mode ${Settings.shared.demoMode ? "On" : "Off"}"),
+                //     value: Settings.shared.demoMode,
+                //     onChanged: ((val) {
+                //       setState(() {
+                //         Settings.shared.demoMode = val;
+                //         Settings.shared.devMode = Settings.shared.demoMode == true ? false : Settings.shared.devMode;
+                //       });
+                //       widget.notify?.call();
+                //       Settings.shared.save();
+                //     }),
+                //     secondary: Icon(Icons.circle, color: Settings.shared.demoMode ? Colors.green : Colors.red)),
               ]))));
 }
