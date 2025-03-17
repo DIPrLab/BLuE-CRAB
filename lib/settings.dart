@@ -13,6 +13,7 @@ class Settings {
   // Factory constructor that returns the shared instance
   factory Settings() => shared;
 
+  late bool demoMode;
   late bool devMode;
   late bool autoConnect;
   late bool locationEnabled;
@@ -26,6 +27,7 @@ class Settings {
   late bool enableTimeWithUserMetric;
 
   // Properties that will be turned into calculated values
+  // late int windowDurationValue;
   late double windowDurationValue;
   late double timeThresholdValue;
   late double distanceThresholdValue;
@@ -34,6 +36,7 @@ class Settings {
   Duration minScanDuration = Duration(minutes: 10);
   Duration scanInterval = Duration(minutes: 10);
 
+  // Duration windowDuration() => Duration(hours: windowDurationValue.toInt());
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
   Duration scanTime() => Duration(seconds: 10);
   Duration timeThreshold() => Duration(seconds: timeThresholdValue.toInt());
@@ -41,6 +44,7 @@ class Settings {
   double distanceThreshold() => distanceThresholdValue;
 
   void loadData() => SharedPreferences.getInstance().then((prefs) {
+        demoMode = prefs.getBool("demoMode") ?? false;
         devMode = prefs.getBool("devMode") ?? false;
         autoConnect = prefs.getBool("autoConnect") ?? false;
         locationEnabled = prefs.getBool("locationEnabled") ?? true;
@@ -56,6 +60,7 @@ class Settings {
         enableRSSIMetric = prefs.getBool("enableRSSIMetric") ?? true;
         enableTimeWithUserMetric = prefs.getBool("enableTimeWithUserMetric") ?? true;
 
+        // windowDurationValue = prefs.getInt("windowDurationValue") ?? 10;
         windowDurationValue = prefs.getDouble("windowDurationValue") ?? 10;
         timeThresholdValue = prefs.getDouble("timeThresholdValue") ?? 10;
         distanceThresholdValue = prefs.getDouble("distanceThresholdValue") ?? 10;
@@ -63,6 +68,7 @@ class Settings {
 
   void save() => SharedPreferences.getInstance().then((prefs) {
         [
+          ("demoMode", demoMode),
           ("devMode", devMode),
           ("autoConnect", autoConnect),
           ("locationEnabled", locationEnabled),
@@ -78,6 +84,10 @@ class Settings {
           ("timeThresholdValue", timeThresholdValue),
           ("distanceThresholdValue", distanceThresholdValue),
         ].forEach((s) => prefs.setDouble(s.$1, s.$2));
+
+        // [
+        //   ("windowDurationValue", windowDurationValue),
+        // ].forEach((s) => prefs.setInt(s.$1, s.$2.toInt()));
 
         prefs.setStringList("safeZones",
             safeZones.map((z) => "${z.latitude.degrees.toString()},${z.longitude.degrees.toString()}").toList());

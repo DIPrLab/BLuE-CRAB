@@ -75,15 +75,15 @@ class SettingsViewState extends State<SettingsView> {
                         ? Icon(Icons.location_searching)
                         : Icon(Icons.location_disabled)),
                 header("Windowing"),
-                settingsSlider(
-                    "Window Duration",
-                    "${Settings.shared.windowDuration().inMinutes.toInt().toString()} minutes",
-                    10.0,
-                    100.0,
-                    Settings.shared.windowDurationValue, ((newValue) {
-                  Settings.shared.recentlyChanged = true;
-                  Settings.shared.windowDurationValue = newValue;
-                })),
+                // settingsSlider(
+                //     "Window Duration",
+                //     "${Settings.shared.windowDuration().inMinutes.toInt().toString()} minutes",
+                //     10.0,
+                //     100.0,
+                //     Settings.shared.windowDurationValue, ((newValue) {
+                //   Settings.shared.recentlyChanged = true;
+                //   Settings.shared.windowDurationValue = newValue;
+                // })),
                 header("Time"),
                 settingsSlider(
                     "Scanning Time Threshold",
@@ -114,23 +114,23 @@ class SettingsViewState extends State<SettingsView> {
                     onChanged: ((val) {
                       setState(() {
                         Settings.shared.devMode = val;
-                        // Settings.shared.demoMode = Settings.shared.devMode == true ? false : Settings.shared.demoMode;
+                        Settings.shared.demoMode = Settings.shared.devMode == true ? false : Settings.shared.demoMode;
                       });
                       widget.notify?.call();
                       Settings.shared.save();
                     }),
                     secondary: Icon(Icons.circle, color: Settings.shared.devMode ? Colors.green : Colors.red)),
-                // SwitchListTile(
-                //     title: Text("Demo Mode ${Settings.shared.demoMode ? "On" : "Off"}"),
-                //     value: Settings.shared.demoMode,
-                //     onChanged: ((val) {
-                //       setState(() {
-                //         Settings.shared.demoMode = val;
-                //         Settings.shared.devMode = Settings.shared.demoMode == true ? false : Settings.shared.devMode;
-                //       });
-                //       widget.notify?.call();
-                //       Settings.shared.save();
-                //     }),
-                //     secondary: Icon(Icons.circle, color: Settings.shared.demoMode ? Colors.green : Colors.red)),
+                SwitchListTile(
+                    title: Text("Demo Mode ${Settings.shared.demoMode ? "On" : "Off"}"),
+                    value: Settings.shared.demoMode,
+                    onChanged: ((val) {
+                      setState(() {
+                        Settings.shared.demoMode = val;
+                        Settings.shared.devMode = Settings.shared.demoMode == true ? false : Settings.shared.devMode;
+                      });
+                      widget.notify?.call();
+                      Settings.shared.save();
+                    }),
+                    secondary: Icon(Icons.circle, color: Settings.shared.demoMode ? Colors.green : Colors.red)),
               ]))));
 }
