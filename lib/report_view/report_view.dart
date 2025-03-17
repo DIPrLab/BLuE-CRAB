@@ -1,5 +1,4 @@
 import 'package:blue_crab/report_view/filter_buttons/filter_buttons.dart';
-import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -25,14 +24,8 @@ class ReportViewState extends State<ReportView> {
     sort(byRiskScore);
   }
 
-  void sort(int sortMethod(Device a, Device b)) => setState(() => devices = widget.report
-      .devices()
-      .where((device) => (Settings.shared.demoMode)
-          ? true
-          : widget.report.riskScore(device) > widget.report.riskScoreStats.tukeyMildUpperLimit)
-      .sorted(sortMethod)
-      .reversed
-      .toList());
+  void sort(int sortMethod(Device a, Device b)) => setState(() =>
+      devices = widget.report.riskyDevices.map((d) => widget.report.data[d]!).sorted(sortMethod).reversed.toList());
 
   int byRiskScore(Device a, Device b) => widget.report.riskScore(a).compareTo(widget.report.riskScore(b));
 

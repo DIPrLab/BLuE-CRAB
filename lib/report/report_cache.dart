@@ -4,13 +4,14 @@ extension Cache on Report {
   void refreshCache() {
     _updateDeviceStatistics();
     _updateStatistics(data.entries.map((entry) => entry.value));
+    riskyDevices = c.getRiskyDeviceIDs(this);
     lastUpdated = DateTime.now();
   }
 
   void _updateDeviceStatistics() {
-    Iterable<Device> devices =
-        Settings.shared.recentlyChanged ? data.values : data.values.where((d) => d.lastUpdated.isAfter(lastUpdated));
-    devices.forEach((d) => d.updateStatistics());
+    Settings.shared.recentlyChanged
+        ? data.values
+        : data.values.where((d) => d.lastUpdated.isAfter(lastUpdated)).forEach((d) => d.updateStatistics());
     Settings.shared.recentlyChanged = false;
   }
 

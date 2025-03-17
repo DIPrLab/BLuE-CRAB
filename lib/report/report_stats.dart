@@ -1,7 +1,6 @@
 part of 'report.dart';
 
 extension Statistics on Report {
-  // TODO: Remove fold method and replace with device caching
   num riskScore(Device device) => riskScores(device).fold(0, (a, b) => a + b);
 
   List<num> riskScores(Device device) => ((!Settings.shared.enableTimeWithUserMetric &&
