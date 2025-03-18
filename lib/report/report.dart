@@ -33,7 +33,6 @@ class Report {
   late Stats riskScoreStats;
   DateTime lastUpdated = DateTime(0);
   Set<String> riskyDevices = {};
-  Classifier c = Permissive();
 
   Report(this.data);
 

@@ -6,11 +6,17 @@ import 'package:k_means_cluster/k_means_cluster.dart';
 
 class IQR extends Classifier {
   @override
+  String name = "IQR";
+
+  @override
   Iterable<Device> getRiskyDevices(Report report) =>
       report.devices().where((d) => report.riskScore(d) > report.riskScoreStats.tukeyMildUpperLimit);
 }
 
 class KMeans extends Classifier {
+  @override
+  String name = "K-Means";
+
   @override
   Iterable<Device> getRiskyDevices(Report report) {
     List<Instance> instances = report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
@@ -26,6 +32,9 @@ class KMeans extends Classifier {
 }
 
 class IQRKMeansHybrid extends Classifier {
+  @override
+  String name = "IQR / K-Means Hybrid";
+
   @override
   Iterable<Device> getRiskyDevices(Report report) {
     List<Instance> instances = report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
@@ -54,6 +63,9 @@ class IQRKMeansHybrid extends Classifier {
 }
 
 class Permissive extends Classifier {
+  @override
+  String name = "Permissive";
+
   @override
   Iterable<Device> getRiskyDevices(Report report) => report.devices();
 }

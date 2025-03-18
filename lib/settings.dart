@@ -1,3 +1,5 @@
+import 'package:blue_crab/report/classifiers/classifier.dart';
+import 'package:blue_crab/report/classifiers/classifiers.dart';
 import 'package:latlng/latlng.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,6 +11,9 @@ class Settings {
   Settings._internal() {
     loadData();
   }
+
+  static List<Classifier> classifiers = [IQR(), IQRKMeansHybrid(), KMeans(), Permissive()];
+  Classifier classifier = classifiers[0];
 
   // Factory constructor that returns the shared instance
   factory Settings() => shared;

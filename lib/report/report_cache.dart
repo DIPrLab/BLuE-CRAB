@@ -4,7 +4,7 @@ extension Cache on Report {
   void refreshCache() {
     _updateDeviceStatistics();
     _updateStatistics(data.entries.map((entry) => entry.value));
-    riskyDevices = c.getRiskyDeviceIDs(this);
+    riskyDevices = Settings.shared.classifier.getRiskyDeviceIDs(this);
     lastUpdated = DateTime.now();
   }
 

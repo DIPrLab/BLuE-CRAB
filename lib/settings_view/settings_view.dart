@@ -1,4 +1,6 @@
 import 'package:blue_crab/map_view/map_functions.dart';
+import 'package:blue_crab/report/classifiers/classifier.dart';
+import 'package:blue_crab/report/classifiers/classifiers.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:blue_crab/settings_view/LatLngTile.dart';
 import 'package:blue_crab/settings.dart';
@@ -39,6 +41,8 @@ class SettingsViewState extends State<SettingsView> {
         Settings.shared.save();
       }));
 
+  void changeClassifier(Classifier? c) => Settings.shared.classifier = c ?? Settings.shared.classifier;
+
   @override
   void initState() => super.initState();
 
@@ -75,15 +79,22 @@ class SettingsViewState extends State<SettingsView> {
                         ? Icon(Icons.location_searching)
                         : Icon(Icons.location_disabled)),
                 header("Windowing"),
-                // settingsSlider(
-                //     "Window Duration",
-                //     "${Settings.shared.windowDuration().inMinutes.toInt().toString()} minutes",
-                //     10.0,
-                //     100.0,
-                //     Settings.shared.windowDurationValue, ((newValue) {
-                //   Settings.shared.recentlyChanged = true;
-                //   Settings.shared.windowDurationValue = newValue;
-                // })),
+                settingsSlider(
+                    "Window Duration",
+                    "${Settings.shared.windowDuration().inMinutes.toInt().toString()} minutes",
+                    10.0,
+                    100.0,
+                    Settings.shared.windowDurationValue, ((newValue) {
+                  Settings.shared.recentlyChanged = true;
+                  Settings.shared.windowDurationValue = newValue;
+                })),
+                header("Classifier"),
+                DropdownButton<Classifier>(
+                    value: Settings.shared.classifier,
+                    items: Settings.classifiers
+                        .map((e) => DropdownMenuItem<Classifier>(value: e, child: Text(e.name)))
+                        .toList(),
+                    onChanged: (Classifier? newValue) => setState(() => Settings.shared.classifier = newValue!)),
                 header("Time"),
                 settingsSlider(
                     "Scanning Time Threshold",

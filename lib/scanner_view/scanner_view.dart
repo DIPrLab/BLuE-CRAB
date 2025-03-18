@@ -46,6 +46,8 @@ class ScannerViewState extends State<ScannerView> {
   late StreamSubscription<DateTime> timeStreamSubscription;
 
   late Stream<DateTime> _timeStream;
+  int deviceCount = 0;
+  int datapointCount = 0;
 
   List<List<(Widget, String)>> buttonList() {
     List<List<(Widget, String)>> result = [
@@ -97,6 +99,8 @@ class ScannerViewState extends State<ScannerView> {
       if (Settings.shared.autoConnect) {
         results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       }
+      deviceCount = widget.report.devices().length;
+      datapointCount = widget.report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
       if (mounted) {
         setState(() {});
       }
@@ -137,6 +141,9 @@ class ScannerViewState extends State<ScannerView> {
                       .toList()))
               .toList(),
           Expanded(child: SizedBox.shrink()),
+          if (FlutterBluePlus.isScanningNow && Settings.shared.demoMode)
+            Text(
+                "${deviceCount} devices scanned. ${datapointCount} datapoints. ${widget.report.riskyDevices.length} suspicious devices."),
         ]),
         Expanded(child: SizedBox.shrink()),
       ])));
