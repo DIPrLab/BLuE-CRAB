@@ -17,11 +17,13 @@ class ReportView extends StatefulWidget {
 
 class ReportViewState extends State<ReportView> {
   late List<Device> devices;
+  late int Function(Device, Device) sortMethod;
 
   @override
   void initState() {
     super.initState();
-    sort(byRiskScore);
+    sortMethod = byRiskScore;
+    sort(sortMethod);
   }
 
   void sort(int sortMethod(Device a, Device b)) => setState(() =>
@@ -46,8 +48,12 @@ class ReportViewState extends State<ReportView> {
             ("Time", byTime),
             ("Areas", byArea),
           ]
-              .map((e) => (ListTile(title: Text("Sort By ${e.$1}")), e.$2))
-              .map((e) => PopupMenuItem(child: e.$1, onTap: () => sort(e.$2)))
+              .map((e) => PopupMenuItem(
+                  child: ListTile(title: Text("Sorte By ${e.$1}")),
+                  onTap: () {
+                    sortMethod = e.$2;
+                    sort(sortMethod);
+                  }))
               .toList());
 
   Widget header(BuildContext context) => Padding(
@@ -72,7 +78,7 @@ class ReportViewState extends State<ReportView> {
           body: SingleChildScrollView(
               child: Column(children: [
         header(context),
-        FilterButtonBar(notify: () => setState(() {})),
+        FilterButtonBar(notify: () => setState(() => sort(sortMethod))),
         Column(children: deviceTileList(context)),
       ])));
 }
