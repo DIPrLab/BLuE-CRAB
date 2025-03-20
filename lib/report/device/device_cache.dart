@@ -8,10 +8,6 @@ extension DeviceCache on Device {
         () => areas = _areas(),
       ].forEach((f) => f());
 
-  List<Duration> _timeClusterPrefix() => this
-      .dataPoints()
-      .map((datum) => datum.time)
-      .sorted()
-      .mapOrderedPairs((pair) => pair.$2.difference(pair.$1))
-      .toList();
+  List<Duration> _timeClusterPrefix() =>
+      dataPoints().map((datum) => datum.time).sorted().mapOrderedPairs((pair) => pair.$2.difference(pair.$1)).toList();
 }

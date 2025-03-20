@@ -2,32 +2,31 @@ import "dart:math";
 import "dart:core";
 
 extension IterableStats on Iterable<num> {
-  num average() => this.fold(0.0, (a, b) => a + b) / this.length;
+  num average() => fold(0.0, (a, b) => a + b) / length;
 
-  num standardDeviation() => sqrt(this.fold(0.0, (a, b) => a + pow(b - average(), 2)) / this.length);
+  num standardDeviation() => sqrt(fold(0.0, (a, b) => a + pow(b - average(), 2)) / length);
 }
 
 extension ListStats on List<num> {
-  num median() => this.length.isEven
-      ? (this..sort((a, b) => a.compareTo(b))).getRange((this.length ~/ 2) - 1, (this.length ~/ 2) + 1).average()
-      : (this..sort((a, b) => a.compareTo(b)))[this.length ~/ 2];
+  num median() => length.isEven
+      ? (this..sort((a, b) => a.compareTo(b))).getRange((length ~/ 2) - 1, (length ~/ 2) + 1).average()
+      : (this..sort((a, b) => a.compareTo(b)))[length ~/ 2];
 
-  // num mad() => this.map((x) => x - this.average().abs()).average();
-  num mad() => this.map((x) => (x - this.median()).abs()).toList().median();
+  // num mad() => map((x) => x - average().abs()).average();
+  num mad() => map((x) => (x - median()).abs()).toList().median();
 
-  (List<num>, List<num>) split() =>
-      (this.getRange(0, this.length ~/ 2).toList(), this.getRange((this.length / 2).ceil(), this.length).toList());
+  (List<num>, List<num>) split() => (getRange(0, length ~/ 2).toList(), getRange((length / 2).ceil(), length).toList());
 
-  num q3() => this.split().$2.median();
-  num q1() => this.split().$1.median();
+  num q3() => split().$2.median();
+  num q1() => split().$1.median();
 
   num iqr() => q3() - q1();
 
   (num, num) iqrLimits() => (q1() - (iqr() * 1.5), q3() + (iqr() * 1.5));
 
   (Iterable<num>, Iterable<num>) iqrOutliers() {
-    Iterable<num> lowOutliers = this.where((element) => element < iqrLimits().$1);
-    Iterable<num> highOutliers = this.where((element) => element > iqrLimits().$2);
+    Iterable<num> lowOutliers = where((element) => element < iqrLimits().$1);
+    Iterable<num> highOutliers = where((element) => element > iqrLimits().$2);
     return (lowOutliers, highOutliers);
   }
 
@@ -35,10 +34,10 @@ extension ListStats on List<num> {
       (q1() - (iqr() * 3), q1() - (iqr() * 1.5), q3() + (iqr() * 1.5), q3() + (iqr() * 3));
 
   (Iterable<num>, Iterable<num>, Iterable<num>, Iterable<num>) tukeyOutliers() {
-    Iterable<num> extremeLowOutliers = this.where((element) => element < tukeyLimits().$1);
-    Iterable<num> mildLowOutliers = this.where((element) => element < tukeyLimits().$2);
-    Iterable<num> mildHighOutliers = this.where((element) => element > tukeyLimits().$3);
-    Iterable<num> extremeHighOutliers = this.where((element) => element > tukeyLimits().$4);
+    Iterable<num> extremeLowOutliers = where((element) => element < tukeyLimits().$1);
+    Iterable<num> mildLowOutliers = where((element) => element < tukeyLimits().$2);
+    Iterable<num> mildHighOutliers = where((element) => element > tukeyLimits().$3);
+    Iterable<num> extremeHighOutliers = where((element) => element > tukeyLimits().$4);
     return (extremeLowOutliers, mildLowOutliers, mildHighOutliers, extremeHighOutliers);
   }
 }

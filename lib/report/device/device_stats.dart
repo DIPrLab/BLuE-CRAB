@@ -25,11 +25,9 @@ extension DeviceStats on Device {
           .fold(0.0, (a, b) => a + b))
       .fold(0.0, (a, b) => a + b);
 
-  int _incidence() =>
-      this._timeClusterPrefix().where((duration) => duration > Settings.shared.timeThreshold()).length + 1;
+  int _incidence() => _timeClusterPrefix().where((duration) => duration > Settings.shared.timeThreshold()).length + 1;
 
-  Duration _timeTravelled() => this
-      ._timeClusterPrefix()
+  Duration _timeTravelled() => _timeClusterPrefix()
       .where((duration) => duration <= Settings.shared.timeThreshold())
       .fold(Duration(), (a, b) => a + b);
 }

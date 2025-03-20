@@ -61,22 +61,19 @@ class Device {
     }
   }
 
-  String deviceLabel() => !this.name.isEmpty
-      ? this.name
-      : !this.platformName.isEmpty
-          ? this.platformName
-          : !this.manufacturer.isEmpty
-              ? this.manufacturers().join(", ")
-              : this.id;
+  String deviceLabel() => !name.isEmpty
+      ? name
+      : !platformName.isEmpty
+          ? platformName
+          : !manufacturer.isEmpty
+              ? manufacturers().join(", ")
+              : id;
 
   Iterable<String> manufacturers() =>
       manufacturer.map((e) => company_identifiers[e.toRadixString(16).toUpperCase().padLeft(4, "0")] ?? "Unknown");
 
-  Set<LatLng> locations() => this
-      .dataPoints()
-      .where((dataPoint) => dataPoint.location != null)
-      .map((dataPoint) => dataPoint.location!)
-      .toSet();
+  Set<LatLng> locations() =>
+      dataPoints().where((dataPoint) => dataPoint.location != null).map((dataPoint) => dataPoint.location!).toSet();
 
   List<Path> paths() {
     List<Path> paths = <Path>[];
