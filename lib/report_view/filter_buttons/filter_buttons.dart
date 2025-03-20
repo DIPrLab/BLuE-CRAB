@@ -75,7 +75,7 @@ class FilterButtonBarState extends State<FilterButtonBar> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
               children: filterButtons
-                  .map((props) => filterButton(props))
+                  .map(filterButton)
                   .expand((e) => e != filterButtons.last ? [e, const SizedBox(width: 12)] : [e])
                   .toList())));
 }

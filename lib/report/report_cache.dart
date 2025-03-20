@@ -33,5 +33,5 @@ extension Cache on Report {
   Stats _distanceTravelledStats(Iterable<Device> devices) =>
       Stats.fromData(devices.map((device) => device.distanceTravelled));
 
-  Stats _riskScoreStats(Iterable<Device> devices) => Stats.fromData(devices.map((device) => riskScore(device)));
+  Stats _riskScoreStats(Iterable<Device> devices) => Stats.fromData(devices.map(riskScore));
 }

@@ -4,7 +4,7 @@ extension Buttons on ScannerViewState {
   Widget testButton() => FloatingActionButton.large(
       heroTag: "Test Report",
       onPressed: () {
-        TestingSuite()..test();
+        TestingSuite().test();
       },
       child: const Icon(Icons.science));
 
@@ -61,7 +61,7 @@ extension Buttons on ScannerViewState {
           },
           child: const Icon(Icons.stop))
       : FloatingActionButton.large(
-          heroTag: "Start Scanning Button", onPressed: () => startScan(), child: const Icon(Icons.play_arrow_rounded));
+          heroTag: "Start Scanning Button", onPressed: startScan, child: const Icon(Icons.play_arrow_rounded));
 
   Widget settingsButton() => FloatingActionButton.large(
       heroTag: "Settings Button",

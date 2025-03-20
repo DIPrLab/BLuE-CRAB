@@ -107,7 +107,7 @@ class SettingsViewState extends State<SettingsView> {
                 }),
                 header("Safe Zones"),
                 LocationHeader(onAddLocation: _addLocation),
-                ...Settings.shared.safeZones.map((location) => LatLngTile(location)),
+                ...Settings.shared.safeZones.map(LatLngTile.new),
                 header("Mode"),
                 SwitchListTile(
                     title: Text("Developer Mode ${Settings.shared.devMode ? "On" : "Off"}"),
