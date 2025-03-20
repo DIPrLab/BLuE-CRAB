@@ -75,7 +75,7 @@ class ScannerViewState extends State<ScannerView> {
 
   void enableLocationStream() => positionStream = Geolocator.getPositionStream(
           locationSettings: Controllers.getLocationSettings(Settings.shared.scanDistance().toInt()))
-      .listen((Position? position) => location = position?.toLatLng());
+      .listen((position) => location = position.toLatLng());
 
   void disableLocationStream() {
     positionStream.pause();
@@ -110,7 +110,7 @@ class ScannerViewState extends State<ScannerView> {
 
     isScanningSubscription = FlutterBluePlus.isScanning.listen((state) => setState(() => isScanning = state));
 
-    _timeStream = Stream.periodic(Settings.shared.scanTime(), (int x) => DateTime.now());
+    _timeStream = Stream.periodic(Settings.shared.scanTime(), (x) => DateTime.now());
     timeStreamSubscription = _timeStream.listen((currentTime) {
       if (isScanning && !Settings.shared.devMode && !updating) {
         updating = true;

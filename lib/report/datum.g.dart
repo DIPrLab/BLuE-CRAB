@@ -19,7 +19,7 @@ Datum _$DatumFromJson(Map<String, dynamic> json) =>
       ..time = DateTime.parse(json['time'] as String);
 
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
-      "\"location\"": "\"${instance.location?.latitude.degrees},${instance.location?.longitude.degrees}\"",
-      "\"rssi\"": "\"${instance.rssi}\"",
-      "\"time\"": "\"${instance.time.toIso8601String()}\"",
+      '"location"': '"${instance.location?.latitude.degrees},${instance.location?.longitude.degrees}"',
+      '"rssi"': '"${instance.rssi}"',
+      '"time"': '"${instance.time.toIso8601String()}"',
     };

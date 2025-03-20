@@ -16,10 +16,9 @@ class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-      child: Container(
-          child: ListTile(
-              leading: IconButton(icon: const Icon(Icons.add), onPressed: onAddLocation),
-              title: const Text("Add New Safe Zone"))));
+      child: ListTile(
+          leading: IconButton(icon: const Icon(Icons.add), onPressed: onAddLocation),
+          title: const Text("Add New Safe Zone")));
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -62,7 +61,7 @@ class SettingsViewState extends State<SettingsView> {
                 SwitchListTile(
                     title: Text("AutoConnect ${Settings.shared.autoConnect ? "On" : "Off"}"),
                     value: Settings.shared.autoConnect,
-                    onChanged: (bool value) {
+                    onChanged: (value) {
                       setState(() => Settings.shared.autoConnect = value);
                       Settings.shared.save();
                     },
@@ -73,7 +72,7 @@ class SettingsViewState extends State<SettingsView> {
                 SwitchListTile(
                     title: Text("Location ${Settings.shared.locationEnabled ? "En" : "Dis"}abled"),
                     value: Settings.shared.locationEnabled,
-                    onChanged: (bool value) {
+                    onChanged: (value) {
                       setState(() => Settings.shared.locationEnabled = value);
                       Settings.shared.save();
                     },
@@ -92,7 +91,7 @@ class SettingsViewState extends State<SettingsView> {
                     items: Settings.classifiers
                         .map((e) => DropdownMenuItem<Classifier>(value: e, child: Text(e.name)))
                         .toList(),
-                    onChanged: (Classifier? newValue) => setState(() => Settings.shared.classifier = newValue!)),
+                    onChanged: (newValue) => setState(() => Settings.shared.classifier = newValue!)),
                 header("Time"),
                 settingsSlider("Scanning Time Threshold", "${Settings.shared.timeThreshold().inSeconds} seconds", 1,
                     100, Settings.shared.timeThresholdValue, (newValue) {

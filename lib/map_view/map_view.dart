@@ -97,7 +97,7 @@ class PolylinePainter extends CustomPainter {
   Offset generateOffsetLatLng(LatLng coordinate) => transformer.toOffset(coordinate);
 
   @override
-  void paint(Canvas canvas, Size size) => device.paths().forEach((Path path) {
+  void paint(Canvas canvas, Size size) => device.paths().forEach((path) {
         path.forEachMappedOrderedPair(
             (pc) => generateOffsetLatLng(pc.location),
             (offsets) => canvas.drawLine(

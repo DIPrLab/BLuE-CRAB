@@ -40,11 +40,12 @@ String parse(String input) {
       .map((str) => str.padLeft(2, "0"))
       .toList();
   final List<String> time = date[3].split(":").map((str) => str.padLeft(2, "0")).toList();
-  date.removeAt(4);
-  date.removeAt(3);
-  date.removeAt(0);
-  date.insert(0, date[2]);
-  date.removeAt(3);
+  date
+    ..removeAt(4)
+    ..removeAt(3)
+    ..removeAt(0)
+    ..insert(0, date[2])
+    ..removeAt(3);
 
   final String result = "${date.join("-")} ${time.join(":")}";
 
@@ -60,9 +61,9 @@ BleDoubtDetection _$BleDoubtDetectionFromJson(Map<String, dynamic> json) => BleD
     );
 
 Map<String, dynamic> _$BleDoubtDetectionToJson(BleDoubtDetection instance) => <String, dynamic>{
-      "\"lat\"": instance.lat,
-      "\"long\"": instance.long,
-      "\"mac\"": instance.mac,
-      "\"rssi\"": instance.rssi,
-      "\"t\"": instance.t.toIso8601String(),
+      '"lat"': instance.lat,
+      '"long"': instance.long,
+      '"mac"': instance.mac,
+      '"rssi"': instance.rssi,
+      '"t"': instance.t.toIso8601String(),
     };

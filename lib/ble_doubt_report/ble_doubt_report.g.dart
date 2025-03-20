@@ -12,6 +12,6 @@ BleDoubtReport _$BleDoubtReportFromJson(Map<String, dynamic> json) => BleDoubtRe
     );
 
 Map<String, dynamic> _$BleDoubtReportToJson(BleDoubtReport instance) => <String, dynamic>{
-      "\"devices\"": instance.devices,
-      "\"detections\"": instance.detections,
+      '"devices"': instance.devices,
+      '"detections"': instance.detections,
     };

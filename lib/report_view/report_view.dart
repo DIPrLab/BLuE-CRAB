@@ -41,7 +41,7 @@ class ReportViewState extends State<ReportView> {
 
   Widget sortButton() => PopupMenuButton<dynamic>(
       icon: const Icon(Icons.sort),
-      itemBuilder: (BuildContext context) => [
+      itemBuilder: (context) => [
             ("Risk", byRiskScore),
             ("Incidence", byIncidence),
             ("Location", byLocation),

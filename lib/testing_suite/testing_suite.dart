@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -42,8 +44,7 @@ class TestingSuite {
   List<DateTime> getTimestamps(Report report) => report
       .devices()
       .map((d) => d.dataPoints(testing: true).map((d) => d.time).toSet())
-      .fold(Set<DateTime>(), (a, b) => a..addAll(b))
-      .toList()
+      .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList()
     ..sort();
 
   void test() {
@@ -117,8 +118,7 @@ class TestingSuite {
     if (deviceEntries.length < 2) {
       return;
     }
-    final Report r = Report(deviceEntries);
-    r.refreshCache();
+    final Report r = Report(deviceEntries)..refreshCache();
     csv.addRow([
       // Time since starting scan
       ts.difference(init).inSeconds,

@@ -12,10 +12,10 @@ Device _$DeviceFromJson(Map<String, dynamic> json) => Device(json['id'] as Strin
   .._dataPoints = (json['_dataPoints'] as List<dynamic>).map((e) => Datum.fromJson(e as Map<String, dynamic>)).toSet();
 
 Map<String, dynamic> _$DeviceToJson(Device instance) => <String, dynamic>{
-      "\"id\"": "\"${instance.id}\"",
-      "\"name\"": "\"${instance.name}\"",
-      "\"platformName\"": "\"${instance.platformName}\"",
-      "\"manufacturer\"": instance.manufacturer,
-      "\"isTrusted\"": instance.isTrusted,
-      "\"_dataPoints\"": instance._dataPoints.map((datum) => "${datum.toJson()}").toList(),
+      '"id"': '"${instance.id}"',
+      '"name"': '"${instance.name}"',
+      '"platformName"': '"${instance.platformName}"',
+      '"manufacturer"': instance.manufacturer,
+      '"isTrusted"': instance.isTrusted,
+      '"_dataPoints"': instance._dataPoints.map((datum) => "${datum.toJson()}").toList(),
     };
