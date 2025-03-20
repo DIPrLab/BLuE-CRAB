@@ -94,7 +94,6 @@ class Settings {
         //   ("windowDurationValue", windowDurationValue),
         // ].forEach((s) => prefs.setInt(s.$1, s.$2.toInt()));
 
-        prefs.setStringList("safeZones",
-            safeZones.map((z) => "${z.latitude.degrees.toString()},${z.longitude.degrees.toString()}").toList());
+        prefs.setStringList("safeZones", safeZones.map((z) => "${z.latitude.degrees},${z.longitude.degrees}").toList());
       });
 }

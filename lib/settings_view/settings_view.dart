@@ -80,11 +80,7 @@ class SettingsViewState extends State<SettingsView> {
                         ? const Icon(Icons.location_searching)
                         : const Icon(Icons.location_disabled)),
                 header("Windowing"),
-                settingsSlider(
-                    "Window Duration",
-                    "${Settings.shared.windowDuration().inMinutes.toInt().toString()} minutes",
-                    10,
-                    100,
+                settingsSlider("Window Duration", "${Settings.shared.windowDuration().inMinutes} minutes", 10, 100,
                     Settings.shared.windowDurationValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.windowDurationValue = newValue;
@@ -97,22 +93,14 @@ class SettingsViewState extends State<SettingsView> {
                         .toList(),
                     onChanged: (Classifier? newValue) => setState(() => Settings.shared.classifier = newValue!)),
                 header("Time"),
-                settingsSlider(
-                    "Scanning Time Threshold",
-                    "${Settings.shared.timeThreshold().inSeconds.toString()} seconds",
-                    1,
-                    100,
-                    Settings.shared.timeThresholdValue, (newValue) {
+                settingsSlider("Scanning Time Threshold", "${Settings.shared.timeThreshold().inSeconds} seconds", 1,
+                    100, Settings.shared.timeThresholdValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.timeThresholdValue = newValue;
                 }),
                 header("Distance"),
-                settingsSlider(
-                    "Scanning Distance Threshold",
-                    "${Settings.shared.distanceThreshold().toInt().toString()} meters",
-                    1,
-                    100,
-                    Settings.shared.distanceThresholdValue, (newValue) {
+                settingsSlider("Scanning Distance Threshold", "${Settings.shared.distanceThreshold().toInt()} meters",
+                    1, 100, Settings.shared.distanceThresholdValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.distanceThresholdValue = newValue;
                 }),

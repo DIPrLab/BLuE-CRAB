@@ -10,7 +10,7 @@ class PropertyTable extends StatelessWidget {
   List<DataRow> rows = [];
 
   PropertyTable(this.device, this.report, {super.key}) {
-    rows.add(Row("UUID", device.id.toString()));
+    rows.add(Row("UUID", device.id));
     if (device.name.isNotEmpty) {
       rows.add(Row("Name", device.name));
     }
@@ -22,7 +22,7 @@ class PropertyTable extends StatelessWidget {
     }
     // rows.add(Row("Risk Score", report.riskScore(device).toString()));
     rows.add(Row("Time Travelled", device.timeTravelled.toReadableString()));
-    rows.add(Row("Distance Travelled", "${device.distanceTravelled.round().toString()} meters"));
+    rows.add(Row("Distance Travelled", "${device.distanceTravelled.round()} meters"));
     rows.add(Row("Incidence", device.incidence.toString()));
     rows.add(Row("Areas", device.areas.length.toString()));
     rows.add(Row("Duration", device.timeTravelled.printFriendly()));
