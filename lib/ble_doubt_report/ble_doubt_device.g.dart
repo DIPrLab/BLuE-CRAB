@@ -20,14 +20,14 @@ BleDoubtDevice _$BleDoubtDeviceFromJson(Map<String, dynamic> json) => BleDoubtDe
     );
 
 Map<String, dynamic> _$BleDoubtDeviceToJson(BleDoubtDevice instance) => <String, dynamic>{
-      "\"address\"": instance.address,
-      "\"name\"": instance.name,
-      "\"type\"": instance.type,
-      "\"id1\"": instance.id1,
-      "\"id2\"": instance.id2,
-      "\"id3\"": instance.id3,
-      "\"manufacturer\"": instance.manufacturer,
-      "\"parserId\"": instance.parserId,
-      "\"isSafe\"": instance.isSafe,
-      "\"isSuspicious\"": instance.isSuspicious,
+      '"address"': instance.address,
+      '"name"': instance.name,
+      '"type"': instance.type,
+      '"id1"': instance.id1,
+      '"id2"': instance.id2,
+      '"id3"': instance.id3,
+      '"manufacturer"': instance.manufacturer,
+      '"parserId"': instance.parserId,
+      '"isSafe"': instance.isSafe,
+      '"isSuspicious"': instance.isSuspicious,
     };
