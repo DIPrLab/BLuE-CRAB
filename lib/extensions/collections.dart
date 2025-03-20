@@ -25,8 +25,8 @@ extension ListStats on List<num> {
   (num, num) iqrLimits() => (q1() - (iqr() * 1.5), q3() + (iqr() * 1.5));
 
   (Iterable<num>, Iterable<num>) iqrOutliers() {
-    Iterable<num> lowOutliers = where((element) => element < iqrLimits().$1);
-    Iterable<num> highOutliers = where((element) => element > iqrLimits().$2);
+    final Iterable<num> lowOutliers = where((element) => element < iqrLimits().$1);
+    final Iterable<num> highOutliers = where((element) => element > iqrLimits().$2);
     return (lowOutliers, highOutliers);
   }
 
@@ -34,17 +34,17 @@ extension ListStats on List<num> {
       (q1() - (iqr() * 3), q1() - (iqr() * 1.5), q3() + (iqr() * 1.5), q3() + (iqr() * 3));
 
   (Iterable<num>, Iterable<num>, Iterable<num>, Iterable<num>) tukeyOutliers() {
-    Iterable<num> extremeLowOutliers = where((element) => element < tukeyLimits().$1);
-    Iterable<num> mildLowOutliers = where((element) => element < tukeyLimits().$2);
-    Iterable<num> mildHighOutliers = where((element) => element > tukeyLimits().$3);
-    Iterable<num> extremeHighOutliers = where((element) => element > tukeyLimits().$4);
+    final Iterable<num> extremeLowOutliers = where((element) => element < tukeyLimits().$1);
+    final Iterable<num> mildLowOutliers = where((element) => element < tukeyLimits().$2);
+    final Iterable<num> mildHighOutliers = where((element) => element > tukeyLimits().$3);
+    final Iterable<num> extremeHighOutliers = where((element) => element > tukeyLimits().$4);
     return (extremeLowOutliers, mildLowOutliers, mildHighOutliers, extremeHighOutliers);
   }
 }
 
 extension CommonElements<T> on Set<Set<T>> {
   Set<Set<T>> combineSetsWithCommonElements() {
-    var result = Set<Set<T>>.from(this);
+    final result = Set<Set<T>>.from(this);
     result.forEach((s1) => result.difference({s1}).where((s2) => s1.intersection(s2).isNotEmpty).forEach((s2) {
           s1 = s1.union(s2);
           result.remove(s2);

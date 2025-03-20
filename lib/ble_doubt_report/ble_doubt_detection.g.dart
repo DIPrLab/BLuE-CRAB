@@ -7,7 +7,7 @@ part of 'ble_doubt_detection.dart';
 // **************************************************************************
 
 String parse(String input) {
-  List<String> date = input
+  final List<String> date = input
       .split(" ")
       .map((str) {
         if (str == "Jan") {
@@ -39,14 +39,14 @@ String parse(String input) {
       })
       .map((str) => str.padLeft(2, "0"))
       .toList();
-  List<String> time = date[3].split(":").map((str) => str.padLeft(2, "0")).toList();
+  final List<String> time = date[3].split(":").map((str) => str.padLeft(2, "0")).toList();
   date.removeAt(4);
   date.removeAt(3);
   date.removeAt(0);
   date.insert(0, date[2]);
   date.removeAt(3);
 
-  String result = "${date.join("-")} ${time.join(":")}";
+  final String result = "${date.join("-")} ${time.join(":")}";
 
   return result;
 }

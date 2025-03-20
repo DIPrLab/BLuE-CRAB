@@ -7,7 +7,7 @@ part of 'datum.dart';
 // **************************************************************************
 
 LatLng? fromString(String latlng) {
-  List<double> components = latlng.split(",").map((x) {
+  final List<double> components = latlng.split(",").map((x) {
     assert(x.toDouble() is! Error);
     return x.toDouble();
   }).toList();

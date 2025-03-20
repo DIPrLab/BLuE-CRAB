@@ -25,7 +25,7 @@ Future<LatLng> getLocation() async {
     return Future.error('Location permissions are permanently denied, we cannot request permissions.');
   }
 
-  Position position = await Geolocator.getCurrentPosition();
+  final Position position = await Geolocator.getCurrentPosition();
   return position.toLatLng();
 }
 
@@ -33,13 +33,13 @@ LatLng middlePoint(List<LatLng> locations) {
   if (locations.isEmpty) {
     return LatLng.degree(0, 0);
   }
-  List<double> latitudes = [];
-  List<double> longitudes = [];
+  final List<double> latitudes = [];
+  final List<double> longitudes = [];
   for (var location in locations) {
     latitudes.insert(0, location.latitude.degrees);
     longitudes.insert(0, location.longitude.degrees);
   }
-  double latitude = (latitudes.max + latitudes.min) / 2;
-  double longitude = (longitudes.max + longitudes.min) / 2;
+  final double latitude = (latitudes.max + latitudes.min) / 2;
+  final double longitude = (longitudes.max + longitudes.min) / 2;
   return LatLng.degree(latitude, longitude);
 }

@@ -28,7 +28,7 @@ class TestingSuite {
   // }
 
   List<DateTime> generateTimestamps(DateTime start, DateTime end, Duration interval) {
-    List<DateTime> timestamps = [start];
+    final List<DateTime> timestamps = [start];
     DateTime curr = start.add(interval);
 
     while (curr.isBefore(end)) {
@@ -74,7 +74,7 @@ class TestingSuite {
   }
 
   void runTest(File inputFile, File csvFile, File logFile) {
-    CSVData csv = CSVData([
+    final CSVData csv = CSVData([
       "SECONDS_SINCE_INIT",
       "DEVICE_COUNT",
       "DATAPOINT_COUNT",
@@ -83,8 +83,8 @@ class TestingSuite {
       "LOW_RISK_DEVICE_COUNT"
     ]);
     inputFile.readAsString().then((jsonData) {
-      Report report = Report.fromJson(jsonDecode(jsonData));
-      List<DateTime> timeStamps = getTimestamps(report);
+      final Report report = Report.fromJson(jsonDecode(jsonData));
+      final List<DateTime> timeStamps = getTimestamps(report);
       generateTimestamps(
               timeStamps.first.add(Settings.shared.minScanDuration), timeStamps.last, Settings.shared.scanInterval)
           .forEach((ts) => logDataAtTime(report, csv, ts, timeStamps.first));
@@ -97,19 +97,19 @@ class TestingSuite {
   }
 
   CSVData getDeviceMetrics(Report report) {
-    CSVData csv = CSVData(["DEVICE_MAC", "TIME_WITH_USER", "INCIDENCE", "AREAS", "DISTANCE_WITH_USER"]);
-    Map<String, Device> deviceEntries = {};
+    final CSVData csv = CSVData(["DEVICE_MAC", "TIME_WITH_USER", "INCIDENCE", "AREAS", "DISTANCE_WITH_USER"]);
+    final Map<String, Device> deviceEntries = {};
     report.devices().forEach((d) {
       deviceEntries[d.id] =
           Device(d.id, d.name, d.platformName, d.manufacturer, dataPoints: d.dataPoints(testing: true).toSet());
     });
-    Report r = Report(deviceEntries)..refreshCache();
+    final Report r = Report(deviceEntries)..refreshCache();
     r.devices().forEach((d) => csv.addRow([d.id, ...r.riskScores(d).map((e) => e.toString())]));
     return csv;
   }
 
   void logDataAtTime(Report report, CSVData csv, DateTime ts, DateTime init) {
-    Map<String, Device> deviceEntries = {};
+    final Map<String, Device> deviceEntries = {};
     report.devices().where((d) => d.dataPoints(testing: true).any((dp) => dp.time.isBefore(ts))).forEach((d) {
       deviceEntries[d.id] = Device(d.id, d.name, d.platformName, d.manufacturer,
           dataPoints: d.dataPoints(testing: true).where((dp) => dp.time.isBefore(ts)).toSet());
@@ -117,7 +117,7 @@ class TestingSuite {
     if (deviceEntries.length < 2) {
       return;
     }
-    Report r = Report(deviceEntries);
+    final Report r = Report(deviceEntries);
     r.refreshCache();
     csv.addRow([
       // Time since starting scan

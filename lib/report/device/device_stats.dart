@@ -2,7 +2,7 @@ part of 'device.dart';
 
 extension DeviceStats on Device {
   Set<Area> _areas() {
-    Set<Area> result = {};
+    final Set<Area> result = {};
     locations().forEach((location) {
       if (result
           .where((area) =>

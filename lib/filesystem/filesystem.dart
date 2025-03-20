@@ -15,7 +15,7 @@ part "package:blue_crab/filesystem/battery_logs.dart";
 Future<Directory> get localFileDirectory async => await getApplicationDocumentsDirectory();
 
 Future<Settings> readSettings() async {
-  Settings settings = Settings();
+  final Settings settings = Settings();
   settings.loadData();
   return settings;
 }

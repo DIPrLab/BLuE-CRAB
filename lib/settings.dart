@@ -54,7 +54,7 @@ class Settings {
         autoConnect = prefs.getBool("autoConnect") ?? false;
         locationEnabled = prefs.getBool("locationEnabled") ?? true;
         safeZones = prefs.getStringList("safeZones")?.map((x) {
-              List<String> latlng = x.split(',');
+              final List<String> latlng = x.split(',');
               return LatLng.degree(double.tryParse(latlng[0]) ?? 0.0, double.tryParse(latlng[1]) ?? 0.0);
             }).toList() ??
             [];

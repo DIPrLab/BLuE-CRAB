@@ -51,8 +51,8 @@ class Device {
 
   void addDatum(LatLng? location, int rssi) {
     lastUpdated = DateTime.now();
-    DateTime now = lastUpdated;
-    Duration difference = _dataPoints.isEmpty
+    final DateTime now = lastUpdated;
+    final Duration difference = _dataPoints.isEmpty
         ? const Duration()
         : DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second)
             .difference(_dataPoints.map((dp) => dp.time).sorted((a, b) => a.compareTo(b)).last);
@@ -76,19 +76,19 @@ class Device {
       dataPoints().where((dataPoint) => dataPoint.location != null).map((dataPoint) => dataPoint.location!).toSet();
 
   List<Path> paths() {
-    List<Path> paths = <Path>[];
-    List<PathComponent> dataPoints = this
+    final List<Path> paths = <Path>[];
+    final List<PathComponent> dataPoints = this
         .dataPoints()
         .where((dataPoint) => dataPoint.location != null)
         .map((datum) => PathComponent(datum.time, datum.location!))
         .sorted((a, b) => a.time.compareTo(b.time));
 
     while (dataPoints.isNotEmpty) {
-      PathComponent curr = dataPoints.first;
+      final PathComponent curr = dataPoints.first;
       dataPoints.removeAt(0);
-      DateTime time1 = paths.isEmpty ? DateTime(1970) : paths.last.last.time;
-      DateTime time2 = curr.time;
-      Duration time = time2.difference(time1);
+      final DateTime time1 = paths.isEmpty ? DateTime(1970) : paths.last.last.time;
+      final DateTime time2 = curr.time;
+      final Duration time = time2.difference(time1);
       if (time < Settings.shared.timeThreshold()) {
         paths.last.add(curr);
       } else {

@@ -1,6 +1,6 @@
 extension PrintFriendly on Duration {
   String printFriendly() {
-    List<String> result = [];
+    final List<String> result = [];
     Duration d = this;
 
     if (d.inDays > 0) {

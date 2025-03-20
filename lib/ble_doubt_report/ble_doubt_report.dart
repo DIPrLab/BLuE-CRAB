@@ -17,7 +17,7 @@ class BleDoubtReport {
   List<BleDoubtDetection> detections;
 
   Report toReport() {
-    Report report = Report({});
+    final Report report = Report({});
 
     devices.forEach((device) {
       report.addDevice(Device(device.address, device.name, "", [device.manufacturer],
