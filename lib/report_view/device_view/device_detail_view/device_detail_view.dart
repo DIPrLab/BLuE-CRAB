@@ -6,7 +6,7 @@ import 'package:blue_crab/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class DeviceDetailView extends StatelessWidget {
-  DeviceDetailView(this.device, this.report);
+  const DeviceDetailView(this.device, this.report);
 
   final Device device;
   final Report report;
@@ -14,9 +14,9 @@ class DeviceDetailView extends StatelessWidget {
   Widget header(BuildContext context) => Stack(children: [
         Row(children: [
           BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithBackground),
-          Spacer(),
+          const Spacer(),
         ]),
-        Row(children: [Spacer(), Text("Device Details", style: TextStyles.title), Spacer()]),
+        Row(children: [const Spacer(), Text("Device Details", style: TextStyles.title), const Spacer()]),
       ]);
 
   Widget mapButton(BuildContext context) => TextButton.icon(
@@ -28,8 +28,8 @@ class DeviceDetailView extends StatelessWidget {
                     device: device,
                     report: report,
                   )))),
-      icon: Icon(Icons.map),
-      label: Text("Device Routes"));
+      icon: const Icon(Icons.map),
+      label: const Text("Device Routes"));
 
   @override
   Widget build(BuildContext context) => Scaffold(

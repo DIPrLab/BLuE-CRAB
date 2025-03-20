@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class FilterButtonBar extends StatefulWidget {
   final VoidCallback? notify;
 
-  FilterButtonBar({super.key, this.notify});
+  const FilterButtonBar({super.key, this.notify});
 
   @override
   FilterButtonBarState createState() => FilterButtonBarState();
@@ -55,7 +55,7 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   }
 
   Widget filterButton(WidgetButtonProperties props) => TextButton(
-      child: Text(props.label, style: TextStyle(color: Colors.white)),
+      child: Text(props.label, style: const TextStyle(color: Colors.white)),
       onPressed: () => setState(() {
             props.onPressed();
             Settings.shared.save();
@@ -72,11 +72,11 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   Widget build(BuildContext context) => SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
               children: filterButtons
                   .map((props) => filterButton(props))
-                  .expand((e) => e != filterButtons.last ? [e, SizedBox(width: 12)] : [e])
+                  .expand((e) => e != filterButtons.last ? [e, const SizedBox(width: 12)] : [e])
                   .toList())));
 }
 

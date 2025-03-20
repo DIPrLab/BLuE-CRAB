@@ -10,7 +10,7 @@ class TextStyles {
 
 class AppButtonStyle {
   static ButtonStyle buttonWithBackground = ButtonStyle(
-      backgroundColor: WidgetStatePropertyAll(colors.foreground),
+      backgroundColor: const WidgetStatePropertyAll(colors.foreground),
       shape: WidgetStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)))));
 
   static ButtonStyle buttonWithoutBackground = ButtonStyle(

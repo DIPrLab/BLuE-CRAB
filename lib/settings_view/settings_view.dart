@@ -12,20 +12,21 @@ part "slider.dart";
 class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onAddLocation;
 
-  LocationHeader({required this.onAddLocation});
+  const LocationHeader({required this.onAddLocation});
 
   @override
   Widget build(BuildContext context) => Center(
       child: Container(
           child: ListTile(
-              leading: IconButton(icon: Icon(Icons.add), onPressed: onAddLocation), title: Text("Add New Safe Zone"))));
+              leading: IconButton(icon: const Icon(Icons.add), onPressed: onAddLocation),
+              title: const Text("Add New Safe Zone"))));
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class SettingsView extends StatefulWidget {
-  SettingsView({super.key, this.notify});
+  const SettingsView({super.key, this.notify});
 
   final VoidCallback? notify;
 
@@ -49,7 +50,7 @@ class SettingsViewState extends State<SettingsView> {
   Widget build(BuildContext context) => Scaffold(
       body: SingleChildScrollView(
           child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
                 BackButton(
                     onPressed: () {

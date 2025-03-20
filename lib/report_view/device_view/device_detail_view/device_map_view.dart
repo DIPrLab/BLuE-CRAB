@@ -10,7 +10,7 @@ class DeviceMapView extends StatefulWidget {
   final Device device;
   final Report report;
 
-  DeviceMapView({super.key, required this.device, required this.report});
+  const DeviceMapView({super.key, required this.device, required this.report});
 
   @override
   DeviceMapViewState createState() => DeviceMapViewState();

@@ -53,10 +53,10 @@ class Device {
     lastUpdated = DateTime.now();
     DateTime now = lastUpdated;
     Duration difference = _dataPoints.isEmpty
-        ? Duration()
+        ? const Duration()
         : DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second)
             .difference(_dataPoints.map((dp) => dp.time).sorted((a, b) => a.compareTo(b)).last);
-    if (_dataPoints.isEmpty || difference > Duration(seconds: 10)) {
+    if (_dataPoints.isEmpty || difference > const Duration(seconds: 10)) {
       _dataPoints.add(Datum(location, rssi));
     }
   }

@@ -25,7 +25,7 @@ class MapView extends StatefulWidget {
   final Device device;
   final MapController controller;
 
-  MapView(this.device, this.controller, {super.key});
+  const MapView(this.device, this.controller, {super.key});
 
   @override
   MapViewState createState() => MapViewState();
@@ -81,7 +81,7 @@ class MapViewState extends State<MapView> {
                             : {e.first.location, e.last.location})
                         .expand((e) => e)
                         .map((location) => buildMarkerWidget(context, transformer.toOffset(location),
-                            Icon(Icons.circle, color: Colors.red, size: 24), false))
+                            const Icon(Icons.circle, color: Colors.red, size: 24), false))
                         .toList(),
                   ])))));
 }

@@ -124,16 +124,16 @@ class ScannerViewState extends State<ScannerView> {
   Widget build(BuildContext context) => Scaffold(
           body: Center(
               child: Row(children: [
-        Expanded(child: SizedBox.shrink()),
+        const Expanded(child: SizedBox.shrink()),
         Column(children: [
-          Expanded(child: SizedBox.shrink()),
+          const Expanded(child: SizedBox.shrink()),
           Text("BL(u)E CRAB",
               // style: GoogleFonts.nothingYouCouldDo(
               // style: GoogleFonts.sniglet(
               // style: GoogleFonts.caprasimo(
               // style: GoogleFonts.mogra(
               style: GoogleFonts.irishGrover(textStyle: TextStyles.splashText)),
-          Expanded(child: SizedBox.shrink()),
+          const Expanded(child: SizedBox.shrink()),
           ...buttonList()
               .map((row) => Row(
                   children: row
@@ -141,11 +141,11 @@ class ScannerViewState extends State<ScannerView> {
                           Column(children: [Padding(padding: const EdgeInsets.all(16), child: e.$1), Text(e.$2)]))
                       .toList()))
               .toList(),
-          Expanded(child: SizedBox.shrink()),
+          const Expanded(child: SizedBox.shrink()),
           if (FlutterBluePlus.isScanningNow && Settings.shared.demoMode)
             Text(
                 "$deviceCount devices scanned. $datapointCount datapoints. ${widget.report.riskyDevices.length} suspicious devices."),
         ]),
-        Expanded(child: SizedBox.shrink()),
+        const Expanded(child: SizedBox.shrink()),
       ])));
 }

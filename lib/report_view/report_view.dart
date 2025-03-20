@@ -7,7 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class ReportView extends StatefulWidget {
-  ReportView({super.key, required this.report});
+  const ReportView({super.key, required this.report});
 
   final Report report;
 
@@ -65,7 +65,7 @@ class ReportViewState extends State<ReportView> {
           const Spacer(),
         ]),
         BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
-        Row(children: [Spacer(), sortButton()])
+        Row(children: [const Spacer(), sortButton()])
       ]));
 
   List<Widget> deviceTileList(BuildContext context) => devices

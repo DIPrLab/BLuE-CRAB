@@ -27,11 +27,11 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) =>
       // MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen(), theme: Themes.darkMode);
-      MaterialApp(debugShowCheckedModeBanner: false, home: HomePage(), theme: Themes.darkMode);
+      MaterialApp(debugShowCheckedModeBanner: false, home: const HomePage(), theme: Themes.darkMode);
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   HomePageState createState() => HomePageState();
