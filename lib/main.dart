@@ -33,8 +33,6 @@ class _AppState extends State<App> {
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 
-  Report report = Report({});
-
   @override
   _HomePage createState() => _HomePage();
 }
@@ -42,6 +40,7 @@ class HomePage extends StatefulWidget {
 class _HomePage extends State<HomePage> {
   BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
   late StreamSubscription<BluetoothAdapterState> _adapterStateSubscription;
+  Report report = Report({});
 
   @override
   void initState() {
@@ -54,7 +53,7 @@ class _HomePage extends State<HomePage> {
   void dispose() => super.dispose();
 
   Future<void> _loadData() async {
-    readReport().then((savedReport) => widget.report.combine(savedReport));
+    readReport().then((savedReport) => report.combine(savedReport));
     readSettings();
   }
 
@@ -64,7 +63,7 @@ class _HomePage extends State<HomePage> {
           debugShowCheckedModeBanner: false,
           home: SafeArea(
               child: _adapterState == BluetoothAdapterState.on
-                  ? ScannerView(widget.report)
+                  ? ScannerView(report)
                   : BluetoothOffView(adapterState: _adapterState)),
           theme: Themes.darkMode));
 }

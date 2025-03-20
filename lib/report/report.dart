@@ -1,5 +1,3 @@
-import 'package:blue_crab/report/classifiers/classifier.dart';
-import 'package:blue_crab/report/classifiers/classifiers.dart';
 import 'package:latlng/latlng.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:json_annotation/json_annotation.dart';
