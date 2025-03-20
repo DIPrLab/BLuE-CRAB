@@ -16,12 +16,13 @@ class PropertyTable extends StatelessWidget {
     if (device.manufacturer.isNotEmpty) {
       rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
-    // rows.add(Row("Risk Score", report.riskScore(device).toString()));
-    rows.add(Row("Time Travelled", device.timeTravelled.toReadableString()));
-    rows.add(Row("Distance Travelled", "${device.distanceTravelled.round()} meters"));
-    rows.add(Row("Incidence", device.incidence.toString()));
-    rows.add(Row("Areas", device.areas.length.toString()));
-    rows.add(Row("Duration", device.timeTravelled.printFriendly()));
+    [
+      Row("Time Travelled", device.timeTravelled.toReadableString()),
+      Row("Distance Travelled", "${device.distanceTravelled.round()} meters"),
+      Row("Incidence", device.incidence.toString()),
+      Row("Areas", device.areas.length.toString()),
+      Row("Duration", device.timeTravelled.printFriendly())
+    ].forEach(rows.add);
   }
 
   final Device device;
