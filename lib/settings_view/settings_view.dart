@@ -52,41 +52,43 @@ class SettingsViewState extends State<SettingsView> {
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
                 BackButton(
-                    onPressed: (() {
+                    onPressed: () {
                       Settings.shared.save();
                       Navigator.pop(context);
-                    }),
+                    },
                     style: AppButtonStyle.buttonWithoutBackground),
                 header("Discover Services"),
                 SwitchListTile(
                     title: Text("AutoConnect ${Settings.shared.autoConnect ? "On" : "Off"}"),
                     value: Settings.shared.autoConnect,
-                    onChanged: ((bool value) {
+                    onChanged: (bool value) {
                       setState(() => Settings.shared.autoConnect = value);
                       Settings.shared.save();
-                    }),
-                    secondary: Settings.shared.autoConnect ? Icon(Icons.bluetooth) : Icon(Icons.bluetooth_disabled)),
+                    },
+                    secondary: Settings.shared.autoConnect
+                        ? const Icon(Icons.bluetooth)
+                        : const Icon(Icons.bluetooth_disabled)),
                 header("Location Services"),
                 SwitchListTile(
                     title: Text("Location ${Settings.shared.locationEnabled ? "En" : "Dis"}abled"),
                     value: Settings.shared.locationEnabled,
-                    onChanged: ((bool value) {
+                    onChanged: (bool value) {
                       setState(() => Settings.shared.locationEnabled = value);
                       Settings.shared.save();
-                    }),
+                    },
                     secondary: Settings.shared.locationEnabled
-                        ? Icon(Icons.location_searching)
-                        : Icon(Icons.location_disabled)),
+                        ? const Icon(Icons.location_searching)
+                        : const Icon(Icons.location_disabled)),
                 header("Windowing"),
                 settingsSlider(
                     "Window Duration",
                     "${Settings.shared.windowDuration().inMinutes.toInt().toString()} minutes",
                     10.0,
                     100.0,
-                    Settings.shared.windowDurationValue, ((newValue) {
+                    Settings.shared.windowDurationValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.windowDurationValue = newValue;
-                })),
+                }),
                 header("Classifier"),
                 DropdownButton<Classifier>(
                     value: Settings.shared.classifier,
@@ -121,26 +123,26 @@ class SettingsViewState extends State<SettingsView> {
                 SwitchListTile(
                     title: Text("Developer Mode ${Settings.shared.devMode ? "On" : "Off"}"),
                     value: Settings.shared.devMode,
-                    onChanged: ((val) {
+                    onChanged: (val) {
                       setState(() {
                         Settings.shared.devMode = val;
                         Settings.shared.demoMode = Settings.shared.devMode == true ? false : Settings.shared.demoMode;
                       });
                       widget.notify?.call();
                       Settings.shared.save();
-                    }),
+                    },
                     secondary: Icon(Icons.circle, color: Settings.shared.devMode ? Colors.green : Colors.red)),
                 SwitchListTile(
                     title: Text("Demo Mode ${Settings.shared.demoMode ? "On" : "Off"}"),
                     value: Settings.shared.demoMode,
-                    onChanged: ((val) {
+                    onChanged: (val) {
                       setState(() {
                         Settings.shared.demoMode = val;
                         Settings.shared.devMode = Settings.shared.demoMode == true ? false : Settings.shared.devMode;
                       });
                       widget.notify?.call();
                       Settings.shared.save();
-                    }),
+                    },
                     secondary: Icon(Icons.circle, color: Settings.shared.demoMode ? Colors.green : Colors.red)),
               ]))));
 }

@@ -53,7 +53,7 @@ extension Buttons on ScannerViewState {
             if (!updating) {
               widget.report.refreshCache();
             }
-            if ((Platform.isAndroid || Platform.isIOS)) {
+            if (Platform.isAndroid || Platform.isIOS) {
               Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
             }
             Navigator.push(

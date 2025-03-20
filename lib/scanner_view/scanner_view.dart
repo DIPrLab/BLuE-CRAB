@@ -137,13 +137,14 @@ class ScannerViewState extends State<ScannerView> {
           ...buttonList()
               .map((row) => Row(
                   children: row
-                      .map((e) => Column(children: [Padding(padding: EdgeInsets.all(16.0), child: e.$1), Text(e.$2)]))
+                      .map((e) =>
+                          Column(children: [Padding(padding: const EdgeInsets.all(16.0), child: e.$1), Text(e.$2)]))
                       .toList()))
               .toList(),
           Expanded(child: SizedBox.shrink()),
           if (FlutterBluePlus.isScanningNow && Settings.shared.demoMode)
             Text(
-                "${deviceCount} devices scanned. ${datapointCount} datapoints. ${widget.report.riskyDevices.length} suspicious devices."),
+                "$deviceCount devices scanned. $datapointCount datapoints. ${widget.report.riskyDevices.length} suspicious devices."),
         ]),
         Expanded(child: SizedBox.shrink()),
       ])));

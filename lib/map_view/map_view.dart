@@ -100,12 +100,12 @@ class PolylinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) => device.paths().forEach((Path path) {
         path.forEachMappedOrderedPair(
             (pc) => generateOffsetLatLng(pc.location),
-            ((offsets) => canvas.drawLine(
+            (offsets) => canvas.drawLine(
                 offsets.$1 as Offset,
                 offsets.$2 as Offset,
                 Paint()
                   ..color = Colors.red
-                  ..strokeWidth = 4)));
+                  ..strokeWidth = 4));
       });
 
   // Since this Sky painter has no fields, it always paints

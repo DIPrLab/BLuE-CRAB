@@ -15,7 +15,7 @@ LatLng? fromString(String latlng) {
 }
 
 Datum _$DatumFromJson(Map<String, dynamic> json) =>
-    Datum(fromString((json['location'] ?? "" as String?)), int.parse(json['rssi']))
+    Datum(fromString(json['location'] ?? "" as String?), int.parse(json['rssi']))
       ..time = DateTime.parse(json['time'] as String);
 
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
