@@ -1,10 +1,10 @@
+import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/report_view/device_view/device_view.dart';
 import 'package:blue_crab/report_view/filter_buttons/filter_buttons.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:blue_crab/report_view/device_view/device_view.dart';
-import 'package:blue_crab/report/report.dart';
-import 'package:blue_crab/report/device/device.dart';
 
 class ReportView extends StatefulWidget {
   ReportView({super.key, required this.report});

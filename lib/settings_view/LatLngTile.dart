@@ -1,5 +1,5 @@
-import 'package:latlng/latlng.dart';
 import 'package:flutter/material.dart';
+import 'package:latlng/latlng.dart';
 
 class LatLngTile extends StatelessWidget {
   LatLngTile(LatLng this.coordinate, {super.key});

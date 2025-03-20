@@ -1,9 +1,9 @@
-import 'package:latlng/latlng.dart';
-import 'package:blue_crab/report/device/device.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:blue_crab/settings.dart';
-import 'package:blue_crab/extensions/stats.dart';
 import 'package:blue_crab/ble_doubt_report/ble_doubt_report.dart';
+import 'package:blue_crab/extensions/stats.dart';
+import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/settings.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:latlng/latlng.dart';
 
 part 'report.g.dart';
 part 'report_cache.dart';

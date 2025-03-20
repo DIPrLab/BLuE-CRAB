@@ -1,5 +1,5 @@
-import "dart:math";
 import "dart:core";
+import "dart:math";
 
 extension IterableStats on Iterable<num> {
   num average() => fold(0.0, (a, b) => a + b) / length;

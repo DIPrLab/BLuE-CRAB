@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/settings.dart';
-import 'package:blue_crab/filesystem/filesystem.dart';
 
 class CSVData {
   List<String> _headers;

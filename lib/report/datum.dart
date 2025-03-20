@@ -1,5 +1,5 @@
-import 'package:latlng/latlng.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:latlng/latlng.dart';
 import 'package:statistics/statistics.dart';
 
 part 'datum.g.dart';

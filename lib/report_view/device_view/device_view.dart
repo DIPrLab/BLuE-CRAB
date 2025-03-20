@@ -1,9 +1,9 @@
-import 'package:blue_crab/report_view/device_view/device_detail_view/device_detail_view.dart';
-import 'package:blue_crab/report/report.dart';
-import 'package:blue_crab/styles/styles.dart';
-import 'package:flutter/material.dart';
 import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/report_view/device_view/device_detail_view/device_detail_view.dart';
+import 'package:blue_crab/styles/styles.dart';
 import 'package:blue_crab/styles/themes.dart';
+import 'package:flutter/material.dart';
 
 class DeviceView extends StatelessWidget {
   final Device device;

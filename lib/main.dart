@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'package:blue_crab/bluetooth_disabled_view/bluetooth_disabled_view.dart';
+import 'package:blue_crab/filesystem/filesystem.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/scanner_view/scanner_view.dart';
+import 'package:blue_crab/styles/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:blue_crab/bluetooth_disabled_view/bluetooth_disabled_view.dart';
-import 'package:blue_crab/scanner_view/scanner_view.dart';
-import 'package:blue_crab/report/report.dart';
-import 'package:blue_crab/filesystem/filesystem.dart';
-import 'package:blue_crab/styles/themes.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
 void main() => runApp(const App());

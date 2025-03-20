@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:blue_crab/styles/themes.dart';
+import 'package:flutter/material.dart';
 
 class TextStyles {
   static var normal = const TextStyle();

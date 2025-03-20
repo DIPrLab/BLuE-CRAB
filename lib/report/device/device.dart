@@ -1,18 +1,18 @@
-import 'package:collection/collection.dart';
-import 'package:latlng/latlng.dart';
-import 'package:flutter/foundation.dart';
-import 'package:blue_crab/report/datum.dart';
-import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/assigned_numbers/company_identifiers.dart';
+import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/extensions/geolocator.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
-import 'package:blue_crab/assigned_numbers/company_identifiers.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:blue_crab/extensions/collections.dart';
+import 'package:blue_crab/report/datum.dart';
+import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/settings.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:latlng/latlng.dart';
 
+part 'device.g.dart';
 part 'device_cache.dart';
 part 'device_stats.dart';
-part 'device.g.dart';
 
 /// Device data type
 ///

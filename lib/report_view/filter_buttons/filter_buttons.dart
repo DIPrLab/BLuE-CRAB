@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/styles/themes.dart';
+import 'package:flutter/material.dart';
 
 class FilterButtonBar extends StatefulWidget {
   final VoidCallback? notify;

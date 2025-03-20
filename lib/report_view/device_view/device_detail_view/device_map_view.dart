@@ -1,8 +1,8 @@
 import 'package:blue_crab/map_view/map_functions.dart';
 import 'package:blue_crab/map_view/map_view.dart';
+import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/styles/styles.dart';
-import 'package:blue_crab/report/device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:map/map.dart';
 

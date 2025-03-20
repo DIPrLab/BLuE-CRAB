@@ -1,13 +1,13 @@
 import 'package:blue_crab/map_view/map_functions.dart';
 import 'package:blue_crab/report/classifiers/classifier.dart';
-import 'package:blue_crab/styles/styles.dart';
-import 'package:blue_crab/settings_view/LatLngTile.dart';
 import 'package:blue_crab/settings.dart';
+import 'package:blue_crab/settings_view/LatLngTile.dart';
+import 'package:blue_crab/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 part "dropdown.dart";
-part "slider.dart";
 part "section_header.dart";
+part "slider.dart";
 
 class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onAddLocation;
