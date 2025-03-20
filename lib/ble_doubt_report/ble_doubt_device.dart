@@ -4,6 +4,11 @@ part 'ble_doubt_device.g.dart';
 
 @JsonSerializable()
 class BleDoubtDevice {
+  BleDoubtDevice(this.address, this.name, this.type, this.id1, this.id2, this.id3, this.manufacturer, this.parserId,
+      this.isSafe, this.isSuspicious);
+
+  factory BleDoubtDevice.fromJson(Map<String, dynamic> json) => _$BleDoubtDeviceFromJson(json);
+
   String address;
   String name;
   String type;
@@ -15,8 +20,5 @@ class BleDoubtDevice {
   bool isSafe;
   bool isSuspicious;
 
-  BleDoubtDevice(this.address, this.name, this.type, this.id1, this.id2, this.id3, this.manufacturer, this.parserId,
-      this.isSafe, this.isSuspicious);
-  factory BleDoubtDevice.fromJson(Map<String, dynamic> json) => _$BleDoubtDeviceFromJson(json);
   Map<String, dynamic> toJson() => _$BleDoubtDeviceToJson(this);
 }

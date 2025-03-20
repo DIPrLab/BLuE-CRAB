@@ -4,13 +4,13 @@ part 'ble_doubt_detection.g.dart';
 
 @JsonSerializable()
 class BleDoubtDetection {
+  BleDoubtDetection(this.lat, this.long, this.mac, this.rssi, this.t);
+  factory BleDoubtDetection.fromJson(Map<String, dynamic> json) => _$BleDoubtDetectionFromJson(json);
+
   double lat;
   double long;
   String mac;
   int rssi;
   DateTime t;
-
-  BleDoubtDetection(this.lat, this.long, this.mac, this.rssi, this.t);
-  factory BleDoubtDetection.fromJson(Map<String, dynamic> json) => _$BleDoubtDetectionFromJson(json);
   Map<String, dynamic> toJson() => _$BleDoubtDetectionToJson(this);
 }

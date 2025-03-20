@@ -25,9 +25,9 @@ class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class SettingsView extends StatefulWidget {
-  final VoidCallback? notify;
-
   SettingsView({super.key, this.notify});
+
+  final VoidCallback? notify;
 
   @override
   SettingsViewState createState() => SettingsViewState();

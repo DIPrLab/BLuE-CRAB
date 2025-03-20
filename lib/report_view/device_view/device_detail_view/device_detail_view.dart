@@ -6,10 +6,10 @@ import 'package:blue_crab/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class DeviceDetailView extends StatelessWidget {
+  DeviceDetailView(this.device, this.report);
+
   final Device device;
   final Report report;
-
-  DeviceDetailView(this.device, this.report);
 
   Widget header(BuildContext context) => Stack(children: [
         Row(children: [

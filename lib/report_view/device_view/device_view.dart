@@ -6,10 +6,10 @@ import 'package:blue_crab/styles/themes.dart';
 import 'package:flutter/material.dart';
 
 class DeviceView extends StatelessWidget {
+  DeviceView(Device this.device, {super.key, required this.report});
+
   final Device device;
   final Report report;
-
-  DeviceView(Device this.device, {super.key, required this.report});
 
   Widget Tile(BuildContext context) => ListTile(
       leading: (report.riskScore(device) > report.riskScoreStats.tukeyExtremeUpperLimit)

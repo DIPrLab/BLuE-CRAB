@@ -7,10 +7,10 @@ import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/settings.dart';
 
 class CSVData {
+  CSVData(this._headers);
+
   List<String> _headers;
   List<List<String>> _rows = [];
-
-  CSVData(this._headers);
 
   void addRow(List<String> row) => _rows.add(row);
 

@@ -5,10 +5,6 @@ import 'package:blue_crab/report_view/duration.dart';
 import 'package:flutter/material.dart';
 
 class PropertyTable extends StatelessWidget {
-  final Device device;
-  final Report report;
-  List<DataRow> rows = [];
-
   PropertyTable(this.device, this.report, {super.key}) {
     rows.add(Row("UUID", device.id));
     if (device.name.isNotEmpty) {
@@ -27,6 +23,10 @@ class PropertyTable extends StatelessWidget {
     rows.add(Row("Areas", device.areas.length.toString()));
     rows.add(Row("Duration", device.timeTravelled.printFriendly()));
   }
+
+  final Device device;
+  final Report report;
+  List<DataRow> rows = [];
 
   DataRow Row(String label, String value) => DataRow(cells: [
         DataCell(Text(label, softWrap: true)),

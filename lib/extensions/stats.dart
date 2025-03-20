@@ -1,6 +1,9 @@
 import 'package:blue_crab/extensions/collections.dart';
 
 class Stats {
+  Stats(this.input);
+  factory Stats.fromData(Iterable<num> input) => Stats(input.toList()..sort());
+
   final List<num> input;
 
   late num average = input.average();
@@ -23,7 +26,4 @@ class Stats {
   late Iterable<num> extremeHighOutliers = input.tukeyOutliers().$4;
 
   num zScore(num x) => standardDeviation == 0 ? 0 : (x - average) / standardDeviation;
-
-  factory Stats.fromData(Iterable<num> input) => Stats(input.toList()..sort());
-  Stats(this.input);
 }
