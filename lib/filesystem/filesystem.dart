@@ -12,7 +12,7 @@ import 'package:share_plus/share_plus.dart';
 part "package:blue_crab/filesystem/report_file.dart";
 part "package:blue_crab/filesystem/battery_logs.dart";
 
-Future<Directory> get localFileDirectory async => await getApplicationDocumentsDirectory();
+Future<Directory> get localFileDirectory async => getApplicationDocumentsDirectory();
 
 Future<Settings> readSettings() async {
   final Settings settings = Settings()..loadData();
