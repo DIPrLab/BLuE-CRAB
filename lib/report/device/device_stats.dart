@@ -3,10 +3,19 @@ part of 'device.dart';
 extension DeviceStats on Device {
   Set<Area> _areas() {
     Set<Area> result = {};
-    locations().forEach((location) => result
-        .where((area) =>
-            area.any((areaLocation) => distanceBetween(location, areaLocation) < Settings.shared.distanceThreshold()))
-        .forEach((area) => area.add(location)));
+    locations().forEach((location) {
+      if (result
+          .where((area) =>
+              area.any((areaLocation) => distanceBetween(location, areaLocation) < Settings.shared.distanceThreshold()))
+          .isEmpty) {
+        result.add({location});
+      } else {
+        result
+            .where((area) => area
+                .any((areaLocation) => distanceBetween(location, areaLocation) < Settings.shared.distanceThreshold()))
+            .forEach((a) => a.add(location));
+      }
+    });
     return result.combineSetsWithCommonElements();
   }
 
