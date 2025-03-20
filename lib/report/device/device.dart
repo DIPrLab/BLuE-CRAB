@@ -61,11 +61,11 @@ class Device {
     }
   }
 
-  String deviceLabel() => !name.isEmpty
+  String deviceLabel() => name.isNotEmpty
       ? name
-      : !platformName.isEmpty
+      : platformName.isNotEmpty
           ? platformName
-          : !manufacturer.isEmpty
+          : manufacturer.isNotEmpty
               ? manufacturers().join(", ")
               : id;
 
@@ -83,7 +83,7 @@ class Device {
         .map((datum) => PathComponent(datum.time, datum.location!))
         .sorted((a, b) => a.time.compareTo(b.time));
 
-    while (!dataPoints.isEmpty) {
+    while (dataPoints.isNotEmpty) {
       PathComponent curr = dataPoints.first;
       dataPoints.removeAt(0);
       DateTime time1 = paths.isEmpty ? DateTime(1970) : paths.last.last.time;

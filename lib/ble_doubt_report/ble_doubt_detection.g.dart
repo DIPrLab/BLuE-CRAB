@@ -46,7 +46,7 @@ String parse(String input) {
   date.insert(0, date[2]);
   date.removeAt(3);
 
-  String result = date.join("-") + " " + time.join(":");
+  String result = "${date.join("-")} ${time.join(":")}";
 
   return result;
 }

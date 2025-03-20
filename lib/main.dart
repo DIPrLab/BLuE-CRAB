@@ -34,10 +34,10 @@ class HomePage extends StatefulWidget {
   HomePage({super.key});
 
   @override
-  _HomePage createState() => _HomePage();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePage extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
   late StreamSubscription<BluetoothAdapterState> _adapterStateSubscription;
   Report report = Report({});

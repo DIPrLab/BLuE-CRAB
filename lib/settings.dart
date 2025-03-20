@@ -38,12 +38,12 @@ class Settings {
   late double distanceThresholdValue;
 
   bool recentlyChanged = false;
-  Duration minScanDuration = Duration(minutes: 10);
-  Duration scanInterval = Duration(minutes: 10);
+  Duration minScanDuration = const Duration(minutes: 10);
+  Duration scanInterval = const Duration(minutes: 10);
 
   // Duration windowDuration() => Duration(hours: windowDurationValue.toInt());
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
-  Duration scanTime() => Duration(seconds: 10);
+  Duration scanTime() => const Duration(seconds: 10);
   Duration timeThreshold() => Duration(seconds: timeThresholdValue.toInt());
   double scanDistance() => 30;
   double distanceThreshold() => distanceThresholdValue;
