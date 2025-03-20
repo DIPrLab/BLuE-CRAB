@@ -14,10 +14,7 @@ part "package:blue_crab/filesystem/battery_logs.dart";
 
 Future<Directory> get localFileDirectory async => getApplicationDocumentsDirectory();
 
-Future<Settings> readSettings() async {
-  final Settings settings = Settings()..loadData();
-  return settings;
-}
+Settings readSettings() => Settings()..loadData();
 
 void printSuccess(String text) => print('\x1B[32m$text\x1B[0m');
 

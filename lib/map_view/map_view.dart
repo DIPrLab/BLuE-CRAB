@@ -5,7 +5,6 @@ import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/map_view/build_marker_widget.dart';
 import 'package:blue_crab/map_view/tile_servers.dart';
 import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +21,10 @@ double clamp(double x, double min, double max) => x < min
         : x;
 
 class MapView extends StatefulWidget {
+  const MapView(this.device, this.controller, {super.key});
+
   final Device device;
   final MapController controller;
-
-  const MapView(this.device, this.controller, {super.key});
 
   @override
   MapViewState createState() => MapViewState();
@@ -81,7 +80,8 @@ class MapViewState extends State<MapView> {
                             : {e.first.location, e.last.location})
                         .expand((e) => e)
                         .map((location) => buildMarkerWidget(context, transformer.toOffset(location),
-                            const Icon(Icons.circle, color: Colors.red, size: 24), false))
+                            const Icon(Icons.circle, color: Colors.red, size: 24),
+                            backgroundCircle: false))
                         .toList(),
                   ])))));
 }

@@ -24,7 +24,7 @@ part 'buttons.dart';
 part 'scanner.dart';
 
 class ScannerView extends StatefulWidget {
-  ScannerView(Report this.report, {super.key});
+  ScannerView(this.report, {super.key});
 
   Report report;
 
