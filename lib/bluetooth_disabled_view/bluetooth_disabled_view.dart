@@ -10,13 +10,13 @@ class BluetoothOffView extends StatelessWidget {
 
   final BluetoothAdapterState? adapterState;
 
-  Widget bluetoothOffIcon(BuildContext context) => const Icon(Icons.bluetooth_disabled, size: 200.0);
+  Widget bluetoothOffIcon(BuildContext context) => const Icon(Icons.bluetooth_disabled, size: 200);
 
   Widget errorText(BuildContext context) =>
       Text('Bluetooth Adapter is ${adapterState?.toString().split(".").last ?? 'not available'}');
 
   Widget turnOnBluetoothButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20),
       child: ElevatedButton(
           child: const Text('TURN ON'),
           onPressed: () async {

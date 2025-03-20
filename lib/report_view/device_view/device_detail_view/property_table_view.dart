@@ -11,10 +11,10 @@ class PropertyTable extends StatelessWidget {
 
   PropertyTable(this.device, this.report, {super.key}) {
     rows.add(Row("UUID", device.id.toString()));
-    if (!device.name.isEmpty) {
+    if (device.name.isNotEmpty) {
       rows.add(Row("Name", device.name));
     }
-    if (!device.platformName.isEmpty) {
+    if (device.platformName.isNotEmpty) {
       rows.add(Row("Platform", device.platformName));
     }
     if (device.manufacturer.isNotEmpty) {

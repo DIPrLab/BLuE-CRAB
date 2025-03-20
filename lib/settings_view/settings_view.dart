@@ -49,7 +49,7 @@ class SettingsViewState extends State<SettingsView> {
   Widget build(BuildContext context) => Scaffold(
       body: SingleChildScrollView(
           child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
                 BackButton(
                     onPressed: () {
@@ -83,8 +83,8 @@ class SettingsViewState extends State<SettingsView> {
                 settingsSlider(
                     "Window Duration",
                     "${Settings.shared.windowDuration().inMinutes.toInt().toString()} minutes",
-                    10.0,
-                    100.0,
+                    10,
+                    100,
                     Settings.shared.windowDurationValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.windowDurationValue = newValue;
@@ -100,8 +100,8 @@ class SettingsViewState extends State<SettingsView> {
                 settingsSlider(
                     "Scanning Time Threshold",
                     "${Settings.shared.timeThreshold().inSeconds.toString()} seconds",
-                    1.0,
-                    100.0,
+                    1,
+                    100,
                     Settings.shared.timeThresholdValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.timeThresholdValue = newValue;
@@ -110,8 +110,8 @@ class SettingsViewState extends State<SettingsView> {
                 settingsSlider(
                     "Scanning Distance Threshold",
                     "${Settings.shared.distanceThreshold().toInt().toString()} meters",
-                    1.0,
-                    100.0,
+                    1,
+                    100,
                     Settings.shared.distanceThresholdValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.distanceThresholdValue = newValue;

@@ -33,7 +33,7 @@ class MapView extends StatefulWidget {
 
 class MapViewState extends State<MapView> {
   Offset? dragStart;
-  double scaleStart = 1.0;
+  double scaleStart = 1;
 
   @override
   void initState() {
@@ -81,7 +81,7 @@ class MapViewState extends State<MapView> {
                             : {e.first.location, e.last.location})
                         .expand((e) => e)
                         .map((location) => buildMarkerWidget(context, transformer.toOffset(location),
-                            Icon(Icons.circle, color: Colors.red, size: 24.0), false))
+                            Icon(Icons.circle, color: Colors.red, size: 24), false))
                         .toList(),
                   ])))));
 }

@@ -70,7 +70,7 @@ class ReportViewState extends State<ReportView> {
 
   List<Widget> deviceTileList(BuildContext context) => devices
       .map((device) => DeviceView(device, report: widget.report))
-      .map((w) => Padding(padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0), child: w))
+      .map((w) => Padding(padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16), child: w))
       .toList();
 
   @override

@@ -31,7 +31,7 @@ Future<LatLng> getLocation() async {
 
 LatLng middlePoint(List<LatLng> locations) {
   if (locations.isEmpty) {
-    return LatLng.degree(0.0, 0.0);
+    return LatLng.degree(0, 0);
   }
   List<double> latitudes = [];
   List<double> longitudes = [];

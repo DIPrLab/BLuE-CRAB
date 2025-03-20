@@ -35,7 +35,7 @@ class DeviceDetailView extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
       body: SingleChildScrollView(
           child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
               child: Column(children: [
                 header(context),
                 PropertyTable(device, report),

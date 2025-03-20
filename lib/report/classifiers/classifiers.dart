@@ -23,9 +23,9 @@ class KMeans extends Classifier {
     List<Cluster> clusters = initialClusters(3, instances, seed: 0);
     kMeans(clusters: clusters, instances: instances);
     clusters = clusters.sorted((c1, c2) => c1.instances
-        .map((i) => i.location.fold<double>(0.0, (a, b) => a + b))
+        .map((i) => i.location.fold(0.0, (a, b) => a + b))
         .fold<double>(0.0, (a, b) => a + b)
-        .compareTo(c2.instances.map((i) => i.location.fold<double>(0.0, (a, b) => a + b)).average));
+        .compareTo(c2.instances.map((i) => i.location.fold(0.0, (a, b) => a + b)).average));
     clusters.forEach((c) => print([c.id, c.instances.map((d) => d.id).join("\n"), ""].join("\n")));
     return clusters.last.instances.map((e) => report.data[e.id]!);
   }

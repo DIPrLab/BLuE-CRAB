@@ -64,19 +64,19 @@ class FilterButtonBarState extends State<FilterButtonBar> {
       style: TextButton.styleFrom(
           backgroundColor: props.value() ? colors.altText : colors.background,
           enableFeedback: true,
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0), side: const BorderSide(color: colors.altText, width: 2.0))));
+              borderRadius: BorderRadius.circular(30), side: const BorderSide(color: colors.altText, width: 2))));
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 16),
           child: Row(
               children: filterButtons
                   .map((props) => filterButton(props))
-                  .expand((e) => e != filterButtons.last ? [e, SizedBox(width: 12.0)] : [e])
+                  .expand((e) => e != filterButtons.last ? [e, SizedBox(width: 12)] : [e])
                   .toList())));
 }
 

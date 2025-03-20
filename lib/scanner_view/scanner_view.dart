@@ -36,7 +36,7 @@ class ScannerViewState extends State<ScannerView> {
   LatLng? location;
   late StreamSubscription<Position> positionStream;
   Offset? dragStart;
-  double scaleStart = 1.0;
+  double scaleStart = 1;
   bool updating = false;
 
   bool isScanning = false;
@@ -138,7 +138,7 @@ class ScannerViewState extends State<ScannerView> {
               .map((row) => Row(
                   children: row
                       .map((e) =>
-                          Column(children: [Padding(padding: const EdgeInsets.all(16.0), child: e.$1), Text(e.$2)]))
+                          Column(children: [Padding(padding: const EdgeInsets.all(16), child: e.$1), Text(e.$2)]))
                       .toList()))
               .toList(),
           Expanded(child: SizedBox.shrink()),

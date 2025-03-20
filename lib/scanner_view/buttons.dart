@@ -76,9 +76,8 @@ extension Buttons on ScannerViewState {
           child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: colors.foreground),
               child: Center(
-                  child:
-                      Padding(padding: EdgeInsets.symmetric(vertical: 16.0), child: Text("Risky Devices Detected!"))),
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)),
+                  child: Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Text("Risky Devices Detected!"))),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
           onTap: () => Navigator.push(
               context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))))),
       child: const Icon(Icons.notifications));

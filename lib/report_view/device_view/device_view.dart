@@ -25,7 +25,7 @@ class DeviceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10.0)), color: colors.foreground),
-      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: colors.foreground),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Tile(context));
 }
