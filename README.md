@@ -132,7 +132,7 @@ samples, guidance on mobile development, and a full API reference.
 To clone this repository, run the following:
 ```
 cd /Downloads
-git clone git@github.com:DIPrLab/bluetooth_detector.git
+git clone git@github.com:DIPrLab/blue_crab.git
 ```
 
 ## Getting packages and setting up your code editor
@@ -166,7 +166,7 @@ When you do so, you should see something similar to what is below. Keep in mind 
 ```
 Launching lib/main.dart on Linux in debug mode...
 Building Linux application...
-✓ Built build/linux/x64/debug/bundle/bluetooth_detector
+✓ Built build/linux/x64/debug/bundle/blue_crab
 
 Flutter run key commands.
 r Hot reload. 🔥🔥🔥

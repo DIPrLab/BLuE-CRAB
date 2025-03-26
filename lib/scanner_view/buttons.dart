@@ -1,100 +1,84 @@
-part of 'package:bluetooth_detector/scanner_view/scanner_view.dart';
+part of 'scanner_view.dart';
 
 extension Buttons on ScannerViewState {
-  Widget autoConnectButton() {
-    return FloatingActionButton.large(
-      onPressed: () async {
-        autoConnect = !autoConnect;
-        print("Auto Connect: ${autoConnect}");
-        setState(() {});
+  Widget testButton() => FloatingActionButton.large(
+      heroTag: "Test Report",
+      onPressed: () {
+        TestingSuite().test();
       },
-      backgroundColor: colors.foreground,
-      child: Icon(autoConnect ? Icons.bluetooth : Icons.bluetooth_disabled,
-          color: colors.primaryText),
-    );
-  }
+      child: const Icon(Icons.science));
 
-  Widget locationButton() {
-    if (location == null) {
-      return FloatingActionButton.large(
-        onPressed: () async {
-          enableLocationStream();
-          location = await getLocation();
-          print("Enabling Location Stream");
-          setState(() {});
-        },
-        backgroundColor: colors.foreground,
-        child: const Icon(Icons.location_disabled, color: colors.primaryText),
-      );
-    } else {
-      return FloatingActionButton.large(
-        onPressed: () {
-          disableLocationStream();
-          location = null;
-          print("Disabling Location Stream");
-          setState(() {});
-        },
-        backgroundColor: colors.foreground,
-        child: const Icon(Icons.location_searching, color: colors.primaryText),
-      );
-    }
-  }
+  Widget deleteReportButton() => FloatingActionButton.large(
+      heroTag: "Delete Report",
+      onPressed: () {
+        widget.report = Report({});
+        write(Report({}));
+      },
+      child: const Icon(Icons.delete));
 
-  Widget scanButton() {
-    if (FlutterBluePlus.isScanningNow) {
-      return FloatingActionButton.large(
-        onPressed: () {
-          log();
-          stopScan();
-          write(report);
-          Vibration.vibrate(pattern: [
-            250,
-            100,
-            100,
-            100,
-            100,
-            100,
-            250,
-            100,
-            500,
-            250,
-            250,
-            100,
-            750,
-            500
-          ], intensities: [
-            255,
-            0,
-            255,
-            0,
-            255,
-            0,
-            255,
-            0,
-            255,
-            0,
-            255,
-            0,
-            255,
-            0
-          ]);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      SafeArea(child: ReportView(report: report))));
-        },
-        backgroundColor: colors.altText,
-        child: const Icon(Icons.stop, color: colors.primaryText),
-      );
-    } else {
-      return FloatingActionButton.large(
-        onPressed: () {
-          startScan();
-        },
-        backgroundColor: colors.foreground,
-        child: const Icon(Icons.play_arrow_rounded, color: colors.primaryText),
-      );
-    }
-  }
+  Widget loadReportButton() => FloatingActionButton.large(
+      heroTag: "Load Sample Report",
+      onPressed: () {
+        readReport().then((report) {
+          widget.report.combine(report);
+          write(widget.report);
+        });
+      },
+      child: const Icon(Icons.upload));
+
+  Widget shareButton() => FloatingActionButton.large(
+      heroTag: "Share",
+      onPressed: () {
+        write(widget.report);
+        shareReport();
+      },
+      child: const Icon(Icons.share));
+
+  Widget reportViewerButton() => FloatingActionButton.large(
+      heroTag: "Report Viewer Button",
+      onPressed: () {
+        if (!updating) {
+          widget.report.refreshCache();
+        }
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
+      },
+      child: const Icon(Icons.newspaper));
+
+  Widget scanButton() => FlutterBluePlus.isScanningNow
+      ? FloatingActionButton.large(
+          heroTag: "Stop Scanning Button",
+          onPressed: () {
+            stopScan().then((_) => write(widget.report));
+            if (!updating) {
+              widget.report.refreshCache();
+            }
+            if (Platform.isAndroid || Platform.isIOS) {
+              Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
+            }
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
+          },
+          child: const Icon(Icons.stop))
+      : FloatingActionButton.large(
+          heroTag: "Start Scanning Button", onPressed: startScan, child: const Icon(Icons.play_arrow_rounded));
+
+  Widget settingsButton() => FloatingActionButton.large(
+      heroTag: "Settings Button",
+      onPressed: () => Navigator.push(context,
+          MaterialPageRoute(builder: (context) => SafeArea(child: SettingsView(notify: () => setState(() {}))))),
+      child: const Icon(Icons.settings));
+
+  Widget notifyButton() => FloatingActionButton.large(
+      heroTag: "Notify Button",
+      onPressed: () => InAppNotification.show(
+          context: context,
+          child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: colors.foreground),
+              child: const Center(
+                  child: Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Text("Risky Devices Detected!"))),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
+          onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))))),
+      child: const Icon(Icons.notifications));
 }

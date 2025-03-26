@@ -6,14 +6,25 @@ part of 'report.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Report _$ReportFromJson(Map<String, dynamic> json) => Report(
-      (json['report'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(
-            k, e == null ? null : Device.fromJson(e as Map<String, dynamic>)),
-      ),
-    );
+Report _$ReportFromJson(Map<String, dynamic> json) {
+  Report? report = null;
+  try {
+    report = Report(
+        (json['data'] as Map<String, dynamic>).map((k, e) => MapEntry(k, Device.fromJson(e as Map<String, dynamic>))))
+      ..time = DateTime.parse(json['time'] as String);
+  } catch (e) {
+    print("Failed to load report as Report");
+    try {
+      report = BleDoubtReport.fromJson(json).toReport();
+    } catch (e) {
+      print("Failed to load report as BleDoubtReport");
+      print("Generating empty report");
+    }
+  }
+  return report ?? Report({});
+}
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
-      'report': instance.report
-          .map((a, b) => MapEntry("${a}", "${b?.toJson() ?? ""}")),
+      '"time"': '"${instance.time.toIso8601String()}"',
+      '"data"': instance.data.map((a, b) => MapEntry('"$a"', "${b.toJson()}")),
     };

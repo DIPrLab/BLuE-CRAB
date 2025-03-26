@@ -1,36 +1,28 @@
 extension PrintFriendly on Duration {
   String printFriendly() {
-    List<String> result = [];
+    final List<String> result = [];
     Duration d = this;
 
-    int days = d.inDays;
-    if (days > 0) {
-      result.add("${days} days");
-      d -= Duration(days: days);
+    if (d.inDays > 0) {
+      result.add("${d.inDays} days");
+      d -= Duration(days: d.inDays);
     }
 
-    int hours = d.inHours;
-    if (hours > 0) {
-      result.add("${hours} hrs");
-      d -= Duration(hours: hours);
+    if (d.inHours > 0) {
+      result.add("${d.inHours} hrs");
+      d -= Duration(hours: d.inHours);
     }
 
-    int minutes = d.inMinutes;
-    if (minutes > 0) {
-      result.add("${minutes} mins");
-      d -= Duration(minutes: minutes);
+    if (d.inMinutes > 0) {
+      result.add("${d.inMinutes} mins");
+      d -= Duration(minutes: d.inMinutes);
     }
 
-    int seconds = d.inSeconds;
-    if (seconds > 0) {
-      result.add("${seconds} sec");
-      d -= Duration(seconds: seconds);
+    if (d.inSeconds > 0) {
+      result.add("${d.inSeconds} sec");
+      d -= Duration(seconds: d.inSeconds);
     }
 
-    if (result.isEmpty) {
-      result.add("< 1 sec");
-    }
-
-    return result.join(", ");
+    return result.isEmpty ? "< 1 sec" : result.join(", ");
   }
 }

@@ -1,7 +1,8 @@
 PODS:
   - device_info_plus (0.0.1):
     - FlutterMacOS
-  - flutter_blue_plus (0.0.1):
+  - flutter_blue_plus_darwin (0.0.2):
+    - Flutter
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - geolocator_apple (1.2.0):
@@ -9,47 +10,53 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - share_plus (0.0.1):
+    - FlutterMacOS
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - sqflite (0.0.3):
+  - sqflite_darwin (0.0.4):
     - Flutter
     - FlutterMacOS
 
 DEPENDENCIES:
   - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
-  - flutter_blue_plus (from `Flutter/ephemeral/.symlinks/plugins/flutter_blue_plus/macos`)
+  - flutter_blue_plus_darwin (from `Flutter/ephemeral/.symlinks/plugins/flutter_blue_plus_darwin/darwin`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - geolocator_apple (from `Flutter/ephemeral/.symlinks/plugins/geolocator_apple/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
+  - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - sqflite (from `Flutter/ephemeral/.symlinks/plugins/sqflite/darwin`)
+  - sqflite_darwin (from `Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin`)
 
 EXTERNAL SOURCES:
   device_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
-  flutter_blue_plus:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_blue_plus/macos
+  flutter_blue_plus_darwin:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_blue_plus_darwin/darwin
   FlutterMacOS:
     :path: Flutter/ephemeral
   geolocator_apple:
     :path: Flutter/ephemeral/.symlinks/plugins/geolocator_apple/macos
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
+  share_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/share_plus/macos
   shared_preferences_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
-  sqflite:
-    :path: Flutter/ephemeral/.symlinks/plugins/sqflite/darwin
+  sqflite_darwin:
+    :path: Flutter/ephemeral/.symlinks/plugins/sqflite_darwin/darwin
 
 SPEC CHECKSUMS:
-  device_info_plus: ce1b7762849d3ec103d0e0517299f2db7ad60720
-  flutter_blue_plus: e2868679021f19d12a8c0c58a33f1df66ec7fa6a
+  device_info_plus: 4fb280989f669696856f8b129e4a5e3cd6c48f76
+  flutter_blue_plus_darwin: 09444a26fb6bdef523e55b68fc1c59af5a877ea6
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  geolocator_apple: 72a78ae3f3e4ec0db62117bd93e34523f5011d58
-  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
-  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
-  sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+  geolocator_apple: ccfb79d5250de3a295f5093cd03e76aa8836a416
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
 
 PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

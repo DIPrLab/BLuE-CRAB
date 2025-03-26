@@ -1,27 +1,32 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bluetooth_detector/map_view/map_functions.dart';
-import 'package:bluetooth_detector/map_view/map_view.dart';
-import 'package:bluetooth_detector/map_view/position.dart';
-import 'package:bluetooth_detector/report/file.dart';
-import 'package:bluetooth_detector/report_view/report_view.dart';
-import 'package:bluetooth_detector/styles/colors.dart';
+import 'package:blue_crab/filesystem/filesystem.dart';
+import 'package:blue_crab/map_view/map_view.dart';
+import 'package:blue_crab/map_view/position.dart';
+import 'package:blue_crab/report/device/device.dart';
+import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/report_view/report_view.dart';
+import 'package:blue_crab/settings.dart';
+import 'package:blue_crab/settings_view/settings_view.dart';
+import 'package:blue_crab/styles/styles.dart';
+import 'package:blue_crab/styles/themes.dart';
+import 'package:blue_crab/testing_suite/testing_suite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:bluetooth_detector/report/device.dart';
-import 'package:bluetooth_detector/report/report.dart';
-import 'package:bluetooth_detector/report/datum.dart';
-import 'package:bluetooth_detector/settings.dart';
-import 'package:vibration/vibration.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:in_app_notification/in_app_notification.dart';
 import 'package:latlng/latlng.dart';
+import 'package:vibration/vibration.dart';
 
-part 'package:bluetooth_detector/scanner_view/buttons.dart';
-part 'package:bluetooth_detector/scanner_view/scanner.dart';
+part 'buttons.dart';
+part 'scanner.dart';
 
 class ScannerView extends StatefulWidget {
-  const ScannerView({super.key});
+  ScannerView(this.report, {super.key});
+
+  Report report;
 
   @override
   ScannerViewState createState() => ScannerViewState();
@@ -31,73 +36,71 @@ class ScannerViewState extends State<ScannerView> {
   LatLng? location;
   late StreamSubscription<Position> positionStream;
   Offset? dragStart;
-  double scaleStart = 1.0;
-  Report report = Report({});
-  bool autoConnect = false;
+  double scaleStart = 1;
+  bool updating = false;
 
   bool isScanning = false;
   late StreamSubscription<bool> isScanningSubscription;
   late StreamSubscription<List<ScanResult>> scanResultsSubscription;
-  List<ScanResult> scanResults = [];
-  List<BluetoothDevice> systemDevices = [];
 
   late StreamSubscription<DateTime> timeStreamSubscription;
 
-  final Stream<DateTime> _timeStream =
-      Stream.periodic(Settings.scanTime, (int x) {
-    return DateTime.now();
-  });
+  late Stream<DateTime> _timeStream;
+  int deviceCount = 0;
+  int datapointCount = 0;
 
-  void log() {
-    List<Device> devices = scanResults
-        .map((e) => Device(
-            e.device.remoteId.toString(),
-            e.advertisementData.advName,
-            e.device.platformName,
-            e.advertisementData.manufacturerData.keys.toList()))
-        .toList();
-    for (Device d in devices) {
-      if (report.report[d.id] == null) {
-        report.report[d.id] =
-            Device(d.id, d.name, d.platformName, d.manufacturer);
-      }
-      report.report[d.id]?.dataPoints
-          .add(Datum(location?.latitude.degrees, location?.longitude.degrees));
+  List<List<(Widget, String)>> buttonList() {
+    List<List<(Widget, String)>> result = [
+      [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+      [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+    ];
+    if (Settings.shared.devMode) {
+      result = [
+        [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+        [(shareButton(), "Share Report"), (deleteReportButton(), "Delete Data")],
+        [
+          (testButton(), "Run Tests"),
+          (scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")
+        ],
+      ];
+    } else if (Settings.shared.demoMode) {
+      result = [
+        [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+        [(loadReportButton(), "Load Sample Data"), (deleteReportButton(), "Delete Data")],
+        [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+      ];
     }
+    return result;
   }
 
-  void enableLocationStream() {
-    positionStream = Geolocator.getPositionStream(
-            locationSettings: Controllers.getLocationSettings(30))
-        .listen((Position? position) {
-      setState(() {
-        location = position?.toLatLng();
-      });
-      if (isScanning) {
-        log();
-        rescan();
-      }
-    });
-  }
+  void enableLocationStream() => positionStream = Geolocator.getPositionStream(
+          locationSettings: Controllers.getLocationSettings(Settings.shared.scanDistance().toInt()))
+      .listen((position) => location = position.toLatLng());
 
   void disableLocationStream() {
     positionStream.pause();
-    positionStream.cancel();
+    positionStream.cancel().then((_) => location = null);
   }
 
   @override
   void initState() {
     super.initState();
 
-    read().then((savedReport) {
-      report = savedReport;
-    });
-
-    enableLocationStream();
+    Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream();
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
-      scanResults = results;
-      probe(results.last.device);
+      results
+          .map((sr) => (
+                Device(sr.device.remoteId.toString(), sr.advertisementData.advName, sr.device.platformName,
+                    sr.advertisementData.manufacturerData.keys.toList()),
+                sr.rssi
+              ))
+          .forEach((d) => widget.report.addDatumToDevice(d.$1, location, d.$2));
+      if (Settings.shared.autoConnect) {
+        results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
+      }
+      deviceCount = widget.report.devices().length;
+      datapointCount = widget.report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
       if (mounted) {
         setState(() {});
       }
@@ -105,56 +108,44 @@ class ScannerViewState extends State<ScannerView> {
       // Snackbar.show(ABC.b, prettyException("Scan Error:", e), success: false);
     });
 
-    isScanningSubscription = FlutterBluePlus.isScanning.listen((state) {
-      isScanning = state;
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    isScanningSubscription = FlutterBluePlus.isScanning.listen((state) => setState(() => isScanning = state));
 
+    _timeStream = Stream.periodic(Settings.shared.scanTime(), (x) => DateTime.now());
     timeStreamSubscription = _timeStream.listen((currentTime) {
-      if (isScanning) {
-        log();
-        rescan();
+      if (isScanning && !Settings.shared.devMode && !updating) {
+        updating = true;
+        widget.report.refreshCache();
+        updating = false;
       }
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colors.background,
-      body: Center(
-          child: Row(children: [
-        Spacer(),
-        Column(
-          children: [
-            Spacer(),
-            Row(children: [
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: autoConnectButton(),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: locationButton(),
-              ),
-            ]),
-            Row(children: [
-              // Padding(
-              //   padding: EdgeInsets.all(16.0),
-              //   child: locationButton(context),
-              // ),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: scanButton(),
-              ),
-            ]),
-            Spacer(),
-          ],
-        ),
-        Spacer(),
-      ])),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+          body: Center(
+              child: Row(children: [
+        const Expanded(child: SizedBox.shrink()),
+        Column(children: [
+          const Expanded(child: SizedBox.shrink()),
+          Text("BL(u)E CRAB",
+              // style: GoogleFonts.nothingYouCouldDo(
+              // style: GoogleFonts.sniglet(
+              // style: GoogleFonts.caprasimo(
+              // style: GoogleFonts.mogra(
+              style: GoogleFonts.irishGrover(textStyle: TextStyles.splashText)),
+          const Expanded(child: SizedBox.shrink()),
+          ...buttonList()
+              .map((row) => Row(
+                  children: row
+                      .map((e) =>
+                          Column(children: [Padding(padding: const EdgeInsets.all(16), child: e.$1), Text(e.$2)]))
+                      .toList()))
+              .toList(),
+          const Expanded(child: SizedBox.shrink()),
+          if (FlutterBluePlus.isScanningNow && Settings.shared.demoMode)
+            Text(
+                "$deviceCount devices scanned. $datapointCount datapoints. ${widget.report.riskyDevices.length} suspicious devices."),
+        ]),
+        const Expanded(child: SizedBox.shrink()),
+      ])));
 }

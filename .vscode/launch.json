@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "bluetooth_detector",
+            "name": "blue_crab",
             "request": "launch",
             "type": "dart"
         },
@@ -26,6 +26,13 @@
         {
             "deviceId": "Dylan",
             "name": "Debug iOS",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug"
+        },
+        {
+            "deviceId": "macOS",
+            "name": "Debug MacOS",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug"

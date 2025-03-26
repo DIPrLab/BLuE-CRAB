@@ -1,6 +1,6 @@
 {
-    "name": "bluetooth_detector",
-    "short_name": "bluetooth_detector",
+    "name": "blue_crab",
+    "short_name": "blue_crab",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

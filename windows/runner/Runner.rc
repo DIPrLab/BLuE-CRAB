@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "bluetooth_detector" "\0"
+            VALUE "FileDescription", "blue_crab" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "bluetooth_detector" "\0"
+            VALUE "InternalName", "blue_crab" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "bluetooth_detector.exe" "\0"
-            VALUE "ProductName", "bluetooth_detector" "\0"
+            VALUE "OriginalFilename", "blue_crab.exe" "\0"
+            VALUE "ProductName", "blue_crab" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

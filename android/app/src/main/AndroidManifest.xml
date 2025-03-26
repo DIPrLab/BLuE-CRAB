@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-     package="conklin.dylan.bluetooth_detector">
+     package="conklin.dylan.blue_crab">
     <!-- Request legacy Bluetooth permissions on older devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH"
                      android:maxSdkVersion="30" />
