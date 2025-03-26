@@ -7,6 +7,7 @@ import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/settings.dart';
+import 'package:statistics/statistics.dart';
 
 class CSVData {
   CSVData(this._headers);
@@ -53,18 +54,22 @@ class TestingSuite {
   }
 
   void testFile(String filename) {
-    localFileDirectory.then((dir) => runTest(File([dir.path, "${filename}.json"].join("/")),
-        File([dir.path, "${filename}_results.csv"].join("/")), File([dir.path, "${filename}_log.txt"].join("/"))));
+    localFileDirectory.then((dir) => runTest(
+        File([dir.path, "${filename}.json"].join("/")),
+        File([dir.path, "${filename}_report_data.csv"].join("/")),
+        File([dir.path, "${filename}_device_data.txt"].join("/")),
+        File([dir.path, "${filename}_flagged_devices.csv"].join("/"))));
   }
 
-  void runTest(File inputFile, File csvFile, File logFile) {
+  void runTest(File inputFile, File reportDataFile, File deviceDataFile, File flaggedDevicesFile) {
     inputFile.readAsString().then((jsonData) {
       final Report report = Report.fromJson(jsonDecode(jsonData));
       // flaggedDevicesWithTimeStamps.forEach(
       //     (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
       // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
-      csvFile.writeAsString(getReportMetrics(report).toString());
-      logFile.writeAsString(getDeviceMetrics(report).toString());
+      reportDataFile.writeAsString(getReportMetrics(report).toString());
+      deviceDataFile.writeAsString(getDeviceMetrics(report).toString());
+      // flaggedDevicesFile.writeAsString(getFlaggedDevicesAtTime(report).toString());
     });
   }
 
@@ -78,7 +83,34 @@ class TestingSuite {
       "LOW_RISK_DEVICE_COUNT"
     ]);
     final List<DateTime> timeStamps = report.getTimestamps();
-    generateTimestamps(timeStamps).forEach((ts) => logDataAtTime(report, csv, ts, timeStamps.first));
+    generateTimestamps(timeStamps).forEach((ts) {
+      final Report r = Report(Map.fromEntries(report
+          .devices()
+          .where((d) => d.dataPoints(testing: true).any((dp) => dp.time.isBefore(ts)))
+          .map((d) => MapEntry(
+              d.id,
+              Device(d.id, d.name, d.platformName, d.manufacturer,
+                  dataPoints: d.dataPoints(testing: true).where((dp) => dp.time.isBefore(ts) || dp == ts).toSet())))))
+        ..refreshCache();
+      if (r.data.entries.length < 2) {
+        return;
+      }
+      csv.addRow([
+        // Time since starting scan
+        ts.difference(timeStamps.first).inSeconds,
+        // Number of devices in Report
+        r.devices().length,
+        // Number of data points in Report
+        r.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b),
+        // Number of risky devices
+        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length,
+        // Number of high-risk devices
+        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
+        // Number of low-risk devices
+        r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyMildUpperLimit).toList().length -
+            r.devices().where((d) => r.riskScore(d) > r.riskScoreStats.tukeyExtremeUpperLimit).toList().length,
+      ].map((e) => e.toString()).toList());
+    });
     return csv;
   }
 
@@ -94,6 +126,7 @@ class TestingSuite {
     return csv;
   }
 
+  // Moved to closure inside getReportMetrics
   void logDataAtTime(Report report, CSVData csv, DateTime ts, DateTime init) {
     final Map<String, Device> deviceEntries = {};
     report.devices().where((d) => d.dataPoints(testing: true).any((dp) => dp.time.isBefore(ts))).forEach((d) {
