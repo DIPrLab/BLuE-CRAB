@@ -34,7 +34,7 @@ class TestingSuite {
     final List<DateTime> timestamps = [start];
     DateTime curr = start.add(interval);
 
-    while (curr.isBefore(end)) {
+    while (curr.isBefore(end) || curr == end) {
       timestamps.add(curr);
       curr = curr.add(interval);
     }
