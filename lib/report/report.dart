@@ -13,14 +13,15 @@ typedef Area = Set<LatLng>;
 typedef Path = List<PathComponent>;
 
 class PathComponent {
+  PathComponent(this.time, this.location);
   DateTime time;
   LatLng location;
-
-  PathComponent(this.time, this.location);
 }
 
 @JsonSerializable()
 class Report {
+  Report(this.data);
+  factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   DateTime time = DateTime.now();
   Map<String, Device> data;
 
@@ -31,8 +32,6 @@ class Report {
   late Stats riskScoreStats;
   DateTime lastUpdated = DateTime(0);
   Set<String> riskyDevices = {};
-
-  Report(this.data);
 
   Device? getDevice(String id) => data[id];
   void addDevice(Device d) {
@@ -49,7 +48,11 @@ class Report {
   void combine(Report report) =>
       report.data.forEach((id, d) => data.update(id, (device) => device..combine(d), ifAbsent: () => d));
 
+  List<DateTime> getTimestamps() => devices()
+      .map((d) => d.dataPoints(testing: true).map((d) => d.time).toSet())
+      .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList()
+    ..sort();
+
   List<Device> devices() => data.values.toList();
-  factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 }

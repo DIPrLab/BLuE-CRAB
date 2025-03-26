@@ -21,32 +21,17 @@ class CSVData {
 }
 
 class TestingSuite {
-  // Report report;
-  // Set<Device> flaggedDevices = {};
-  // Map<DateTime, Set<Device>> flaggedDevicesWithTimeStamps = {};
-  // late List<DateTime> timeStamps;
+  List<DateTime> generateTimestamps(List<DateTime> timestamps) {
+    final List<DateTime> result = [];
+    DateTime curr = timestamps.first.add(Settings.shared.minScanDuration);
 
-  // TestingSuite(this.report) {
-  //   timeStamps = getTimestamps();
-  // }
-
-  List<DateTime> generateTimestamps(DateTime start, DateTime end, Duration interval) {
-    final List<DateTime> timestamps = [start];
-    DateTime curr = start.add(interval);
-
-    while (curr.isBefore(end) || curr == end) {
-      timestamps.add(curr);
-      curr = curr.add(interval);
+    while (curr.isBefore(timestamps.last) || curr == timestamps.last) {
+      result.add(curr);
+      curr = curr.add(Settings.shared.scanInterval);
     }
 
-    return timestamps;
+    return result;
   }
-
-  List<DateTime> getTimestamps(Report report) => report
-      .devices()
-      .map((d) => d.dataPoints(testing: true).map((d) => d.time).toSet())
-      .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList()
-    ..sort();
 
   void testBleDoubtFiles() {
     [
@@ -73,6 +58,17 @@ class TestingSuite {
   }
 
   void runTest(File inputFile, File csvFile, File logFile) {
+    inputFile.readAsString().then((jsonData) {
+      final Report report = Report.fromJson(jsonDecode(jsonData));
+      // flaggedDevicesWithTimeStamps.forEach(
+      //     (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
+      // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
+      csvFile.writeAsString(getReportMetrics(report).toString());
+      logFile.writeAsString(getDeviceMetrics(report).toString());
+    });
+  }
+
+  CSVData getReportMetrics(Report report) {
     final CSVData csv = CSVData([
       "SECONDS_SINCE_INIT",
       "DEVICE_COUNT",
@@ -81,18 +77,9 @@ class TestingSuite {
       "HIGH_RISK_DEVICE_COUNT",
       "LOW_RISK_DEVICE_COUNT"
     ]);
-    inputFile.readAsString().then((jsonData) {
-      final Report report = Report.fromJson(jsonDecode(jsonData));
-      final List<DateTime> timeStamps = getTimestamps(report);
-      generateTimestamps(
-              timeStamps.first.add(Settings.shared.minScanDuration), timeStamps.last, Settings.shared.scanInterval)
-          .forEach((ts) => logDataAtTime(report, csv, ts, timeStamps.first));
-      // flaggedDevicesWithTimeStamps.forEach(
-      //     (timestamp, listOfDevices) => print(timestamp.toString() + ": " + listOfDevices.map((e) => e.id).join(", ")));
-      // print("Flagged " + flaggedDevices.length.toString() + " of " + report.devices().length.toString() + " devices");
-      csvFile.writeAsString(csv.toString());
-      logFile.writeAsString(getDeviceMetrics(report).toString());
-    });
+    final List<DateTime> timeStamps = report.getTimestamps();
+    generateTimestamps(timeStamps).forEach((ts) => logDataAtTime(report, csv, ts, timeStamps.first));
+    return csv;
   }
 
   CSVData getDeviceMetrics(Report report) {
