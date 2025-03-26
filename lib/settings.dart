@@ -4,19 +4,18 @@ import 'package:latlng/latlng.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings {
-  // The singleton instance
-  static final Settings shared = Settings._internal();
+  // Factory constructor that returns the shared instance
+  factory Settings() => shared;
 
   // Private constructor
   Settings._internal() {
     loadData();
   }
+  // The singleton instance
+  static final Settings shared = Settings._internal();
 
   static List<Classifier> classifiers = [IQR(), IQRKMeansHybrid(), KMeans(), Permissive()];
   Classifier classifier = classifiers[0];
-
-  // Factory constructor that returns the shared instance
-  factory Settings() => shared;
 
   late bool demoMode;
   late bool devMode;
