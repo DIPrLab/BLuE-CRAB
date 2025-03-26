@@ -4,7 +4,7 @@ extension Buttons on ScannerViewState {
   Widget testButton() => FloatingActionButton.large(
       heroTag: "Test Report",
       onPressed: () {
-        TestingSuite().test();
+        TestingSuite().testBleDoubtFiles();
       },
       child: const Icon(Icons.science));
 
@@ -75,9 +75,9 @@ extension Buttons on ScannerViewState {
           context: context,
           child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: colors.foreground),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: const Center(
-                  child: Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Text("Risky Devices Detected!"))),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
+                  child: Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Text("Risky Devices Detected!")))),
           onTap: () => Navigator.push(
               context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))))),
       child: const Icon(Icons.notifications));
