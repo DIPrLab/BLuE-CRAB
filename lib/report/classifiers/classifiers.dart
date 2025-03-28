@@ -9,8 +9,8 @@ class IQR extends Classifier {
   String name = "IQR";
 
   @override
-  Iterable<Device> getRiskyDevices(Report report) =>
-      report.devices().where((d) => report.riskScore(d) > report.riskScoreStats.tukeyMildUpperLimit);
+  Set<Device> getRiskyDevices(Report report) =>
+      report.devices().where((d) => report.riskScore(d) > report.riskScoreStats.tukeyMildUpperLimit).toSet();
 }
 
 class KMeans extends Classifier {
@@ -18,17 +18,17 @@ class KMeans extends Classifier {
   String name = "K-Means";
 
   @override
-  Iterable<Device> getRiskyDevices(Report report) {
+  Set<Device> getRiskyDevices(Report report) {
     final List<Instance> instances =
         report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
     List<Cluster> clusters = initialClusters(3, instances, seed: 0);
     kMeans(clusters: clusters, instances: instances);
     clusters = clusters.sorted((c1, c2) => c1.instances
-        .map((i) => i.location.fold(0.0, (a, b) => a + b))
-        .fold<double>(0.0, (a, b) => a + b)
-        .compareTo(c2.instances.map((i) => i.location.fold(0.0, (a, b) => a + b)).average));
+        .map((i) => i.location.fold(0.toDouble(), (a, b) => a + b))
+        .fold<double>(0, (a, b) => a + b)
+        .compareTo(c2.instances.map((i) => i.location.fold(0.toDouble(), (a, b) => a + b)).average));
     clusters.forEach((c) => print([c.id, c.instances.map((d) => d.id).join("\n"), ""].join("\n")));
-    return clusters.last.instances.map((e) => report.data[e.id]!);
+    return clusters.last.instances.map((e) => report.data[e.id]!).toSet();
   }
 }
 
@@ -37,15 +37,15 @@ class IQRKMeansHybrid extends Classifier {
   String name = "IQR / K-Means Hybrid";
 
   @override
-  Iterable<Device> getRiskyDevices(Report report) {
+  Set<Device> getRiskyDevices(Report report) {
     final List<Instance> instances =
         report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
     List<Cluster> clusters = initialClusters(5, instances, seed: 0);
     kMeans(clusters: clusters, instances: instances);
     clusters = clusters.sorted((c1, c2) => c1.instances
-        .map((i) => i.location.fold<double>(0.0, (a, b) => a + b))
-        .fold<double>(0.0, (a, b) => a + b)
-        .compareTo(c2.instances.map((i) => i.location.fold<double>(0.0, (a, b) => a + b)).average));
+        .map((i) => i.location.fold<double>(0, (a, b) => a + b))
+        .fold<double>(0, (a, b) => a + b)
+        .compareTo(c2.instances.map((i) => i.location.fold<double>(0, (a, b) => a + b)).average));
     clusters.forEach((c) => print([c.id, c.instances.map((d) => d.id).join("\n"), ""].join("\n")));
     final num lower = clusters.first.instances
         .sorted((a, b) => report.riskScore(report.data[a.id]!).compareTo(report.riskScore(report.data[b.id]!)))
@@ -60,7 +60,7 @@ class IQRKMeansHybrid extends Classifier {
         .map((i) => report.riskScore(report.data[i.id]!))
         .first;
     final num limit = (upper - lower) * 3;
-    return report.devices().where((d) => report.riskScore(d) > limit);
+    return report.devices().where((d) => report.riskScore(d) > limit).toSet();
   }
 }
 
@@ -69,5 +69,5 @@ class Permissive extends Classifier {
   String name = "Permissive";
 
   @override
-  Iterable<Device> getRiskyDevices(Report report) => report.devices();
+  Set<Device> getRiskyDevices(Report report) => report.devices().toSet();
 }
