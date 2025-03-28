@@ -38,7 +38,7 @@ class Settings {
 
   bool recentlyChanged = false;
   Duration minScanDuration = const Duration(minutes: 10);
-  Duration scanInterval = const Duration(minutes: 10);
+  Duration scanInterval = const Duration(minutes: 1);
 
   // Duration windowDuration() => Duration(hours: windowDurationValue.toInt());
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
