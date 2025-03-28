@@ -40,7 +40,7 @@ class IQRKMeansHybrid extends Classifier {
   Set<Device> getRiskyDevices(Report report) {
     final List<Instance> instances =
         report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
-    List<Cluster> clusters = initialClusters(5, instances, seed: 0);
+    List<Cluster> clusters = initialClusters(3, instances, seed: 0);
     kMeans(clusters: clusters, instances: instances);
     clusters = clusters.sorted((c1, c2) => c1.instances
         .map((i) => i.location.fold<double>(0, (a, b) => a + b))
