@@ -1,0 +1,48 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "blue_crab",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "deviceId": "Dylan",
+            "name": "Profile iOS",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "deviceId": "Dylan",
+            "name": "Release iOS",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "deviceId": "Dylan",
+            "name": "Debug iOS",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug"
+        },
+        {
+            "deviceId": "macOS",
+            "name": "Debug MacOS",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug"
+        },
+        {
+            "deviceId": "SM T220",
+            "name": "Debug Andoid",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug"
+        },
+    ]
+}
