@@ -53,8 +53,10 @@ class Report {
       .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList()
     ..sort();
 
-  Set<String> getSuspiciousDevices() => Settings.shared.classifier.getRiskyDeviceIDs(this);
+  Set<Device> getSuspiciousDevices() => Settings.shared.classifier.getRiskyDevices(this);
+  Set<String> getSuspiciousDeviceIDs() => Settings.shared.classifier.getRiskyDeviceIDs(this);
 
-  List<Device> devices() => data.values.toList();
+  Set<Device> devices() => data.values.toSet();
+  Set<String> deviceIDs() => data.values.map((d) => d.id).toSet();
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 }
