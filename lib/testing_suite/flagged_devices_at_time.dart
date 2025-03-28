@@ -17,6 +17,7 @@ extension FlaggedDevicesAtTime on TestingSuite {
       "FALSE_NEGATIVES_RATE",
       "POSITIVES_ACCURACY",
       "NEGATIVES_ACCURACY",
+      "F1_SCORE",
     ]);
     Set<String> devicesToFlag = {};
     Set<String> devicesToUnflag = {};
@@ -36,6 +37,16 @@ extension FlaggedDevicesAtTime on TestingSuite {
       // Get all non-suspicious devices currently flagged and remove them to flagged devices
       devicesToUnflag = r.deviceIDs().difference(r.getSuspiciousDeviceIDs()).where(flaggedDevices.contains).toSet();
       flaggedDevices.removeAll(devicesToUnflag);
+
+      final double accuracy = (flaggedDevices.intersection(gt).length +
+              r.deviceIDs().difference(flaggedDevices).intersection(r.deviceIDs().difference(gt)).length) /
+          r.deviceIDs().length;
+      final double recall = flaggedDevices.intersection(gt).length /
+          (flaggedDevices.intersection(gt).length +
+              r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length);
+      final double precision = flaggedDevices.intersection(gt).length /
+          (flaggedDevices.intersection(gt).length + flaggedDevices.difference(gt).length);
+      final double f1 = 2 * ((precision * recall) / (precision + recall));
 
       csv.addRow([
         // Time since starting scan
@@ -67,6 +78,8 @@ extension FlaggedDevicesAtTime on TestingSuite {
         flaggedDevices.intersection(gt).length / gt.length,
         // Negatives Accuracy
         r.deviceIDs().difference(gt).difference(flaggedDevices).length / r.deviceIDs().difference(gt).length,
+        // F1 Score
+        f1,
       ].map((e) => e.toString()).toList());
     });
     return csv;
