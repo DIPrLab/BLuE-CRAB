@@ -53,6 +53,8 @@ class Report {
       .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList()
     ..sort();
 
+  Set<String> getSuspiciousDevices() => Settings.shared.classifier.getRiskyDeviceIDs(this);
+
   List<Device> devices() => data.values.toList();
   Map<String, dynamic> toJson() => _$ReportToJson(this);
 }
