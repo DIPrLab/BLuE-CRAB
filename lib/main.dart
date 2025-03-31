@@ -26,7 +26,6 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) =>
-      // MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen(), theme: Themes.darkMode);
       MaterialApp(debugShowCheckedModeBanner: false, home: const HomePage(), theme: Themes.darkMode);
 }
 
@@ -53,7 +52,7 @@ class HomePageState extends State<HomePage> {
   void dispose() => super.dispose();
 
   Future<void> _loadData() async {
-    readReport().then((savedReport) => report.combine(savedReport));
+    unawaited(readReport().then((savedReport) => report.combine(savedReport)));
     readSettings();
   }
 
