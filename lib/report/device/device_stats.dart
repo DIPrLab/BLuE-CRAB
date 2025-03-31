@@ -29,5 +29,5 @@ extension DeviceStats on Device {
 
   Duration _timeTravelled() => _timeClusterPrefix()
       .where((duration) => duration <= Settings.shared.timeThreshold())
-      .fold(const Duration(), (a, b) => a + b);
+      .fold(Duration.zero, (a, b) => a + b);
 }
