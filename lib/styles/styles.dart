@@ -2,10 +2,10 @@ import 'package:blue_crab/styles/themes.dart';
 import 'package:flutter/material.dart';
 
 class TextStyles {
-  static var normal = const TextStyle();
-  static var splashText = const TextStyle(fontSize: 64, fontWeight: FontWeight.bold);
-  static var title = const TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
-  static var title2 = const TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+  static TextStyle normal = const TextStyle();
+  static TextStyle splashText = const TextStyle(fontSize: 64, fontWeight: FontWeight.bold);
+  static TextStyle title = const TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
+  static TextStyle title2 = const TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 }
 
 class AppButtonStyle {

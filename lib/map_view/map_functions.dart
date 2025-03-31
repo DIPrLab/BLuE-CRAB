@@ -35,7 +35,7 @@ LatLng middlePoint(List<LatLng> locations) {
   }
   final List<double> latitudes = [];
   final List<double> longitudes = [];
-  for (var location in locations) {
+  for (final location in locations) {
     latitudes.insert(0, location.latitude.degrees);
     longitudes.insert(0, location.longitude.degrees);
   }

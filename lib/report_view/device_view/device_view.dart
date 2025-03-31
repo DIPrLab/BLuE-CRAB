@@ -6,7 +6,7 @@ import 'package:blue_crab/styles/themes.dart';
 import 'package:flutter/material.dart';
 
 class DeviceView extends StatelessWidget {
-  const DeviceView(Device this.device, {super.key, required this.report});
+  const DeviceView(this.device, {required this.report, super.key});
 
   final Device device;
   final Report report;

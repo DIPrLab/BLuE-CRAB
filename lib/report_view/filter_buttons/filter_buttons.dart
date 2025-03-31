@@ -3,9 +3,8 @@ import 'package:blue_crab/styles/themes.dart';
 import 'package:flutter/material.dart';
 
 class FilterButtonBar extends StatefulWidget {
-  final VoidCallback? notify;
-
   const FilterButtonBar({super.key, this.notify});
+  final VoidCallback? notify;
 
   @override
   FilterButtonBarState createState() => FilterButtonBarState();
@@ -55,7 +54,6 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   }
 
   Widget filterButton(WidgetButtonProperties props) => TextButton(
-      child: Text(props.label, style: const TextStyle(color: Colors.white)),
       onPressed: () => setState(() {
             props.onPressed();
             Settings.shared.save();
@@ -66,7 +64,8 @@ class FilterButtonBarState extends State<FilterButtonBar> {
           enableFeedback: true,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30), side: const BorderSide(color: colors.altText, width: 2))));
+              borderRadius: BorderRadius.circular(30), side: const BorderSide(color: colors.altText, width: 2))),
+      child: Text(props.label, style: const TextStyle(color: Colors.white)));
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
@@ -81,9 +80,8 @@ class FilterButtonBarState extends State<FilterButtonBar> {
 }
 
 class WidgetButtonProperties {
+  WidgetButtonProperties(this.label, this.value, this.onPressed);
   final String label;
   final VoidCallback onPressed;
   bool Function() value;
-
-  WidgetButtonProperties(this.label, this.value, this.onPressed);
 }

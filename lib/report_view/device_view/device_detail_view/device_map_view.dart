@@ -7,10 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:map/map.dart';
 
 class DeviceMapView extends StatefulWidget {
+  const DeviceMapView({super.key, required this.device, required this.report});
   final Device device;
   final Report report;
-
-  const DeviceMapView({super.key, required this.device, required this.report});
 
   @override
   DeviceMapViewState createState() => DeviceMapViewState();

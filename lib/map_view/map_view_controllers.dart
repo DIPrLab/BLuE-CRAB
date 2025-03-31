@@ -18,9 +18,7 @@ extension Controllers on MapViewState {
               accuracy: LocationAccuracy.high,
               activityType: ActivityType.fitness,
               distanceFilter: distanceFilter,
-              pauseLocationUpdatesAutomatically: true,
-              // Only set to true if our app will be started up in the background.
-              showBackgroundLocationIndicator: false)
+              pauseLocationUpdatesAutomatically: true)
           : LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: distanceFilter);
 
   void onDoubleTap(MapTransformer transformer, Offset position) =>

@@ -7,7 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class ReportView extends StatefulWidget {
-  const ReportView({super.key, required this.report});
+  const ReportView({required this.report, super.key});
 
   final Report report;
 
@@ -26,7 +26,7 @@ class ReportViewState extends State<ReportView> {
     sort(sortMethod);
   }
 
-  void sort(int sortMethod(Device a, Device b)) => setState(() =>
+  void sort(int Function(Device a, Device b) sortMethod) => setState(() =>
       devices = widget.report.riskyDevices.map((d) => widget.report.data[d]!).sorted(sortMethod).reversed.toList());
 
   int byRiskScore(Device a, Device b) => widget.report.riskScore(a).compareTo(widget.report.riskScore(b));

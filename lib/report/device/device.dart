@@ -20,6 +20,11 @@ part 'device_stats.dart';
 /// along with metadata that goes along with it
 @JsonSerializable()
 class Device {
+  Device(this.id, this.name, this.platformName, this.manufacturer, {this.isTrusted = false, Set<Datum>? dataPoints}) {
+    _dataPoints = dataPoints ?? {};
+    updateStatistics();
+  }
+  factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   String id;
   String name;
   String platformName;
@@ -32,12 +37,6 @@ class Device {
   late int incidence;
   late Set<Area> areas;
   late double distanceTravelled;
-
-  Device(this.id, this.name, this.platformName, this.manufacturer, {this.isTrusted = false, Set<Datum>? dataPoints}) {
-    _dataPoints = dataPoints ?? {};
-    updateStatistics();
-  }
-  factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
   Set<Datum> dataPoints({bool testing = false}) => _dataPoints

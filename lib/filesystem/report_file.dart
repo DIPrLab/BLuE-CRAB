@@ -2,7 +2,7 @@ part of "package:blue_crab/filesystem/filesystem.dart";
 
 Future<File> get _localReportFile async => localFileDirectory.then((dir) => File("${dir.path}/reports.json"));
 
-void write(Report report) async => _localReportFile.then((file) => file.writeAsString("${report.toJson()}"));
+Future<void> write(Report report) async => _localReportFile.then((file) => file.writeAsString("${report.toJson()}"));
 
 Future<Report> readReport() => (kDebugMode
             ? rootBundle.loadString('assets/bledoubt_logs/bledoubt_log_g.json')

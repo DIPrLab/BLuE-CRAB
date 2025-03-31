@@ -10,9 +10,8 @@ part "section_header.dart";
 part "slider.dart";
 
 class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
-  final VoidCallback onAddLocation;
-
   const LocationHeader({required this.onAddLocation});
+  final VoidCallback onAddLocation;
 
   @override
   Widget build(BuildContext context) => Center(

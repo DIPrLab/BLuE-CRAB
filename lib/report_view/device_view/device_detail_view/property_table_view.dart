@@ -35,6 +35,6 @@ class PropertyTable extends StatelessWidget {
       ]);
 
   @override
-  Widget build(context) => DataTable(
+  Widget build(BuildContext context) => DataTable(
       sortColumnIndex: 1, columns: const [DataColumn(label: Text("")), DataColumn(label: Text(""))], rows: rows);
 }
