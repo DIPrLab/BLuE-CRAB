@@ -52,7 +52,7 @@ class Device {
     lastUpdated = DateTime.now();
     final DateTime now = lastUpdated;
     final Duration difference = _dataPoints.isEmpty
-        ? const Duration()
+        ? Duration.zero
         : DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second)
             .difference(_dataPoints.map((dp) => dp.time).sorted((a, b) => a.compareTo(b)).last);
     if (_dataPoints.isEmpty || difference > const Duration(seconds: 10)) {
