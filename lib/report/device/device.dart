@@ -41,11 +41,11 @@ class Device {
 
   Set<Datum> dataPoints({bool testing = false}) => _dataPoints
       .where((datum) =>
-          kDebugMode || testing ? true : datum.time.isAfter(DateTime.now().subtract(Settings.shared.windowDuration())))
-      .where((datum) => datum.location == null
-          ? true
-          : !Settings.shared.safeZones.any(
-              (safeLocation) => distanceBetween(datum.location!, safeLocation) < Settings.shared.distanceThreshold()))
+          (kDebugMode || testing) || (datum.time.isAfter(DateTime.now().subtract(Settings.shared.windowDuration()))))
+      .where((datum) =>
+          (datum.location == null) ||
+          (!Settings.shared.safeZones.any(
+              (safeLocation) => distanceBetween(datum.location!, safeLocation) < Settings.shared.distanceThreshold())))
       .toSet();
 
   void addDatum(LatLng? location, int rssi) {
