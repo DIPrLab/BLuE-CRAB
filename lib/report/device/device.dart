@@ -69,7 +69,7 @@ class Device {
               : id;
 
   Iterable<String> manufacturers() =>
-      manufacturer.map((e) => company_identifiers[e.toRadixString(16).toUpperCase().padLeft(4, "0")] ?? "Unknown");
+      manufacturer.map((e) => companyIdentifiers[e.toRadixString(16).toUpperCase().padLeft(4, "0")] ?? "Unknown");
 
   Set<LatLng> locations() =>
       dataPoints().where((dataPoint) => dataPoint.location != null).map((dataPoint) => dataPoint.location!).toSet();
