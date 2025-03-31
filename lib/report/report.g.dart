@@ -7,7 +7,7 @@ part of 'report.dart';
 // **************************************************************************
 
 Report _$ReportFromJson(Map<String, dynamic> json) {
-  Report? report = null;
+  Report? report;
   try {
     report = Report(
         (json['data'] as Map<String, dynamic>).map((k, e) => MapEntry(k, Device.fromJson(e as Map<String, dynamic>))))
