@@ -6,7 +6,7 @@ class LatLngTile extends StatelessWidget {
 
   final LatLng coordinate;
 
-  Widget CoordinateText(String text) =>
+  Widget coordinateText(String text) =>
       Padding(padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), child: Text(text));
 
   @override
@@ -15,7 +15,7 @@ class LatLngTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: Center(
           child: Column(children: [
-        CoordinateText("Latitude: ${coordinate.latitude.degrees}"),
-        CoordinateText("Longitude: ${coordinate.longitude.degrees}"),
+        coordinateText("Latitude: ${coordinate.latitude.degrees}"),
+        coordinateText("Longitude: ${coordinate.longitude.degrees}"),
       ])));
 }
