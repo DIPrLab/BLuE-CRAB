@@ -10,7 +10,7 @@ part "section_header.dart";
 part "slider.dart";
 
 class LocationHeader extends StatelessWidget implements PreferredSizeWidget {
-  const LocationHeader({required this.onAddLocation});
+  const LocationHeader({required this.onAddLocation, super.key});
   final VoidCallback onAddLocation;
 
   @override
@@ -113,7 +113,7 @@ class SettingsViewState extends State<SettingsView> {
                     onChanged: (val) {
                       setState(() {
                         Settings.shared.devMode = val;
-                        Settings.shared.demoMode = Settings.shared.devMode == true ? false : Settings.shared.demoMode;
+                        Settings.shared.demoMode = Settings.shared.devMode ? false : Settings.shared.demoMode;
                       });
                       widget.notify?.call();
                       Settings.shared.save();
@@ -125,7 +125,7 @@ class SettingsViewState extends State<SettingsView> {
                     onChanged: (val) {
                       setState(() {
                         Settings.shared.demoMode = val;
-                        Settings.shared.devMode = Settings.shared.demoMode == true ? false : Settings.shared.devMode;
+                        Settings.shared.devMode = Settings.shared.demoMode ? false : Settings.shared.devMode;
                       });
                       widget.notify?.call();
                       Settings.shared.save();
