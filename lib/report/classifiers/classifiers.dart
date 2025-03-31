@@ -27,7 +27,6 @@ class KMeans extends Classifier {
         .map((i) => i.location.fold(0.toDouble(), (a, b) => a + b))
         .fold<double>(0, (a, b) => a + b)
         .compareTo(c2.instances.map((i) => i.location.fold(0.toDouble(), (a, b) => a + b)).average));
-    clusters.forEach((c) => print([c.id, c.instances.map((d) => d.id).join("\n"), ""].join("\n")));
     return clusters.last.instances.map((e) => report.data[e.id]!).toSet();
   }
 }
@@ -46,19 +45,8 @@ class IQRKMeansHybrid extends Classifier {
         .map((i) => i.location.fold<double>(0, (a, b) => a + b))
         .fold<double>(0, (a, b) => a + b)
         .compareTo(c2.instances.map((i) => i.location.fold<double>(0, (a, b) => a + b)).average));
-    clusters.forEach((c) => print([c.id, c.instances.map((d) => d.id).join("\n"), ""].join("\n")));
-    final num lower = clusters.first.instances
-        .sorted((a, b) => report.riskScore(report.data[a.id]!).compareTo(report.riskScore(report.data[b.id]!)))
-        .reversed
-        .map((i) => report.riskScore(report.data[i.id]!))
-        .first;
-    final num upper = clusters.reversed
-        .toList()[1]
-        .instances
-        .sorted((a, b) => report.riskScore(report.data[a.id]!).compareTo(report.riskScore(report.data[b.id]!)))
-        .reversed
-        .map((i) => report.riskScore(report.data[i.id]!))
-        .first;
+    final num lower = clusters.first.instances.map((i) => report.riskScore(report.data[i.id]!)).max;
+    final num upper = clusters.reversed.toList()[1].instances.map((i) => report.riskScore(report.data[i.id]!)).min;
     final num limit = (upper - lower) * 3;
     return report.devices().where((d) => report.riskScore(d) > limit).toSet();
   }
