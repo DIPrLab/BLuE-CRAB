@@ -2,9 +2,9 @@ import "dart:core";
 import "dart:math";
 
 extension IterableStats on Iterable<num> {
-  num average() => fold(0.0, (a, b) => a + b) / length;
+  num average() => fold(0.toDouble(), (a, b) => a + b) / length;
 
-  num standardDeviation() => sqrt(fold(0.0, (a, b) => a + pow(b - average(), 2)) / length);
+  num standardDeviation() => sqrt(fold(0.toDouble(), (a, b) => a + pow(b - average(), 2)) / length);
 }
 
 extension ListStats on List<num> {
