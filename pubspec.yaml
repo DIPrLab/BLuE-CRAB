@@ -48,6 +48,7 @@ dependencies:
   share_plus: ^10.1.4
   k_means_cluster: ^0.3.0
   permission_handler: ^10.2.0
+  collection: ^1.19.1
 
 dev_dependencies:
   build_runner: ^2.4.6
