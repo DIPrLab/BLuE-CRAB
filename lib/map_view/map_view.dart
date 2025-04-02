@@ -75,13 +75,19 @@ class MapViewState extends State<MapView> {
                     CustomPaint(painter: PolylinePainter(transformer, widget.device)),
                     ...widget.device
                         .paths()
-                        .map((e) => e.first.location == e.last.location
-                            ? {e.first.location}
-                            : {e.first.location, e.last.location})
+                        .map((e) => e.first == e.last ? {e.first} : {e.first, e.last})
                         .expand((e) => e)
-                        .map((location) => buildMarkerWidget(context, transformer.toOffset(location),
+                        .map((pc) => buildMarkerWidget(context, transformer.toOffset(pc.location),
                             const Icon(Icons.circle, color: Colors.red, size: 24),
-                            backgroundCircle: false))
+                            backgroundCircle: false,
+                            alertContent: Column(mainAxisSize: MainAxisSize.min, children: [
+                              Text("Location: (${[
+                                pc.location.latitude.degrees,
+                                pc.location.longitude.degrees
+                              ].join(", ")})"),
+                              Text("Date: ${[pc.time.month, pc.time.day, pc.time.year].join("/")}"),
+                              Text("Time: ${[pc.time.hour, pc.time.minute, pc.time.second].join(":")}")
+                            ])))
                         .toList(),
                   ])))));
 }
