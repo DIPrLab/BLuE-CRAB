@@ -101,8 +101,8 @@ class PolylinePainter extends CustomPainter {
         path.forEachMappedOrderedPair(
             (pc) => generateOffsetLatLng(pc.location),
             (offsets) => canvas.drawLine(
-                offsets.$1! as Offset,
-                offsets.$2! as Offset,
+                offsets.$1,
+                offsets.$2,
                 Paint()
                   ..color = Colors.red
                   ..strokeWidth = 4));
