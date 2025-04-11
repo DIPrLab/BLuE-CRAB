@@ -6,5 +6,12 @@ abstract class Classifier {
   String name = "";
   Set<Device> getRiskyDevices(Report report);
   Set<String> getRiskyDeviceIDs(Report report) => getRiskyDevices(report).map((d) => d.id).toSet();
-  static List<Classifier> classifiers = [DbScan(), IQR(), IQRKMeansHybrid(), KMeans(), Permissive()];
+  static List<Classifier> classifiers = [
+    Smallest_K_Cluster(),
+    DbScan(),
+    IQR(),
+    IQRKMeansHybrid(),
+    KMeans(),
+    Permissive()
+  ];
 }

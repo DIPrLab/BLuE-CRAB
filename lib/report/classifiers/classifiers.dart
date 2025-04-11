@@ -80,3 +80,31 @@ class DbScan extends Classifier {
     return clusters[-1] ?? {};
   }
 }
+
+class Smallest_K_Cluster extends Classifier {
+  @override
+  String name = "Smallest K-Cluster";
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    final List<Instance> instances =
+        report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
+    return List.generate(5, (x) => x + 2)
+        .map((k) {
+          final List<Cluster> clusters = initialClusters(k, instances, seed: 0);
+          kMeans(clusters: clusters, instances: instances);
+          return clusters;
+        })
+        .map((clusters) => clusters.sorted((c1, c2) =>
+            c1.location.fold<double>(0, (a, b) => a + b).compareTo(c2.location.fold<double>(0, (a, b) => a + b))))
+        .map((clusters) {
+          final num lower = clusters.first.instances.map((i) => report.riskScore(report.data[i.id]!)).max;
+          final num upper =
+              clusters.reversed.toList()[1].instances.map((i) => report.riskScore(report.data[i.id]!)).min;
+          final num limit = (upper - lower) * 3;
+          return report.devices().where((d) => report.riskScore(d) > limit).toSet();
+        })
+        .sorted((a, b) => a.length.compareTo(b.length))
+        .first;
+  }
+}
