@@ -47,6 +47,7 @@ dependencies:
   permission_handler: ^10.2.0
   share_plus: ^10.1.4
   shared_preferences: ^2.5.2
+  simple_cluster: ^0.3.0
   statistics: ^1.2.0
   vibration: ^3.1.3
 

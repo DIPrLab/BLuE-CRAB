@@ -1,5 +1,4 @@
 import 'package:blue_crab/report/classifiers/classifier.dart';
-import 'package:blue_crab/report/classifiers/classifiers.dart';
 import 'package:latlng/latlng.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,8 +13,7 @@ class Settings {
   // The singleton instance
   static final Settings shared = Settings._internal();
 
-  static List<Classifier> classifiers = [IQR(), IQRKMeansHybrid(), KMeans(), Permissive()];
-  Classifier classifier = classifiers[0];
+  Classifier classifier = Classifier.classifiers[0];
 
   late bool demoMode;
   late bool devMode;

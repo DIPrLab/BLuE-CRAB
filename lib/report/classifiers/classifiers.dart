@@ -3,6 +3,7 @@ import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
+import 'package:simple_cluster/simple_cluster.dart';
 
 class IQR extends Classifier {
   @override
@@ -58,4 +59,24 @@ class Permissive extends Classifier {
 
   @override
   Set<Device> getRiskyDevices(Report report) => report.devices().toSet();
+}
+
+class DbScan extends Classifier {
+  @override
+  String name = "DB Scan";
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    final DBSCAN dbscan = DBSCAN(epsilon: 3)
+      ..run(report.devices().map((d) => report.riskScores(d).map((x) => x.toDouble()).toList()).toList());
+    final Map<int, Set<Device>> clusters = {};
+    List.generate(dbscan.dataset.length, (i) => i).forEach((i) {
+      if (!clusters.keys.contains(dbscan.label![i])) {
+        clusters[dbscan.label![i]] = {};
+      }
+      clusters[dbscan.label![i]]!.addAll(report.devices().where((d) => report.riskScores(d).equals(dbscan.dataset[i])));
+    });
+    print(clusters);
+    return clusters[-1] ?? {};
+  }
 }

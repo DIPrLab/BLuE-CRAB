@@ -87,7 +87,7 @@ class SettingsViewState extends State<SettingsView> {
                 header("Classifier"),
                 DropdownButton<Classifier>(
                     value: Settings.shared.classifier,
-                    items: Settings.classifiers
+                    items: Classifier.classifiers
                         .map((e) => DropdownMenuItem<Classifier>(value: e, child: Text(e.name)))
                         .toList(),
                     onChanged: (newValue) => setState(() => Settings.shared.classifier = newValue!)),
