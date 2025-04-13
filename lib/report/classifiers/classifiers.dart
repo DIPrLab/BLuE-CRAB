@@ -7,7 +7,7 @@ import 'package:simple_cluster/simple_cluster.dart';
 
 class IQR extends Classifier {
   @override
-  String name = "IQR";
+  String name() => "IQR";
 
   @override
   Set<Device> getRiskyDevices(Report report) =>
@@ -16,7 +16,7 @@ class IQR extends Classifier {
 
 class KMeans extends Classifier {
   @override
-  String name = "K-Means";
+  String name() => "K-Means";
 
   @override
   Set<Device> getRiskyDevices(Report report) {
@@ -34,7 +34,7 @@ class KMeans extends Classifier {
 
 class IQRKMeansHybrid extends Classifier {
   @override
-  String name = "IQR / K-Means Hybrid";
+  String name() => "IQR / K-Means Hybrid";
 
   @override
   Set<Device> getRiskyDevices(Report report) {
@@ -55,7 +55,7 @@ class IQRKMeansHybrid extends Classifier {
 
 class Permissive extends Classifier {
   @override
-  String name = "Permissive";
+  String name() => "Permissive";
 
   @override
   Set<Device> getRiskyDevices(Report report) => report.devices().toSet();
@@ -63,7 +63,7 @@ class Permissive extends Classifier {
 
 class DbScan extends Classifier {
   @override
-  String name = "DB Scan";
+  String name() => "DB Scan";
 
   @override
   Set<Device> getRiskyDevices(Report report) {
@@ -76,14 +76,14 @@ class DbScan extends Classifier {
       }
       clusters[dbscan.label![i]]!.addAll(report.devices().where((d) => report.riskScores(d).equals(dbscan.dataset[i])));
     });
-    print(clusters);
+    // print(clusters);
     return clusters[-1] ?? {};
   }
 }
 
 class Smallest_K_Cluster extends Classifier {
   @override
-  String name = "Smallest K-Cluster";
+  String name() => "Smallest K-Cluster";
 
   @override
   Set<Device> getRiskyDevices(Report report) {

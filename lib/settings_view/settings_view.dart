@@ -88,7 +88,7 @@ class SettingsViewState extends State<SettingsView> {
                 DropdownButton<Classifier>(
                     value: Settings.shared.classifier,
                     items: Classifier.classifiers
-                        .map((e) => DropdownMenuItem<Classifier>(value: e, child: Text(e.name)))
+                        .map((e) => DropdownMenuItem<Classifier>(value: e, child: Text(e.name())))
                         .toList(),
                     onChanged: (newValue) => setState(() => Settings.shared.classifier = newValue!)),
                 header("Time"),
