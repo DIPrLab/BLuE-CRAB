@@ -22,6 +22,7 @@ class TestingSuite {
       result.add(curr);
       curr = curr.add(Settings.shared.scanInterval);
     }
+    result.add(timestamps.last);
 
     return result;
   }
