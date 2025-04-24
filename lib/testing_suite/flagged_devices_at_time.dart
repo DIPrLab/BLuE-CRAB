@@ -3,7 +3,7 @@ part of 'package:blue_crab/testing_suite/testing_suite.dart';
 extension FlaggedDevicesAtTime on TestingSuite {
   CSVData getFlaggedDevicesAtTime(Report report, Set<String> gt) {
     final CSVData csv = CSVData([
-      "SECONDS_SINCE_INIT",
+      "MINUTES_SINCE_INIT",
       "NUMBER_OF_SUSPICIOUS_DEVICES",
       "NUMBER_OF_DEVICES_TO_FLAG",
       "NUMBER_OF_DEVICES_TO_UNFLAG",
@@ -50,7 +50,7 @@ extension FlaggedDevicesAtTime on TestingSuite {
 
       csv.addRow([
         // Time since starting scan
-        ts.difference(timeStamps.first).inSeconds,
+        ts.difference(timeStamps.first).inMinutes,
         // Number of suspicious devices
         flaggedDevices.length,
         // Number of devices to flag
