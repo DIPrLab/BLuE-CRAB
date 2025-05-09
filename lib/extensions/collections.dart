@@ -1,15 +1,19 @@
 import "dart:core";
 import "dart:math";
 
-extension IterableStats on Iterable<num> {
-  num average() => fold(0.toDouble(), (a, b) => a + b) / length;
+// import "package:statistics/statistics.dart";
 
-  num standardDeviation() => sqrt(fold(0.toDouble(), (a, b) => a + pow(b - average(), 2)) / length);
+enum SmoothingMethod { padding, resizing, skipping }
+
+extension IterableStats on Iterable<num> {
+  num avg() => fold(0.toDouble(), (a, b) => a + b) / length;
+
+  num standardDeviation() => sqrt(fold(0.toDouble(), (a, b) => a + pow(b - avg(), 2)) / length);
 }
 
 extension ListStats on List<num> {
   num median() => length.isEven
-      ? (this..sort((a, b) => a.compareTo(b))).getRange((length ~/ 2) - 1, (length ~/ 2) + 1).average()
+      ? (this..sort((a, b) => a.compareTo(b))).getRange((length ~/ 2) - 1, (length ~/ 2) + 1).avg()
       : (this..sort((a, b) => a.compareTo(b)))[length ~/ 2];
 
   // num mad() => map((x) => x - average().abs()).average();
@@ -40,6 +44,38 @@ extension ListStats on List<num> {
     final Iterable<num> extremeHighOutliers = where((element) => element > tukeyLimits().$4);
     return (extremeLowOutliers, mildLowOutliers, mildHighOutliers, extremeHighOutliers);
   }
+
+  num distanceFromOrigin() => sqrt(map((e) => e.toDouble() * e.toDouble()).fold(0.toDouble(), (a, b) => a + b));
+
+  List<num> smoothedByMovingAverage(int factor, SmoothingMethod smoothingMethod) {
+    final List<num> source = List.from(this);
+    final List<num> result = [];
+    void smooth(int f) {
+      final value = source.getRange(0, f).avg();
+      result.add(value);
+      source.removeAt(0);
+    }
+
+    if (smoothingMethod == SmoothingMethod.padding) {
+      source.insertAll(0, List<double>.generate(factor - 1, (e) => first.toDouble()));
+    } else if (smoothingMethod == SmoothingMethod.resizing) {
+      List.generate(min(factor, source.length) - 1, (e) => e + 1).forEach((e) {
+        final num v = source.first;
+        smooth(e);
+        source.insert(0, v);
+      });
+    } else if (smoothingMethod == SmoothingMethod.skipping) {
+      // Do nothing
+    }
+    while (source.length >= factor) {
+      smooth(factor);
+    }
+    return result;
+  }
+
+  List<num> smoothedByExponentiallyWeightedMovingAverage(num alpha) => List.generate(length, (e) => e).fold(
+      List<num>.empty(growable: true),
+      (acc, e) => e == 0 ? [first] : acc + [(alpha * this[e]) + ((1 - alpha) * acc.last)]);
 }
 
 extension CommonElements<T> on Set<Set<T>> {

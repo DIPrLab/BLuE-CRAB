@@ -1,9 +1,11 @@
+import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/report/classifiers/classifier.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
 import 'package:simple_cluster/simple_cluster.dart';
+import "package:statistics/statistics.dart";
 
 class IQR extends Classifier {
   @override
@@ -104,4 +106,43 @@ class Smallest_K_Cluster extends Classifier {
       })
       .sorted((a, b) => a.length.compareTo(b.length))
       .first;
+}
+
+class RSSI extends Classifier {
+  @override
+  String name() => "RSSI Confidence";
+
+  List<Cluster> cluster(int k, Iterable<Instance> dataPoints) {
+    final List<Instance> instances = dataPoints.toList();
+    final List<Cluster> clusters = initialClusters(k, instances, seed: 0);
+    kMeans(clusters: clusters, instances: instances);
+    return clusters;
+  }
+
+  List<Cluster> sortedClusters(Report report) =>
+      cluster(3, report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)))
+          .sorted((a, b) => a.location.distanceFromOrigin().compareTo(b.location.distanceFromOrigin()));
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    final List<double> rssiAverages = report
+        .devices()
+        .sorted((a, b) => report.riskScore(a).compareTo(report.riskScore(b)))
+        .map((d) => d.dataPoints().map((dp) => dp.rssi.toDouble()).average)
+        .toList();
+    print("");
+    return report
+        .devices()
+        .where((e) => !sortedClusters(report).first.instances.map((e) => e.id).map((e) => report.data[e]!).contains(e))
+        .where((e) =>
+            e
+                .dataPoints()
+                .map((e) => e.rssi.toDouble())
+                .toList()
+                // .smoothedByMovingAverage(5, SmoothingMethod.resizing)
+                .smoothedByExponentiallyWeightedMovingAverage(0.7)
+                .avg() >
+            -70)
+        .toSet();
+  }
 }
