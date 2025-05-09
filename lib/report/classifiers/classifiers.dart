@@ -130,7 +130,6 @@ class RSSI extends Classifier {
         .sorted((a, b) => report.riskScore(a).compareTo(report.riskScore(b)))
         .map((d) => d.dataPoints().map((dp) => dp.rssi.toDouble()).average)
         .toList();
-    print("");
     return report
         .devices()
         .where((e) => !sortedClusters(report).first.instances.map((e) => e.id).map((e) => report.data[e]!).contains(e))
