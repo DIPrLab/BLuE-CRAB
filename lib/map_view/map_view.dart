@@ -14,12 +14,6 @@ import 'package:map/map.dart';
 
 part 'map_view_controllers.dart';
 
-double clamp(double x, double min, double max) => x < min
-    ? min
-    : x > max
-        ? max
-        : x;
-
 class MapView extends StatefulWidget {
   const MapView(this.device, this.controller, {super.key});
 
@@ -53,7 +47,7 @@ class MapViewState extends State<MapView> {
                   onPointerSignal: (event) {
                     if (event is PointerScrollEvent) {
                       setState(() => transformer.setZoomInPlace(
-                          clamp(widget.controller.zoom + event.scrollDelta.dy / -1000.0, 2, 18), event.localPosition));
+                          (widget.controller.zoom + event.scrollDelta.dy / -1000.0).clamp(2, 18), event.localPosition));
                     }
                   },
                   child: Stack(children: [

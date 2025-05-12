@@ -22,7 +22,7 @@ extension Controllers on MapViewState {
           : LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: distanceFilter);
 
   void onDoubleTap(MapTransformer transformer, Offset position) =>
-      setState(() => transformer.setZoomInPlace(clamp(widget.controller.zoom + 0.5, 2, 18), position));
+      setState(() => transformer.setZoomInPlace((widget.controller.zoom + 0.5).clamp(2, 18), position));
 
   void onScaleStart(ScaleStartDetails details) {
     dragStart = details.focalPoint;
