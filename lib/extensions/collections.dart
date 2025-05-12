@@ -1,9 +1,15 @@
 import "dart:core";
 import "dart:math";
 
+import "package:collection/collection.dart";
+
 // import "package:statistics/statistics.dart";
 
-enum SmoothingMethod { padding, resizing, skipping }
+enum SmoothingMethod {
+  padding,
+  resizing,
+// skipping
+}
 
 extension IterableStats on Iterable<num> {
   num avg() => fold(0.toDouble(), (a, b) => a + b) / length;
@@ -47,31 +53,27 @@ extension ListStats on List<num> {
 
   num distanceFromOrigin() => sqrt(map((e) => e.toDouble() * e.toDouble()).fold(0.toDouble(), (a, b) => a + b));
 
-  List<num> smoothedByMovingAverage(int factor, SmoothingMethod smoothingMethod) {
-    final List<num> source = List.from(this);
-    final List<num> result = [];
-    void smooth(int f) {
-      final value = source.getRange(0, f).avg();
-      result.add(value);
-      source.removeAt(0);
-    }
+  // Backup, safe?
+  // List<num> smoothedByMovingAverageV0(int factor, SmoothingMethod smoothingMethod) =>
+  //     List.generate(length, (element) => (element - factor, element + factor))
+  //         .map((element) => List.generate(element.$2 - element.$1 + 1, (index) => index + element.$1))
+  //         .map((element) => smoothingMethod == SmoothingMethod.padding
+  //             ? element.map((e) => e.clamp(0, length - 1))
+  //             : smoothingMethod == SmoothingMethod.resizing
+  //                 ? element.where((e) => 0 <= e && e < length)
+  //                 : element)
+  //         .map((element) => element.map((e) => this[e]).average)
+  //         .toList();
 
-    if (smoothingMethod == SmoothingMethod.padding) {
-      source.insertAll(0, List<double>.generate(factor - 1, (e) => first.toDouble()));
-    } else if (smoothingMethod == SmoothingMethod.resizing) {
-      List.generate(min(factor, source.length) - 1, (e) => e + 1).forEach((e) {
-        final num v = source.first;
-        smooth(e);
-        source.insert(0, v);
-      });
-    } else if (smoothingMethod == SmoothingMethod.skipping) {
-      // Do nothing
-    }
-    while (source.length >= factor) {
-      smooth(factor);
-    }
-    return result;
-  }
+  List<num> smoothedByMovingAverage(int factor, SmoothingMethod smoothingMethod) =>
+      List.generate(length, (index) => List.generate(2 * factor + 1, (offset) => index + offset - factor))
+          .map((element) => smoothingMethod == SmoothingMethod.padding
+              ? element.map((e) => e.clamp(0, length - 1))
+              : smoothingMethod == SmoothingMethod.resizing
+                  ? element.where((e) => 0 <= e && e < length)
+                  : element)
+          .map((element) => element.map((e) => this[e]).average)
+          .toList();
 
   List<num> smoothedByExponentiallyWeightedMovingAverage(num alpha) => List.generate(length, (e) => e).fold(
       List<num>.empty(growable: true),
