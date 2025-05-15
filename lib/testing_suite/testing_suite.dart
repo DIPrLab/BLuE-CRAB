@@ -51,28 +51,45 @@ class TestingSuite {
       .then((content) => jsonDecode(content) as Map<String, dynamic>)
       .then((raw) => raw.map((key, value) => MapEntry(key, (value as List).map((e) => e as String).toList())));
 
-  void testFile(String filename) {
-    localFileDirectory.then((dir) => loadGtMacs([dir.path, "gt_macs.json"].join("/")).then((gt) {
-          runTest(
-              File([dir.path, "$filename.json"].join("/")),
-              gt["$filename.json"]?.toSet() ?? {},
-              File([dir.path, "${filename}_reports", "${filename}_report_data.csv"].join("/")),
-              File([dir.path, "${filename}_reports", "${filename}_device_data.csv"].join("/")),
-              File([dir.path, "${filename}_reports", "${filename}_flagged_devices.csv"].join("/")),
-              Directory([dir.path, "${filename}_reports"].join("/")));
-        }));
-  }
+  void testFile(String filename) =>
+      localFileDirectory.then((currDir) => loadGtMacs([currDir.path, "gt_macs.json"].join("/")).then((gt) =>
+          Directory([currDir.path, "${filename}_reports"].join("/"))
+            ..create().then((destDir) => runTest(
+                File([currDir.path, "$filename.json"].join("/"))..createSync(),
+                gt["$filename.json"]?.toSet() ?? {},
+                File([destDir.path, "${filename}_report_data.csv"].join("/"))..createSync(),
+                File([destDir.path, "${filename}_device_data.csv"].join("/"))..createSync(),
+                File([destDir.path, "${filename}_flagged_devices.csv"].join("/"))..createSync(),
+                destDir))));
 
   void runTest(File inputFile, Set<String> groundTruth, File reportDataFile, File deviceDataFile,
       File flaggedDevicesFile, Directory deviceReportDir) {
     inputFile.readAsString().then((jsonData) {
+      print("${inputFile.path}: Checkpoint 0");
       final Report report = Report.fromJson(jsonDecode(jsonData));
-      reportDataFile.writeAsString(getReportMetrics(report).toString());
-      deviceDataFile.writeAsString(getDeviceMetrics(report).toString());
-      flaggedDevicesFile.writeAsString(getFlaggedDevicesAtTime(report, groundTruth).toString());
-      report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
-        ..createSync(recursive: true)
-        ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
+      print("${inputFile.path}: Checkpoint 1");
+      reportDataFile
+        ..createSync()
+        ..writeAsString(getReportMetrics(report).toString());
+      print("${inputFile.path}: Checkpoint 2");
+      deviceDataFile
+        ..createSync()
+        ..writeAsString(getDeviceMetrics(report).toString());
+      print("${inputFile.path}: Checkpoint 3");
+      // flaggedDevicesFile
+      //   ..createSync()
+      //   ..writeAsString(getFlaggedDevicesAtTime(report, groundTruth).toString());
+      print("${inputFile.path}: Checkpoint 4");
+      try {
+        print("${inputFile.path}: Checkpoint 5");
+        report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
+          ..createSync(recursive: true)
+          ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
+        print("${inputFile.path}: Checkpoint 6");
+      } catch (e) {
+        print(e);
+      }
+      print("${inputFile.path}: Checkpoint 7");
     });
   }
 }
