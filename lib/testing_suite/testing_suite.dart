@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
@@ -8,6 +9,7 @@ import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/testing_suite/csv_data.dart';
 
 part 'package:blue_crab/testing_suite/device_metrics.dart';
+part 'package:blue_crab/testing_suite/device_signal_information.dart';
 part 'package:blue_crab/testing_suite/flagged_devices_at_time.dart';
 part 'package:blue_crab/testing_suite/report_metrics.dart';
 
@@ -52,21 +54,25 @@ class TestingSuite {
   void testFile(String filename) {
     localFileDirectory.then((dir) => loadGtMacs([dir.path, "gt_macs.json"].join("/")).then((gt) {
           runTest(
-              File([dir.path, "${filename}.json"].join("/")),
-              File([dir.path, "${filename}_report_data.csv"].join("/")),
-              File([dir.path, "${filename}_device_data.csv"].join("/")),
-              File([dir.path, "${filename}_flagged_devices.csv"].join("/")),
-              gt["${filename}.json"]?.toSet() ?? {});
+              File([dir.path, "$filename.json"].join("/")),
+              gt["$filename.json"]?.toSet() ?? {},
+              File([dir.path, "${filename}_reports", "${filename}_report_data.csv"].join("/")),
+              File([dir.path, "${filename}_reports", "${filename}_device_data.csv"].join("/")),
+              File([dir.path, "${filename}_reports", "${filename}_flagged_devices.csv"].join("/")),
+              Directory([dir.path, "${filename}_reports"].join("/")));
         }));
   }
 
-  void runTest(
-      File inputFile, File reportDataFile, File deviceDataFile, File flaggedDevicesFile, Set<String> groundTruth) {
+  void runTest(File inputFile, Set<String> groundTruth, File reportDataFile, File deviceDataFile,
+      File flaggedDevicesFile, Directory deviceReportDir) {
     inputFile.readAsString().then((jsonData) {
       final Report report = Report.fromJson(jsonDecode(jsonData));
       reportDataFile.writeAsString(getReportMetrics(report).toString());
       deviceDataFile.writeAsString(getDeviceMetrics(report).toString());
       flaggedDevicesFile.writeAsString(getFlaggedDevicesAtTime(report, groundTruth).toString());
+      report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
     });
   }
 }
