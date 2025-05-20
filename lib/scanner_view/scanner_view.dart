@@ -75,7 +75,7 @@ class ScannerViewState extends State<ScannerView> {
   }
 
   void enableLocationStream() => positionStream = Geolocator.getPositionStream(
-          locationSettings: Controllers.getLocationSettings(Settings.shared.scanDistance().toInt()))
+          locationSettings: MapViewState.getLocationSettings(Settings.shared.scanDistance().toInt()))
       .listen((position) => location = position.toLatLng());
 
   void disableLocationStream() {
