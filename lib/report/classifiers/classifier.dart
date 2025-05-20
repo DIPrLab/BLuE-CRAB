@@ -8,7 +8,7 @@ abstract class Classifier {
   Set<String> getRiskyDeviceIDs(Report report) => getRiskyDevices(report).map((d) => d.id).toSet();
   static List<Classifier> classifiers = [
     RSSI(),
-    Smallest_K_Cluster(),
+    SmallestKCluster(),
     DbScan(),
     IQR(),
     IQRKMeansHybrid(),

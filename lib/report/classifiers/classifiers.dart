@@ -82,7 +82,7 @@ class DbScan extends Classifier {
   }
 }
 
-class Smallest_K_Cluster extends Classifier {
+class SmallestKCluster extends Classifier {
   @override
   String name() => "Smallest K-Cluster";
 
