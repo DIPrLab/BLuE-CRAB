@@ -124,6 +124,14 @@ class ScannerViewState extends State<ScannerView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    isScanningSubscription.cancel();
+    scanResultsSubscription.cancel();
+    timeStreamSubscription.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
           body: Center(
               child: Row(children: [
