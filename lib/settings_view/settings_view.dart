@@ -83,6 +83,7 @@ class SettingsViewState extends State<SettingsView> {
                     Settings.shared.windowDurationValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.windowDurationValue = newValue;
+                  setState(() {});
                 }),
                 header("Classifier"),
                 DropdownButton<Classifier>(
@@ -96,12 +97,14 @@ class SettingsViewState extends State<SettingsView> {
                     100, Settings.shared.timeThresholdValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.timeThresholdValue = newValue;
+                  setState(() {});
                 }),
                 header("Distance"),
                 settingsSlider("Scanning Distance Threshold", "${Settings.shared.distanceThreshold().toInt()} meters",
                     1, 100, Settings.shared.distanceThresholdValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.distanceThresholdValue = newValue;
+                  setState(() {});
                 }),
                 header("Safe Zones"),
                 LocationHeader(onAddLocation: _addLocation),
