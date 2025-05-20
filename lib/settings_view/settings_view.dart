@@ -5,7 +5,6 @@ import 'package:blue_crab/settings_view/lat_lng_tile.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-part "dropdown.dart";
 part "section_header.dart";
 part "slider.dart";
 
@@ -40,6 +39,19 @@ class SettingsViewState extends State<SettingsView> {
       }));
 
   void changeClassifier(Classifier? c) => Settings.shared.classifier = c ?? Settings.shared.classifier;
+
+  Column settingsDropdownMenu(
+          String label, String valueLabel, List<num> values, num value, void Function(num) onChange) =>
+      Column(children: [
+        Row(children: [Text(label), const Spacer(), Text(valueLabel)]),
+        DropdownButton(
+            items: values.map((e) => DropdownMenuItem(value: e, child: Text(e.toString()))).toList(),
+            value: value,
+            onChanged: (newValue) {
+              setState(() => onChange(newValue!));
+              Settings.shared.save();
+            })
+      ]);
 
   @override
   void initState() => super.initState();
