@@ -52,12 +52,12 @@ class ScannerViewState extends State<ScannerView> {
 
   List<List<(Widget, String)>> buttonList() {
     List<List<(Widget, String)>> result = [
-      [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+      [(settingsButton(() => setState(() {})), "Settings"), (reportViewerButton(), "View Report")],
       [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
     ];
     if (Settings.shared.devMode) {
       result = [
-        [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+        [(settingsButton(() => setState(() {})), "Settings"), (reportViewerButton(), "View Report")],
         [(shareButton(), "Share Report"), (deleteReportButton(), "Delete Data")],
         [
           (testButton(), "Run Tests"),
@@ -66,7 +66,7 @@ class ScannerViewState extends State<ScannerView> {
       ];
     } else if (Settings.shared.demoMode) {
       result = [
-        [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
+        [(settingsButton(() => setState(() {})), "Settings"), (reportViewerButton(), "View Report")],
         [(loadReportButton(), "Load Sample Data"), (deleteReportButton(), "Delete Data")],
         [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
       ];
