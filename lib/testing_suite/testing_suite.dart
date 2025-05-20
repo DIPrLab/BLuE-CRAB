@@ -62,36 +62,31 @@ class TestingSuite {
                 File([destDir.path, "${filename}_report_data.csv"].join("/"))..createSync(),
                 File([destDir.path, "${filename}_device_data.csv"].join("/"))..createSync(),
                 File([destDir.path, "${filename}_flagged_devices.csv"].join("/"))..createSync(),
+                File([destDir.path, "${filename}_rssi_metrics_5.txt"].join("/"))..createSync(),
                 destDir))));
 
   void runTest(File inputFile, Set<String> groundTruth, File reportDataFile, File deviceDataFile,
-      File flaggedDevicesFile, Directory deviceReportDir) {
+      File flaggedDevicesFile, File rssiMetricFile, Directory deviceReportDir) {
     inputFile.readAsString().then((jsonData) {
       print("${inputFile.path}: Checkpoint 0");
       final Report report = Report.fromJson(jsonDecode(jsonData));
-      print("${inputFile.path}: Checkpoint 1");
       reportDataFile
         ..createSync()
-        ..writeAsString(getReportMetrics(report).toString());
-      print("${inputFile.path}: Checkpoint 2");
+        ..writeAsStringSync(getReportMetrics(report).toString());
       deviceDataFile
         ..createSync()
-        ..writeAsString(getDeviceMetrics(report).toString());
-      print("${inputFile.path}: Checkpoint 3");
-      // flaggedDevicesFile
-      //   ..createSync()
-      //   ..writeAsString(getFlaggedDevicesAtTime(report, groundTruth).toString());
-      print("${inputFile.path}: Checkpoint 4");
-      try {
         print("${inputFile.path}: Checkpoint 5");
         report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
-          ..createSync(recursive: true)
-          ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
-        print("${inputFile.path}: Checkpoint 6");
-      } catch (e) {
-        print(e);
-      }
-      print("${inputFile.path}: Checkpoint 7");
+        ..writeAsStringSync(getDeviceMetrics(report).toString());
+      flaggedDevicesFile
+        ..createSync()
+        ..writeAsStringSync(getFlaggedDevicesAtTime(report, groundTruth).toString());
+      report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
+      rssiMetricFile
+        ..createSync()
+        ..writeAsStringSync(getRssiMetricData(report, groundTruth, 5));
     });
   }
 }
