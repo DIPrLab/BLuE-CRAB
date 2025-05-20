@@ -15,6 +15,8 @@ extension IterableStats on Iterable<num> {
   num avg() => fold(0.toDouble(), (a, b) => a + b) / length;
 
   num standardDeviation() => sqrt(fold(0.toDouble(), (a, b) => a + pow(b - avg(), 2)) / length);
+
+  num median() => sorted((a, b) => a.compareTo(b))[(length / 2).floor()];
 }
 
 extension ListStats on List<num> {
