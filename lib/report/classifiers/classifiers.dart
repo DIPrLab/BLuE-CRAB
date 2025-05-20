@@ -5,7 +5,6 @@ import 'package:blue_crab/report/report.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
 import 'package:simple_cluster/simple_cluster.dart';
-import "package:statistics/statistics.dart";
 
 class IQR extends Classifier {
   @override
