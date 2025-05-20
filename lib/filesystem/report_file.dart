@@ -11,7 +11,7 @@ Future<Report> readReport() => (kDebugMode
       try {
         return Report.fromJson(jsonDecode(jsonData));
       } catch (e) {
-        printWarning("Failed to load report");
+        Logger().e("Failed to load report");
         return Report({});
       }
     });

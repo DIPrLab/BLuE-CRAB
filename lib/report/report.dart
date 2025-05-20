@@ -4,6 +4,7 @@ import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
+import 'package:logger/logger.dart';
 
 part 'report.g.dart';
 part 'report_cache.dart';

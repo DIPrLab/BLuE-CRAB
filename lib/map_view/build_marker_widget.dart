@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 Widget buildMarkerWidget(BuildContext context, Offset pos, Icon icon,
         {bool backgroundCircle = true, Widget? alertContent}) =>
@@ -10,5 +11,5 @@ Widget buildMarkerWidget(BuildContext context, Offset pos, Icon icon,
         child: GestureDetector(
             child: Center(child: Stack(children: [if (backgroundCircle) Icon(Icons.circle, size: icon.size), icon])),
             onTap: () => alertContent == null
-                ? print("No widget provided")
+                ? Logger().w("No widget provided")
                 : showDialog(context: context, builder: (context) => AlertDialog(content: alertContent))));

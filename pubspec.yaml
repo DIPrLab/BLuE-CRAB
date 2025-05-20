@@ -43,6 +43,7 @@ dependencies:
   json_annotation: ^4.9.0
   k_means_cluster: ^0.3.0
   latlng: ^2.0.7
+  logger: ^2.5.0
   map: ^2.0.2
   path_provider: ^2.1.5
   permission_handler: ^10.2.0
