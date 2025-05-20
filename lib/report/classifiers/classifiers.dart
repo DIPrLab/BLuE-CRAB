@@ -137,8 +137,7 @@ class RSSI extends Classifier {
                 .dataPoints()
                 .map((e) => e.rssi.toDouble())
                 .toList()
-                // .smoothedByMovingAverage(5, SmoothingMethod.resizing)
-                .smoothedByExponentiallyWeightedMovingAverage(0.7)
+                .smoothedByMovingAverage(5, SmoothingMethod.resizing)
                 .avg() >
             -70)
         .toSet();
