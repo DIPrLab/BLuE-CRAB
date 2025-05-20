@@ -17,6 +17,7 @@ extension FlaggedDevicesAtTime on TestingSuite {
       "FALSE_NEGATIVES_RATE",
       "POSITIVES_ACCURACY",
       "NEGATIVES_ACCURACY",
+      "OVERALL_ACCURACY",
       "F1_SCORE",
     ]);
     Set<String> devicesToFlag = {};
@@ -78,6 +79,8 @@ extension FlaggedDevicesAtTime on TestingSuite {
         flaggedDevices.intersection(gt).length / gt.length,
         // Negatives Accuracy
         r.deviceIDs().difference(gt).difference(flaggedDevices).length / r.deviceIDs().difference(gt).length,
+        // Overall Accuracy
+        accuracy,
         // F1 Score
         f1,
       ].map((e) => e.toString()).toList());
