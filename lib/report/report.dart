@@ -29,7 +29,6 @@ class Report {
 
   late Stats timeTravelledStats;
   late Stats incidenceStats;
-  late Stats areaStats;
   late Stats distanceTravelledStats;
   late Stats riskScoreStats;
   DateTime lastUpdated = DateTime(0);

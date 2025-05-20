@@ -1,24 +1,6 @@
 part of 'device.dart';
 
 extension DeviceStats on Device {
-  Set<Area> _areas() {
-    final Set<Area> result = {};
-    locations().forEach((location) {
-      if (result
-          .where((area) =>
-              area.any((areaLocation) => distanceBetween(location, areaLocation) < Settings.shared.distanceThreshold()))
-          .isEmpty) {
-        result.add({location});
-      } else {
-        result
-            .where((area) => area
-                .any((areaLocation) => distanceBetween(location, areaLocation) < Settings.shared.distanceThreshold()))
-            .forEach((a) => a.add(location));
-      }
-    });
-    return result.combineSetsWithCommonElements();
-  }
-
   double _distanceTravelled() => paths()
       .map((path) => path
           .mapOrderedPairs((pair) => distanceBetween(pair.$1.location, pair.$2.location))

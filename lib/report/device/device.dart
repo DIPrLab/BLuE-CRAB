@@ -35,7 +35,6 @@ class Device {
 
   late Duration timeTravelled;
   late int incidence;
-  late Set<Area> areas;
   late double distanceTravelled;
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 

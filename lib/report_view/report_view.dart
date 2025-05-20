@@ -31,8 +31,6 @@ class ReportViewState extends State<ReportView> {
 
   int byRiskScore(Device a, Device b) => widget.report.riskScore(a).compareTo(widget.report.riskScore(b));
 
-  int byArea(Device a, Device b) => a.areas.length.compareTo(b.areas.length);
-
   int byTime(Device a, Device b) => a.timeTravelled.compareTo(b.timeTravelled);
 
   int byIncidence(Device a, Device b) => a.incidence.compareTo(b.incidence);
@@ -46,10 +44,9 @@ class ReportViewState extends State<ReportView> {
             ("Incidence", byIncidence),
             ("Location", byLocation),
             ("Time", byTime),
-            ("Areas", byArea),
           ]
               .map((e) => PopupMenuItem(
-                  child: ListTile(title: Text("Sorte By ${e.$1}")),
+                  child: ListTile(title: Text("Sort By ${e.$1}")),
                   onTap: () {
                     sortMethod = e.$2;
                     sort(sortMethod);

@@ -21,10 +21,6 @@ class FilterButtonBarState extends State<FilterButtonBar> {
         Settings.shared.enableTimeWithUserMetric = !Settings.shared.enableTimeWithUserMetric;
         widget.notify?.call();
       }),
-      WidgetButtonProperties("Areas", () => Settings.shared.enableAreasMetric, () {
-        Settings.shared.enableAreasMetric = !Settings.shared.enableAreasMetric;
-        widget.notify?.call();
-      }),
       WidgetButtonProperties("Distance w/ User", () => Settings.shared.enableDistanceWithUserMetric, () {
         Settings.shared.enableDistanceWithUserMetric = !Settings.shared.enableDistanceWithUserMetric;
         widget.notify?.call();

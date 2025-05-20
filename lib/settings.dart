@@ -22,7 +22,6 @@ class Settings {
   late List<LatLng> safeZones;
 
   // Risk Metrics
-  late bool enableAreasMetric;
   late bool enableDistanceWithUserMetric;
   late bool enableIncidenceMetric;
   late bool enableRSSIMetric;
@@ -56,7 +55,6 @@ class Settings {
             }).toList() ??
             [];
 
-        enableAreasMetric = prefs.getBool("enableAreasMetric") ?? true;
         enableDistanceWithUserMetric = prefs.getBool("enableDistanceWithUserMetric") ?? true;
         enableIncidenceMetric = prefs.getBool("enableIncidenceMetric") ?? true;
         enableRSSIMetric = prefs.getBool("enableRSSIMetric") ?? true;
@@ -74,7 +72,6 @@ class Settings {
           ("devMode", devMode),
           ("autoConnect", autoConnect),
           ("locationEnabled", locationEnabled),
-          ("enableAreasMetric", enableAreasMetric),
           ("enableDistanceWithUserMetric", enableDistanceWithUserMetric),
           ("enableIncidenceMetric", enableIncidenceMetric),
           ("enableRSSIMetric", enableRSSIMetric),

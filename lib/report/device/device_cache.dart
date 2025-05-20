@@ -5,8 +5,6 @@ extension DeviceCache on Device {
         () => distanceTravelled = _distanceTravelled(),
         () => timeTravelled = _timeTravelled(),
         () => incidence = _incidence(),
-        // () => areas = _areas(),
-        () => areas = Set.identity(),
       ].forEach((f) => f());
 
   List<Duration> _timeClusterPrefix() =>
