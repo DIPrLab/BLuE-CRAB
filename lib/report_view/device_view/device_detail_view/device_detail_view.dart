@@ -47,7 +47,7 @@ class DeviceDetailView extends StatelessWidget {
           final file = File("${dir.path}/output.png");
           await file.writeAsBytes(data!);
           Logger().i("Exported to: ${file.path}");
-        } on Exception catch (e) {
+        } catch (e) {
           Logger().e("Error capturing image: $e");
         }
       },

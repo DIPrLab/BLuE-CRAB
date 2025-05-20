@@ -10,6 +10,8 @@
 # include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  errors:
+    avoid_catches_without_on_clauses: ignore
   exclude: [build/**]
   language:
     # strict-casts: true
