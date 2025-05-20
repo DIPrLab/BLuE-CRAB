@@ -12,11 +12,11 @@ Report _$ReportFromJson(Map<String, dynamic> json) {
     report = Report(
         (json['data'] as Map<String, dynamic>).map((k, e) => MapEntry(k, Device.fromJson(e as Map<String, dynamic>))))
       ..time = DateTime.parse(json['time'] as String);
-  } catch (e) {
+  } on Exception {
     Logger().w("Failed to load report as Report");
     try {
       report = BleDoubtReport.fromJson(json).toReport();
-    } catch (e) {
+    } on Exception {
       Logger().w("Failed to load report as BleDoubtReport");
       Logger().i("Generating empty report");
     }
