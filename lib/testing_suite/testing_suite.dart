@@ -68,15 +68,12 @@ class TestingSuite {
   void runTest(File inputFile, Set<String> groundTruth, File reportDataFile, File deviceDataFile,
       File flaggedDevicesFile, File rssiMetricFile, Directory deviceReportDir) {
     inputFile.readAsString().then((jsonData) {
-      print("${inputFile.path}: Checkpoint 0");
       final Report report = Report.fromJson(jsonDecode(jsonData));
       reportDataFile
         ..createSync()
         ..writeAsStringSync(getReportMetrics(report).toString());
       deviceDataFile
         ..createSync()
-        print("${inputFile.path}: Checkpoint 5");
-        report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
         ..writeAsStringSync(getDeviceMetrics(report).toString());
       flaggedDevicesFile
         ..createSync()
