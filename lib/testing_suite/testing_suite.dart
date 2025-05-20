@@ -7,11 +7,13 @@ import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/testing_suite/csv_data.dart';
+import 'package:collection/collection.dart';
 
 part 'package:blue_crab/testing_suite/device_metrics.dart';
 part 'package:blue_crab/testing_suite/device_signal_information.dart';
 part 'package:blue_crab/testing_suite/flagged_devices_at_time.dart';
 part 'package:blue_crab/testing_suite/report_metrics.dart';
+part 'package:blue_crab/testing_suite/rssi_metric_data.dart';
 
 class TestingSuite {
   List<DateTime> generateTimestamps(List<DateTime> timestamps) {
