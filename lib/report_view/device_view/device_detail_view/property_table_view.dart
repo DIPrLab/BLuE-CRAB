@@ -6,22 +6,22 @@ import 'package:flutter/material.dart';
 
 class PropertyTable extends StatelessWidget {
   PropertyTable(this.device, this.report, {super.key}) {
-    rows.add(dataRow("UUID", device.id));
+    rows.add(Row("UUID", device.id));
     if (device.name.isNotEmpty) {
-      rows.add(dataRow("Name", device.name));
+      rows.add(Row("Name", device.name));
     }
     if (device.platformName.isNotEmpty) {
-      rows.add(dataRow("Platform", device.platformName));
+      rows.add(Row("Platform", device.platformName));
     }
     if (device.manufacturer.isNotEmpty) {
-      rows.add(dataRow("Manufacturer", device.manufacturers().join(", ")));
+      rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
     }
     [
-      dataRow("Time Travelled", device.timeTravelled.toReadableString()),
-      dataRow("Distance Travelled", "${device.distanceTravelled.round()} meters"),
-      dataRow("Incidence", device.incidence.toString()),
-      dataRow("Areas", device.areas.length.toString()),
-      dataRow("Duration", device.timeTravelled.printFriendly())
+      Row("Time Travelled", device.timeTravelled.toReadableString()),
+      Row("Distance Travelled", "${device.distanceTravelled.round()} meters"),
+      Row("Incidence", device.incidence.toString()),
+      Row("Areas", device.areas.length.toString()),
+      Row("Duration", device.timeTravelled.printFriendly())
     ].forEach(rows.add);
   }
 
@@ -29,7 +29,7 @@ class PropertyTable extends StatelessWidget {
   final Report report;
   List<DataRow> rows = [];
 
-  DataRow dataRow(String label, String value) => DataRow(cells: [
+  DataRow Row(String label, String value) => DataRow(cells: [
         DataCell(Text(label, softWrap: true)),
         DataCell(Text(value, softWrap: true, textAlign: TextAlign.right))
       ]);

@@ -24,15 +24,16 @@ part 'buttons.dart';
 part 'scanner.dart';
 
 class ScannerView extends StatefulWidget {
-  ScannerView(this.report, {super.key});
+  const ScannerView(this.initialReport, {super.key});
 
-  Report report;
+  final Report initialReport;
 
   @override
   ScannerViewState createState() => ScannerViewState();
 }
 
 class ScannerViewState extends State<ScannerView> {
+  late Report report;
   LatLng? location;
   late StreamSubscription<Position> positionStream;
   Offset? dragStart;
@@ -86,6 +87,8 @@ class ScannerViewState extends State<ScannerView> {
   void initState() {
     super.initState();
 
+    report = widget.initialReport;
+
     Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream();
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
@@ -95,12 +98,12 @@ class ScannerViewState extends State<ScannerView> {
                     sr.advertisementData.manufacturerData.keys.toList()),
                 sr.rssi
               ))
-          .forEach((d) => widget.report.addDatumToDevice(d.$1, location, d.$2));
+          .forEach((d) => report.addDatumToDevice(d.$1, location, d.$2));
       if (Settings.shared.autoConnect) {
         results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       }
-      deviceCount = widget.report.devices().length;
-      datapointCount = widget.report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
+      deviceCount = report.devices().length;
+      datapointCount = report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
       if (mounted) {
         setState(() {});
       }
@@ -114,7 +117,7 @@ class ScannerViewState extends State<ScannerView> {
     timeStreamSubscription = _timeStream.listen((currentTime) {
       if (isScanning && !Settings.shared.devMode && !updating) {
         updating = true;
-        widget.report.refreshCache();
+        report.refreshCache();
         updating = false;
       }
     });
@@ -144,7 +147,7 @@ class ScannerViewState extends State<ScannerView> {
           const Expanded(child: SizedBox.shrink()),
           if (FlutterBluePlus.isScanningNow && Settings.shared.demoMode)
             Text(
-                "$deviceCount devices scanned. $datapointCount datapoints. ${widget.report.riskyDevices.length} suspicious devices."),
+                "$deviceCount devices scanned. $datapointCount datapoints. ${report.riskyDevices.length} suspicious devices."),
         ]),
         const Expanded(child: SizedBox.shrink()),
       ])));

@@ -11,7 +11,7 @@ extension Buttons on ScannerViewState {
   Widget deleteReportButton() => FloatingActionButton.large(
       heroTag: "Delete Report",
       onPressed: () {
-        widget.report = Report({});
+        report = Report({});
         write(Report({}));
       },
       child: const Icon(Icons.delete));
@@ -20,8 +20,8 @@ extension Buttons on ScannerViewState {
       heroTag: "Load Sample Report",
       onPressed: () {
         readReport().then((report) {
-          widget.report.combine(report);
-          write(widget.report);
+          widget.initialReport.combine(report);
+          write(widget.initialReport);
         });
       },
       child: const Icon(Icons.upload));
@@ -29,7 +29,7 @@ extension Buttons on ScannerViewState {
   Widget shareButton() => FloatingActionButton.large(
       heroTag: "Share",
       onPressed: () {
-        write(widget.report);
+        write(widget.initialReport);
         shareReport();
       },
       child: const Icon(Icons.share));
@@ -38,10 +38,10 @@ extension Buttons on ScannerViewState {
       heroTag: "Report Viewer Button",
       onPressed: () {
         if (!updating) {
-          widget.report.refreshCache();
+          widget.initialReport.refreshCache();
         }
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.initialReport))));
       },
       child: const Icon(Icons.newspaper));
 
@@ -49,15 +49,15 @@ extension Buttons on ScannerViewState {
       ? FloatingActionButton.large(
           heroTag: "Stop Scanning Button",
           onPressed: () {
-            stopScan().then((_) => write(widget.report));
+            stopScan().then((_) => write(widget.initialReport));
             if (!updating) {
-              widget.report.refreshCache();
+              widget.initialReport.refreshCache();
             }
             if (Platform.isAndroid || Platform.isIOS) {
               Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
             }
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.initialReport))));
           },
           child: const Icon(Icons.stop))
       : FloatingActionButton.large(
@@ -78,7 +78,7 @@ extension Buttons on ScannerViewState {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: const Center(
                   child: Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Text("Risky Devices Detected!")))),
-          onTap: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))))),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.initialReport))))),
       child: const Icon(Icons.notifications));
 }
