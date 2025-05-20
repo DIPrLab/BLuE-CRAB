@@ -38,13 +38,12 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
-  late StreamSubscription<BluetoothAdapterState> _adapterStateSubscription;
   Report report = Report({});
 
   @override
   void initState() {
     super.initState();
-    _adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) => setState(() => _adapterState = state));
+    FlutterBluePlus.adapterState.listen((state) => setState(() => _adapterState = state));
     _loadData();
   }
 
