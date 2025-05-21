@@ -26,7 +26,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) =>
-      MaterialApp(debugShowCheckedModeBanner: false, home: const HomePage(), theme: Themes.darkMode);
+      MaterialApp(debugShowCheckedModeBanner: false, home: const HomePage(), theme: darkMode);
 }
 
 class HomePage extends StatefulWidget {
@@ -63,5 +63,5 @@ class HomePageState extends State<HomePage> {
               child: _adapterState == BluetoothAdapterState.on
                   ? ScannerView(report)
                   : BluetoothOffView(adapterState: _adapterState)),
-          theme: Themes.darkMode));
+          theme: darkMode));
 }
