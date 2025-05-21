@@ -24,16 +24,14 @@ part 'buttons.dart';
 part 'scanner.dart';
 
 class ScannerView extends StatefulWidget {
-  const ScannerView(this.initialReport, {super.key});
-
-  final Report initialReport;
+  const ScannerView({super.key});
 
   @override
   ScannerViewState createState() => ScannerViewState();
 }
 
 class ScannerViewState extends State<ScannerView> {
-  late Report report;
+  Report report = Report({});
   LatLng? location;
   late StreamSubscription<Position> positionStream;
   Offset? dragStart;
@@ -83,11 +81,13 @@ class ScannerViewState extends State<ScannerView> {
     positionStream.cancel().then((_) => location = null);
   }
 
+  void _loadData() => readReport().then(report.combine);
+
   @override
   void initState() {
     super.initState();
 
-    report = widget.initialReport;
+    _loadData();
 
     Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream();
 
@@ -138,12 +138,7 @@ class ScannerViewState extends State<ScannerView> {
         const Expanded(child: SizedBox.shrink()),
         Column(children: [
           const Expanded(child: SizedBox.shrink()),
-          Text("BL(u)E CRAB",
-              // style: GoogleFonts.nothingYouCouldDo(
-              // style: GoogleFonts.sniglet(
-              // style: GoogleFonts.caprasimo(
-              // style: GoogleFonts.mogra(
-              style: GoogleFonts.irishGrover(textStyle: splashText)),
+          Text("BL(u)E CRAB", style: GoogleFonts.irishGrover(textStyle: splashText)),
           const Expanded(child: SizedBox.shrink()),
           ...buttonList()
               .map((row) => Row(

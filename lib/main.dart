@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'package:blue_crab/bluetooth_disabled_view/bluetooth_disabled_view.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
-import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/scanner_view/scanner_view.dart';
 import 'package:blue_crab/styles/themes.dart';
 import 'package:flutter/material.dart';
@@ -38,22 +36,16 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
-  Report report = Report({});
 
   @override
   void initState() {
     super.initState();
     FlutterBluePlus.adapterState.listen((state) => setState(() => _adapterState = state));
-    _loadData();
+    readSettings();
   }
 
   @override
   void dispose() => super.dispose();
-
-  Future<void> _loadData() async {
-    unawaited(readReport().then((savedReport) => report.combine(savedReport)));
-    readSettings();
-  }
 
   @override
   Widget build(BuildContext context) => InAppNotification(
@@ -61,7 +53,7 @@ class HomePageState extends State<HomePage> {
           debugShowCheckedModeBanner: false,
           home: SafeArea(
               child: _adapterState == BluetoothAdapterState.on
-                  ? ScannerView(report)
+                  ? const ScannerView()
                   : BluetoothOffView(adapterState: _adapterState)),
           theme: darkMode));
 }
