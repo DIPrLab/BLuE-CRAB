@@ -15,8 +15,6 @@ BleDoubtDevice _$BleDoubtDeviceFromJson(Map<String, dynamic> json) => BleDoubtDe
       json['id3'] as String,
       (json['manufacturer'] as num).toInt(),
       (json['parserId'] ?? "") as String,
-      json['isSafe'] as bool,
-      json['isSuspicious'] as bool,
     );
 
 Map<String, dynamic> _$BleDoubtDeviceToJson(BleDoubtDevice instance) => <String, dynamic>{

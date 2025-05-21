@@ -5,7 +5,7 @@ part 'ble_doubt_device.g.dart';
 @JsonSerializable()
 class BleDoubtDevice {
   BleDoubtDevice(this.address, this.name, this.type, this.id1, this.id2, this.id3, this.manufacturer, this.parserId,
-      this.isSafe, this.isSuspicious);
+      {this.isSafe = false, this.isSuspicious = false});
 
   factory BleDoubtDevice.fromJson(Map<String, dynamic> json) => _$BleDoubtDeviceFromJson(json);
 
