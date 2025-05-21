@@ -1,7 +1,6 @@
 import 'package:blue_crab/extensions/date_time.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
-import 'package:blue_crab/report_view/duration.dart';
 import 'package:flutter/material.dart';
 
 class PropertyTable extends StatelessWidget {
@@ -19,10 +18,9 @@ class PropertyTable extends StatelessWidget {
       rows.add(dataRow("Manufacturer", device.manufacturers().join(", ")));
     }
     [
-      dataRow("Time Travelled", device.timeTravelled.toReadableString()),
+      dataRow("Duration Travelled", device.timeTravelled.toReadableString()),
       dataRow("Distance Travelled", "${device.distanceTravelled.round()} meters"),
       dataRow("Incidence", device.incidence.toString()),
-      dataRow("Duration", device.timeTravelled.printFriendly())
     ].forEach(rows.add);
     return rows;
   }
