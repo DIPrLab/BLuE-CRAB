@@ -77,7 +77,6 @@ class DbScan extends Classifier {
       }
       clusters[dbscan.label![i]]!.addAll(report.devices().where((d) => report.riskScores(d).equals(dbscan.dataset[i])));
     });
-    // print(clusters);
     return clusters[-1] ?? {};
   }
 }
@@ -111,35 +110,18 @@ class RSSI extends Classifier {
   @override
   String name() => "RSSI Confidence";
 
-  List<Cluster> cluster(int k, Iterable<Instance> dataPoints) {
-    final List<Instance> instances = dataPoints.toList();
-    final List<Cluster> clusters = initialClusters(k, instances, seed: 0);
-    kMeans(clusters: clusters, instances: instances);
-    return clusters;
-  }
-
-  List<Cluster> sortedClusters(Report report) =>
-      cluster(3, report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)))
-          .sorted((a, b) => a.location.distanceFromOrigin().compareTo(b.location.distanceFromOrigin()));
-
   @override
-  Set<Device> getRiskyDevices(Report report) {
-    final List<double> rssiAverages = report
-        .devices()
-        .sorted((a, b) => report.riskScore(a).compareTo(report.riskScore(b)))
-        .map((d) => d.dataPoints().map((dp) => dp.rssi.toDouble()).average)
-        .toList();
-    return report
-        .devices()
-        .where((e) => !sortedClusters(report).first.instances.map((e) => e.id).map((e) => report.data[e]!).contains(e))
-        .where((e) =>
-            e
-                .dataPoints()
-                .map((e) => e.rssi.toDouble())
-                .toList()
-                .smoothedByMovingAverage(5, SmoothingMethod.resizing)
-                .avg() >
-            -70)
-        .toSet();
-  }
+  Set<Device> getRiskyDevices(Report report) => report
+      .devices()
+      .where((e) => e.timeTravelled.inSeconds > report.devices().map((e) => e.timeTravelled.inSeconds).toSet().median())
+      .where((e) => e.distanceTravelled > report.devices().map((e) => e.distanceTravelled).toSet().median())
+      .where((e) =>
+          e
+              .dataPoints()
+              .map((e) => e.rssi.toDouble())
+              .toList()
+              .smoothedByMovingAverage(5, SmoothingMethod.resizing)
+              .standardDeviation() <
+          3.5)
+      .toSet();
 }
