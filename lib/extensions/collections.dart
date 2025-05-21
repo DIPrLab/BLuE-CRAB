@@ -16,14 +16,12 @@ extension IterableStats on Iterable<num> {
 
   num standardDeviation() => sqrt(fold(0.toDouble(), (a, b) => a + pow(b - avg(), 2)) / length);
 
-  num median() => sorted((a, b) => a.compareTo(b))[(length / 2).floor()];
+  num median() => length.isEven
+      ? sorted((a, b) => a.compareTo(b)).getRange((length ~/ 2) - 1, (length ~/ 2) + 1).avg()
+      : sorted((a, b) => a.compareTo(b))[length ~/ 2];
 }
 
 extension ListStats on List<num> {
-  num median() => length.isEven
-      ? (this..sort((a, b) => a.compareTo(b))).getRange((length ~/ 2) - 1, (length ~/ 2) + 1).avg()
-      : (this..sort((a, b) => a.compareTo(b)))[length ~/ 2];
-
   // num mad() => map((x) => x - average().abs()).average();
   num mad() => map((x) => (x - median()).abs()).toList().median();
 
