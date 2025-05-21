@@ -21,10 +21,10 @@ class DeviceDetailView extends StatelessWidget {
 
   Widget header(BuildContext context) => Stack(children: [
         Row(children: [
-          BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithBackground),
+          BackButton(onPressed: () => Navigator.pop(context), style: buttonWithBackground),
           const Spacer(),
         ]),
-        Row(children: [const Spacer(), Text("Device Details", style: TextStyles.title), const Spacer()]),
+        Row(children: [const Spacer(), Text("Device Details", style: titleText), const Spacer()]),
       ]);
 
   Widget mapButton(BuildContext context) => TextButton.icon(

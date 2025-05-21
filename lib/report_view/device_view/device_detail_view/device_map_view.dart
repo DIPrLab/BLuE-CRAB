@@ -22,6 +22,6 @@ class DeviceMapViewState extends State<DeviceMapView> {
   @override
   Widget build(BuildContext context) => Stack(children: [
         MapView(widget.device, MapController(location: middlePoint(widget.device.locations().toList()))),
-        BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithBackground),
+        BackButton(onPressed: () => Navigator.pop(context), style: buttonWithBackground),
       ]);
 }

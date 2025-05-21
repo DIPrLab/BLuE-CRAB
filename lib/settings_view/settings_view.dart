@@ -67,7 +67,7 @@ class SettingsViewState extends State<SettingsView> {
                       Settings.shared.save();
                       Navigator.pop(context);
                     },
-                    style: AppButtonStyle.buttonWithoutBackground),
+                    style: buttonWithoutBackground),
                 header("Discover Services"),
                 SwitchListTile(
                     title: Text("AutoConnect ${Settings.shared.autoConnect ? "On" : "Off"}"),

@@ -143,7 +143,7 @@ class ScannerViewState extends State<ScannerView> {
               // style: GoogleFonts.sniglet(
               // style: GoogleFonts.caprasimo(
               // style: GoogleFonts.mogra(
-              style: GoogleFonts.irishGrover(textStyle: TextStyles.splashText)),
+              style: GoogleFonts.irishGrover(textStyle: splashText)),
           const Expanded(child: SizedBox.shrink()),
           ...buttonList()
               .map((row) => Row(

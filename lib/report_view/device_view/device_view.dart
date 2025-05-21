@@ -17,7 +17,7 @@ class DeviceView extends StatelessWidget {
           : (report.riskScore(device) > report.riskScoreStats.tukeyMildUpperLimit)
               ? const CircleAvatar(backgroundColor: colors.altText, foregroundColor: colors.altText)
               : const CircleAvatar(backgroundColor: Colors.green, foregroundColor: Colors.green),
-      title: Text(device.deviceLabel() == device.id ? "" : device.deviceLabel(), style: TextStyles.title2),
+      title: Text(device.deviceLabel() == device.id ? "" : device.deviceLabel(), style: titleText2),
       subtitle: Text(device.id, maxLines: 2, overflow: TextOverflow.ellipsis),
       trailing: const Icon(Icons.keyboard_arrow_right),
       onTap: () => Navigator.push(
