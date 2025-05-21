@@ -69,11 +69,8 @@ class FilterButtonBarState extends State<FilterButtonBar> {
       scrollDirection: Axis.horizontal,
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-              children: filterButtons
-                  .map(filterButton)
-                  .expand((e) => e != filterButtons.last ? [e, const SizedBox(width: 12)] : [e])
-                  .toList())));
+          child:
+              Row(children: filterButtons.map(filterButton).expand((e) => [e, const SizedBox(width: 12)]).toList())));
 }
 
 class WidgetButtonProperties {
