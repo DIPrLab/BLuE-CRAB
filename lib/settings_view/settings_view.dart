@@ -68,35 +68,35 @@ class SettingsViewState extends State<SettingsView> {
                       Navigator.pop(context);
                     },
                     style: buttonWithoutBackground),
-                header("Discover Services"),
-                SwitchListTile(
-                    title: Text("AutoConnect ${Settings.shared.autoConnect ? "On" : "Off"}"),
-                    value: Settings.shared.autoConnect,
-                    onChanged: (value) {
-                      setState(() => Settings.shared.autoConnect = value);
-                      Settings.shared.save();
-                    },
-                    secondary: Settings.shared.autoConnect
-                        ? const Icon(Icons.bluetooth)
-                        : const Icon(Icons.bluetooth_disabled)),
-                header("Location Services"),
-                SwitchListTile(
-                    title: Text("Location ${Settings.shared.locationEnabled ? "En" : "Dis"}abled"),
-                    value: Settings.shared.locationEnabled,
-                    onChanged: (value) {
-                      setState(() => Settings.shared.locationEnabled = value);
-                      Settings.shared.save();
-                    },
-                    secondary: Settings.shared.locationEnabled
-                        ? const Icon(Icons.location_searching)
-                        : const Icon(Icons.location_disabled)),
-                header("Windowing"),
-                settingsSlider("Window Duration", "${Settings.shared.windowDuration().inMinutes} minutes", 10, 100,
-                    Settings.shared.windowDurationValue, (newValue) {
-                  Settings.shared.recentlyChanged = true;
-                  Settings.shared.windowDurationValue = newValue;
-                  setState(() {});
-                }),
+                // header("Discover Services"),
+                // SwitchListTile(
+                //     title: Text("AutoConnect ${Settings.shared.autoConnect ? "On" : "Off"}"),
+                //     value: Settings.shared.autoConnect,
+                //     onChanged: (value) {
+                //       setState(() => Settings.shared.autoConnect = value);
+                //       Settings.shared.save();
+                //     },
+                //     secondary: Settings.shared.autoConnect
+                //         ? const Icon(Icons.bluetooth)
+                //         : const Icon(Icons.bluetooth_disabled)),
+                // header("Location Services"),
+                // SwitchListTile(
+                //     title: Text("Location ${Settings.shared.locationEnabled ? "En" : "Dis"}abled"),
+                //     value: Settings.shared.locationEnabled,
+                //     onChanged: (value) {
+                //       setState(() => Settings.shared.locationEnabled = value);
+                //       Settings.shared.save();
+                //     },
+                //     secondary: Settings.shared.locationEnabled
+                //         ? const Icon(Icons.location_searching)
+                //         : const Icon(Icons.location_disabled)),
+                // header("Windowing"),
+                // settingsSlider("Window Duration", "${Settings.shared.windowDuration().inMinutes} minutes", 10, 100,
+                //     Settings.shared.windowDurationValue, (newValue) {
+                //   Settings.shared.recentlyChanged = true;
+                //   Settings.shared.windowDurationValue = newValue;
+                //   setState(() {});
+                // }),
                 header("Classifier"),
                 DropdownButton<Classifier>(
                     value: Settings.shared.classifier,
@@ -104,14 +104,13 @@ class SettingsViewState extends State<SettingsView> {
                         .map((e) => DropdownMenuItem<Classifier>(value: e, child: Text(e.name())))
                         .toList(),
                     onChanged: (newValue) => setState(() => Settings.shared.classifier = newValue!)),
-                header("Time"),
+                header("Thresholds"),
                 settingsSlider("Scanning Time Threshold", "${Settings.shared.timeThreshold().inSeconds} seconds", 1,
                     100, Settings.shared.timeThresholdValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
                   Settings.shared.timeThresholdValue = newValue;
                   setState(() {});
                 }),
-                header("Distance"),
                 settingsSlider("Scanning Distance Threshold", "${Settings.shared.distanceThreshold().toInt()} meters",
                     1, 100, Settings.shared.distanceThresholdValue, (newValue) {
                   Settings.shared.recentlyChanged = true;
