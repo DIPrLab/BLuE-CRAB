@@ -5,7 +5,6 @@ import 'package:blue_crab/report/datum.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
 
@@ -39,11 +38,9 @@ class Device {
 
   Set<Datum> dataPoints({bool testing = false}) => _dataPoints
       .where((datum) =>
-          (kDebugMode || testing) || (datum.time.isAfter(DateTime.now().subtract(Settings.shared.windowDuration()))))
-      .where((datum) =>
-          (datum.location == null) ||
-          (!Settings.shared.safeZones.any(
-              (safeLocation) => distanceBetween(datum.location!, safeLocation) < Settings.shared.distanceThreshold())))
+          datum.location == null ||
+          !Settings.shared.safeZones.any(
+              (safeLocation) => distanceBetween(datum.location!, safeLocation) < Settings.shared.distanceThreshold()))
       .toSet();
 
   void addDatum(LatLng? location, int rssi) {
@@ -53,7 +50,7 @@ class Device {
         ? Duration.zero
         : DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second)
             .difference(_dataPoints.map((dp) => dp.time).sorted((a, b) => a.compareTo(b)).last);
-    if (_dataPoints.isEmpty || difference > const Duration(seconds: 10)) {
+    if (_dataPoints.isEmpty || difference >= const Duration(seconds: 10)) {
       _dataPoints.add(Datum(location, rssi));
     }
   }
