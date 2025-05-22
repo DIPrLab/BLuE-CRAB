@@ -45,14 +45,7 @@ class Device {
 
   void addDatum(LatLng? location, int rssi) {
     lastUpdated = DateTime.now();
-    final DateTime now = lastUpdated;
-    final Duration difference = _dataPoints.isEmpty
-        ? Duration.zero
-        : DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second)
-            .difference(_dataPoints.map((dp) => dp.time).sorted((a, b) => a.compareTo(b)).last);
-    if (_dataPoints.isEmpty || difference >= const Duration(seconds: 10)) {
-      _dataPoints.add(Datum(location, rssi));
-    }
+    _dataPoints.add(Datum(location, rssi));
   }
 
   String deviceLabel() => name.isNotEmpty
