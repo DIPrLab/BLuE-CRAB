@@ -8,19 +8,8 @@ import 'package:in_app_notification/in_app_notification.dart';
 
 void main() => runApp(const App());
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({super.key});
-
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  void initState() => super.initState();
-
-  @override
-  void dispose() => super.dispose();
 
   @override
   Widget build(BuildContext context) =>
@@ -49,11 +38,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) => InAppNotification(
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: SafeArea(
-              child: _adapterState == BluetoothAdapterState.on
-                  ? const ScannerView()
-                  : BluetoothOffView(adapterState: _adapterState)),
-          theme: darkMode));
+      child: _adapterState == BluetoothAdapterState.on
+          ? const ScannerView()
+          : BluetoothOffView(adapterState: _adapterState));
 }
