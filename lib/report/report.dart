@@ -11,7 +11,6 @@ part 'report_cache.dart';
 part 'report_stats.dart';
 part 'synthetic_report.dart';
 
-typedef Area = Set<LatLng>;
 typedef Path = List<PathComponent>;
 
 class PathComponent {
