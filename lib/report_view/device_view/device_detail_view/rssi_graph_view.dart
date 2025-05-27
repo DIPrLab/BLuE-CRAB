@@ -25,6 +25,8 @@ class RssiGraphView extends StatelessWidget {
         device.dataPoints().map((e) => e.time.difference(origin).inSeconds.toDouble()).toList();
     final List<num> actualRSSI = device.dataPoints().map((e) => e.rssi).toList();
     final List<num> smoothedRSSI =
+        device.dataPoints().map((e) => e.rssi).toList().smoothedByExponentiallyWeightedMovingAverage(0.3).toList();
+    final List<num> smoothedRSSI2 =
         device.dataPoints().map((e) => e.rssi).toList().smoothedByMovingAverage(3, SmoothingMethod.padding).toList();
     final List<FlSpot> actualRSSIData =
         List.generate(timestamps.length, (e) => (timestamps[e], actualRSSI[e].toDouble()))
@@ -34,11 +36,16 @@ class RssiGraphView extends StatelessWidget {
         List.generate(timestamps.length, (e) => (timestamps[e], smoothedRSSI[e].toDouble()))
             .map((e) => FlSpot(e.$1, e.$2))
             .toList();
+    final List<FlSpot> smoothedRSSIData2 =
+        List.generate(timestamps.length, (e) => (timestamps[e], smoothedRSSI2[e].toDouble()))
+            .map((e) => FlSpot(e.$1, e.$2))
+            .toList();
     return Scaffold(
         body: LineChart(
             LineChartData(minY: -100, maxY: 0, lineBarsData: [
               LineChartBarData(dotData: const FlDotData(show: false), color: colors.foreground, spots: actualRSSIData),
               LineChartBarData(dotData: const FlDotData(show: false), color: colors.altText, spots: smoothedRSSIData),
+              LineChartBarData(dotData: const FlDotData(show: false), color: colors.warnText, spots: smoothedRSSIData2),
             ]),
             curve: Curves.ease));
   }
