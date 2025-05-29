@@ -62,7 +62,7 @@ class Device {
   Set<LatLng> locations() =>
       dataPoints().where((dataPoint) => dataPoint.location != null).map((dataPoint) => dataPoint.location!).toSet();
 
-  List<Path> paths() {
+  List<Path> paths2() {
     final List<Path> paths = <Path>[];
     final List<PathComponent> dataPoints = this
         .dataPoints()
@@ -85,6 +85,22 @@ class Device {
 
     return paths;
   }
+
+  List<Path> paths() => dataPoints()
+          .where((dataPoint) => dataPoint.location != null)
+          .map((datum) => PathComponent(datum.time, datum.location!))
+          .sorted((a, b) => a.time.compareTo(b.time))
+          .fold<List<Path>>([], (paths, curr) {
+        if (paths.isEmpty || curr.time.difference(paths.last.last.time) >= Settings.shared.timeThreshold()) {
+          return [
+            ...paths,
+            [curr]
+          ];
+        } else {
+          final updatedLast = [...paths.last, curr];
+          return [...paths.take(paths.length - 1), updatedLast];
+        }
+      });
 
   Device combine(Device device) {
     lastUpdated = DateTime.now();
