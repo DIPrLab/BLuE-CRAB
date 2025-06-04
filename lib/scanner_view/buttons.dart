@@ -34,6 +34,7 @@ extension Buttons on ScannerViewState {
       onPressed: () {
         if (!updating) {
           report.refreshCache();
+          write(report);
         }
         Navigator.push(context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: report))));
       },
@@ -46,6 +47,7 @@ extension Buttons on ScannerViewState {
             stopScan().then((_) => write(report));
             if (!updating) {
               report.refreshCache();
+              write(report);
             }
             if (Platform.isAndroid || Platform.isIOS) {
               Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
