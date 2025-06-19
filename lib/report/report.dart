@@ -2,6 +2,7 @@ import 'package:blue_crab/ble_doubt_report/ble_doubt_report.dart';
 import 'package:blue_crab/extensions/stats.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/settings.dart';
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
 import 'package:logger/logger.dart';
@@ -17,6 +18,31 @@ class PathComponent {
   PathComponent(this.time, this.location);
   DateTime time;
   LatLng location;
+}
+
+class LocationTracker {
+  LocationTracker(this._data);
+
+  Map<DateTime, LatLng> _data;
+
+  void operator []=(DateTime key, LatLng value) => _data[key] = value;
+
+  LatLng? operator [](DateTime? key) {
+    if (key == null) {
+      return null;
+    }
+    LatLng? result;
+    try {
+      result = _data.entries
+          .where((e) => e.key.isBefore(key) || e.key == key)
+          .sorted((a, b) => a.key.compareTo(b.key))
+          .last
+          .value;
+    } catch (e) {
+      return null;
+    }
+    return result;
+  }
 }
 
 @JsonSerializable()
