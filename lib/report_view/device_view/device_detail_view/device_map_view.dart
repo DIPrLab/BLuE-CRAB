@@ -6,22 +6,15 @@ import 'package:blue_crab/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:map/map.dart';
 
-class DeviceMapView extends StatefulWidget {
+class DeviceMapView extends StatelessWidget {
   const DeviceMapView({required this.device, required this.report, super.key});
+
   final Device device;
   final Report report;
 
   @override
-  DeviceMapViewState createState() => DeviceMapViewState();
-}
-
-class DeviceMapViewState extends State<DeviceMapView> {
-  @override
-  void initState() => super.initState();
-
-  @override
   Widget build(BuildContext context) => Stack(children: [
-        MapView(widget.device, MapController(location: middlePoint(widget.device.locations().toList()))),
+        MapView(device, MapController(location: middlePoint(device.locations().toList()))),
         BackButton(onPressed: () => Navigator.pop(context), style: buttonWithBackground),
       ]);
 }
