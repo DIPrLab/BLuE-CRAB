@@ -3,8 +3,6 @@ import "dart:math";
 
 import "package:collection/collection.dart";
 
-// import "package:statistics/statistics.dart";
-
 enum SmoothingMethod {
   padding,
   resizing,
@@ -78,6 +76,21 @@ extension ListStats on List<num> {
   List<num> smoothedByExponentiallyWeightedMovingAverage(num alpha) => List.generate(length, (e) => e).fold(
       List<num>.empty(growable: true),
       (acc, e) => e == 0 ? [first] : acc + [(alpha * this[e]) + ((1 - alpha) * acc.last)]);
+}
+
+extension Intersperse<T> on List<T> {
+  List<T> intersperse(T separator, {bool edges = false}) {
+    final List<T> result = edges ? [separator] : [];
+
+    forEach((e) {
+      result.add(e);
+      if (edges || e != last) {
+        result.add(separator);
+      }
+    });
+
+    return result;
+  }
 }
 
 extension CommonElements<T> on Set<Set<T>> {
