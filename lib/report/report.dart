@@ -23,7 +23,7 @@ class PathComponent {
 class LocationTracker {
   LocationTracker(this._data);
 
-  Map<DateTime, LatLng> _data;
+  final Map<DateTime, LatLng> _data;
 
   void operator []=(DateTime key, LatLng value) => _data[key] = value;
 
