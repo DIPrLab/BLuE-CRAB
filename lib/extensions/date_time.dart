@@ -8,3 +8,7 @@ extension S on Duration {
           "${(this - Duration(minutes: inMinutes)).inSeconds} sec"
         ].where((s) => s[0] != "0").join(", ");
 }
+
+extension RoundedToSecond on DateTime {
+  DateTime roundedToSecond() => DateTime(year, month, day, hour, minute, second);
+}

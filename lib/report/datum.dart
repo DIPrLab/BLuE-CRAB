@@ -1,3 +1,4 @@
+import 'package:blue_crab/extensions/date_time.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
 import 'package:statistics/statistics.dart';
@@ -8,8 +9,7 @@ part 'datum.g.dart';
 @JsonSerializable()
 class Datum {
   Datum(this.location, this.rssi) {
-    final DateTime now = DateTime.now();
-    time = DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
+    time = DateTime.now().roundedToSecond();
   }
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
   LatLng? location;
