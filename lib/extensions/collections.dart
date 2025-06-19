@@ -90,19 +90,3 @@ extension CommonElements<T> on Set<Set<T>> {
     return result;
   }
 }
-
-extension ClampInt on int {
-  int clamp(int min, int max) => this < min
-      ? min
-      : this > max
-          ? max
-          : this;
-}
-
-extension ClampDouble on double {
-  double clamp(double min, double max) => this < min
-      ? min
-      : this > max
-          ? max
-          : this;
-}
