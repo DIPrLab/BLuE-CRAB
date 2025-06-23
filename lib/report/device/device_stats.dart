@@ -12,4 +12,16 @@ extension DeviceStats on Device {
   Duration _timeTravelled() => _timeClusterPrefix()
       .where((duration) => duration <= Settings.shared.timeThreshold())
       .fold(Duration.zero, (a, b) => a + b);
+
+  // n is path loss exponent
+  // c is constant coefficient, obtained through least square fitting
+  // num distance() => exp(log(1 /
+  //         (dataPoints()
+  //                 .sorted((a, b) => a.time.compareTo(b.time))
+  //                 .map((e) => e.rssi)
+  //                 .toList()
+  //                 .smoothedByMovingAverage(5, SmoothingMethod.resizing)
+  //                 .last -
+  //             c)) /
+  //     n);
 }
