@@ -33,6 +33,7 @@ dependencies:
   cached_network_image: ^3.4.1
   collection: ^1.19.1
   cupertino_icons: ^1.0.8
+  eval_ex: ^1.2.0
   fl_chart: ^1.0.0
   flutter:
     sdk: flutter
