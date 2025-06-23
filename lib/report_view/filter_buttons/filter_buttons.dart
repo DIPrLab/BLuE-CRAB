@@ -38,11 +38,9 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   }
 
   void reorder(List<WidgetButtonProperties> propList) {
-    propList.forEach((props) {
-      filterButtons
-        ..remove(props)
-        ..insert(0, props);
-    });
+    propList.forEach((props) => filterButtons
+      ..remove(props)
+      ..insert(0, props));
     filterButtons.sort((a, b) => (a.value() && b.value()) || !(a.value() || b.value())
         ? 0
         : a.value()
