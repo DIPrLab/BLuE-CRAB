@@ -44,6 +44,9 @@ class Settings {
   double scanDistance() => 30;
   double distanceThreshold() => distanceThresholdValue;
 
+  Duration segmentDuration() => const Duration(seconds: 10);
+  Duration skipDuration() => const Duration(seconds: 5);
+
   void loadData() => SharedPreferences.getInstance().then((prefs) {
         demoMode = prefs.getBool("demoMode") ?? false;
         devMode = prefs.getBool("devMode") ?? false;
