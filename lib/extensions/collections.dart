@@ -2,6 +2,7 @@ import "dart:core";
 import "dart:math";
 
 import "package:blue_crab/extensions/ordered_pairs.dart";
+import "package:blue_crab/report/classifiers/jenks.dart";
 import "package:blue_crab/report/datum.dart";
 import "package:blue_crab/settings.dart";
 import "package:collection/collection.dart";
@@ -20,6 +21,11 @@ extension IterableStats on Iterable<num> {
   num median() => length.isEven
       ? sorted((a, b) => a.compareTo(b)).getRange((length ~/ 2) - 1, (length ~/ 2) + 1).avg()
       : sorted((a, b) => a.compareTo(b))[length ~/ 2];
+
+  Set<num> getBreaks() {
+    final jenks = Jenks()..list = toList();
+    return jenks.computeBreaks().breaks.toSet();
+  }
 }
 
 extension ListStats on List<num> {

@@ -1,6 +1,7 @@
 import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/report/classifiers/classifier.dart';
+import 'package:blue_crab/report/classifiers/jenks.dart';
 import 'package:blue_crab/report/datum.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
@@ -134,8 +135,8 @@ class RSSI extends Classifier {
   @override
   Set<Device> getRiskyDevices(Report report) => report
       .devices()
-      .where((e) => e.timeTravelled.inSeconds > report.devices().map((e) => e.timeTravelled.inSeconds).toSet().median())
-      .where((e) => e.distanceTravelled > report.devices().map((e) => e.distanceTravelled).toSet().median())
+      .where((e) => e.timeTravelled.inSeconds > report.devices().map((e) => e.timeTravelled.inSeconds).median())
+      .where((e) => e.distanceTravelled > report.devices().map((e) => e.distanceTravelled).median())
       .where((device) => device
           .dataPoints()
           .sorted((a, b) => a.time.compareTo(b.time))

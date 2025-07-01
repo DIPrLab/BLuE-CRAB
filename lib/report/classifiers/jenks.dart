@@ -18,7 +18,6 @@ class Jenks {
     num lastImprovement = lastGvf - computeBreaks2(list, 1).gvf();
 
     for (int i = 3; i <= min(6, uniqueValues); ++i) {
-      // final Breaks breaks = computeBreaks2(list, 2);
       final Breaks breaks = computeBreaks2(list, i);
       final num gvf = breaks.gvf();
       final num marginalImprovement = gvf - lastGvf;
