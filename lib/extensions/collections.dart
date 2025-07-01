@@ -1,6 +1,9 @@
 import "dart:core";
 import "dart:math";
 
+import "package:blue_crab/extensions/ordered_pairs.dart";
+import "package:blue_crab/report/datum.dart";
+import "package:blue_crab/settings.dart";
 import "package:collection/collection.dart";
 
 enum SmoothingMethod {
@@ -101,5 +104,24 @@ extension CommonElements<T> on Set<Set<T>> {
           result.remove(s2);
         }));
     return result;
+  }
+}
+
+extension X on List<Datum> {
+  List<Datum> smoothedDatumByMovingAverage(int factor) =>
+      map((item) => where((e) => item.time.difference(e.time).inSeconds.abs() <= factor)
+              .sorted((a, b) => a.time.compareTo(b.time)))
+          .map((e) => e.toList())
+          .map((e) => Datum(e[(e.length / 2).floor()].location, e.map((f) => f.rssi).average.round()))
+          .toList();
+
+  List<List<Datum>> segment() {
+    final DateTime first = map((e) => e.time).sorted((a, b) => a.compareTo(b)).first;
+    final DateTime last = map((e) => e.time).sorted((a, b) => a.compareTo(b)).last;
+    return List.generate(
+        (last.difference(first).inSeconds.abs() / Settings.shared.skipDuration().inSeconds).toInt() + 1,
+        (e) =>
+            first.add(Settings.shared.segmentDuration() * e)).mapOrderedPairs((e) => where((datum) =>
+        datum.time.isAfter(e.$1) || datum.time.isBefore(e.$2) || datum.time == e.$1 || datum.time == e.$2).toList());
   }
 }
