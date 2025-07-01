@@ -4,6 +4,7 @@ import 'package:blue_crab/report/classifiers/classifier.dart';
 import 'package:blue_crab/report/datum.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
 import 'package:simple_cluster/simple_cluster.dart';
@@ -112,7 +113,7 @@ class RSSI extends Classifier {
   @override
   String name() => "RSSI Confidence";
 
-  List<List<Datum>> segment(Report report, Device device, Duration segmentLength, Duration skipLength) {
+  List<List<Datum>> segment2(Report report, Device device, Duration segmentLength, Duration skipLength) {
     final DateTime first = report.data.values
         .map((e) => e.dataPoints().map((e) => e.time).sorted((a, b) => a.compareTo(b)).first)
         .sorted((a, b) => a.compareTo(b))
@@ -135,13 +136,12 @@ class RSSI extends Classifier {
       .devices()
       .where((e) => e.timeTravelled.inSeconds > report.devices().map((e) => e.timeTravelled.inSeconds).toSet().median())
       .where((e) => e.distanceTravelled > report.devices().map((e) => e.distanceTravelled).toSet().median())
-      .where((e) =>
-          e
-              .dataPoints()
-              .map((e) => e.rssi.toDouble())
-              .toList()
-              .smoothedByMovingAverage(5, SmoothingMethod.resizing)
-              .standardDeviation() <
-          3.5)
+      .where((device) => device
+          .dataPoints()
+          .sorted((a, b) => a.time.compareTo(b.time))
+          .smoothedDatumByMovingAverage(5)
+          .segment()
+          .map((e) => e.map((f) => f.rssi).standardDeviation())
+          .any((e) => e > 5))
       .toSet();
 }
