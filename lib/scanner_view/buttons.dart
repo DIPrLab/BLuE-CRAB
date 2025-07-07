@@ -27,7 +27,9 @@ extension Buttons on ScannerViewState {
       child: const Icon(Icons.upload));
 
   Widget shareButton() => FloatingActionButton.large(
-      heroTag: "Share", onPressed: () => write(report).then((_) => shareReport()), child: const Icon(Icons.share));
+      heroTag: "Share",
+      onPressed: () => Settings.shared.devMode ? shareCombinedReport(report) : shareReport(report),
+      child: const Icon(Icons.share));
 
   Widget reportViewerButton() => FloatingActionButton.large(
       heroTag: "Report Viewer Button",
