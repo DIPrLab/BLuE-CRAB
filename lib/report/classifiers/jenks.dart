@@ -98,6 +98,7 @@ class Jenks {
   }
 }
 
+// ignore: one_member_abstracts
 abstract class DoubleFunction {
   num apply(num x);
 }
