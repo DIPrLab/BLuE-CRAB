@@ -72,7 +72,7 @@ class Report {
   }
 
   void combine(Report report) =>
-      report.data.forEach((id, d) => data.update(id, (device) => device..combine(d), ifAbsent: () => d));
+      report.data.forEach((id, d) => data.update(id, (device) => device.combine(d), ifAbsent: () => d));
 
   List<DateTime> getTimestamps() => devices()
       .map((d) => d.dataPoints(testing: true).map((d) => d.time).toSet())
