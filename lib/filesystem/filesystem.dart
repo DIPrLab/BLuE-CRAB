@@ -47,11 +47,11 @@ Future<Report> readReport() => (kDebugMode
     });
 
 void shareCombinedReport(Report report) {
-  localPartialsDirectory.then((dir) => dir
+  localPartialsDirectory.then((dir) => shareReport(dir
       .listSync()
       .map((e) => File(e.path))
       .map((e) => Report.fromJson(jsonDecode(e.readAsStringSync())))
-      .fold(Report({}), (report, partial) => report..combine(partial)));
+      .fold(Report({}), (report, partial) => report..combine(partial))));
 }
 
 void shareReport(Report report) =>
