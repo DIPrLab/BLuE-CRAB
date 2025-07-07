@@ -121,9 +121,7 @@ class ScannerViewState extends State<ScannerView> {
         write(report);
         updating = false;
       }
-      if (isScanning &&
-          Settings.shared.devMode &&
-          DateTime.now().difference(report.time) > const Duration(seconds: 10)) {
+      if (isScanning && Settings.shared.devMode) {
         final Report reportToWrite = report;
         report = Report({});
         try {
