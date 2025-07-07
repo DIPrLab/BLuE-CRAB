@@ -7,11 +7,15 @@ part of 'datum.dart';
 // **************************************************************************
 
 LatLng? fromString(String latlng) {
-  final List<double> components = latlng.split(",").map((x) {
-    assert(x.toDouble() is! Error, "");
-    return x.toDouble();
-  }).toList();
-  return components.length == 2 ? LatLng.degree(components[0], components[1]) : null;
+  try {
+    final List<double> components = latlng.split(",").map((x) {
+      assert(x.toDouble() is! Error, "");
+      return x.toDouble();
+    }).toList();
+    return components.length == 2 ? LatLng.degree(components[0], components[1]) : null;
+  } catch (e) {
+    return null;
+  }
 }
 
 Datum _$DatumFromJson(Map<String, dynamic> json) =>
