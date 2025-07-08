@@ -118,7 +118,8 @@ extension X on List<Datum> {
       map((item) => where((e) => item.time.difference(e.time).inSeconds.abs() <= factor.inSeconds)
               .sorted((a, b) => a.time.compareTo(b.time)))
           .map((e) => e.toList())
-          .map((e) => Datum(e[(e.length / 2).floor()].location, e.map((f) => f.rssi).average.round()))
+          .map((e) => Datum(e[(e.length / 2).floor()].location, e.map((f) => f.rssi).average.round())
+            ..time = (e[(e.length / 2).floor()].time))
           .toList();
 
   List<List<Datum>> segment() {

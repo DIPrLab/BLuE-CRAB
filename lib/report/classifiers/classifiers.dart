@@ -126,6 +126,6 @@ class RSSI extends Classifier {
           .smoothedDatumByMovingAverage(const Duration(seconds: 5))
           .segment()
           .map((e) => e.map((f) => f.rssi).standardDeviation())
-          .any((e) => e > 100))
+          .any((e) => e < 7))
       .toSet();
 }
