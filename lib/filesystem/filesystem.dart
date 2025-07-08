@@ -46,13 +46,14 @@ Future<Report> readReport() => (kDebugMode
       }
     });
 
-void shareCombinedReport(Report report) {
-  localPartialsDirectory.then((dir) => shareReport(dir
-      .listSync()
-      .map((e) => File(e.path))
-      .map((e) => Report.fromJson(jsonDecode(e.readAsStringSync())))
-      .fold(Report({}), (report, partial) => report..combine(partial))));
-}
+void deletePartialReports() =>
+    localPartialsDirectory.then((dir) => dir.listSync().map((e) => File(e.path)).forEach((e) => e.deleteSync()));
+
+void shareCombinedReport(Report report) => localPartialsDirectory.then((dir) => shareReport(dir
+    .listSync()
+    .map((e) => File(e.path))
+    .map((e) => Report.fromJson(jsonDecode(e.readAsStringSync())))
+    .fold(Report({}), (report, partial) => report..combine(partial))));
 
 void shareReport(Report report) =>
     write(report).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)]).then((_) {})));

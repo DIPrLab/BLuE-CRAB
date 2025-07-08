@@ -58,92 +58,91 @@ class SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                BackButton(
-                    onPressed: () {
-                      Settings.shared.save();
-                      Navigator.pop(context);
-                    },
-                    style: buttonWithoutBackground),
-                // header("Discover Services"),
-                // SwitchListTile(
-                //     title: Text("AutoConnect ${Settings.shared.autoConnect ? "On" : "Off"}"),
-                //     value: Settings.shared.autoConnect,
-                //     onChanged: (value) {
-                //       setState(() => Settings.shared.autoConnect = value);
-                //       Settings.shared.save();
-                //     },
-                //     secondary: Settings.shared.autoConnect
-                //         ? const Icon(Icons.bluetooth)
-                //         : const Icon(Icons.bluetooth_disabled)),
-                // header("Location Services"),
-                // SwitchListTile(
-                //     title: Text("Location ${Settings.shared.locationEnabled ? "En" : "Dis"}abled"),
-                //     value: Settings.shared.locationEnabled,
-                //     onChanged: (value) {
-                //       setState(() => Settings.shared.locationEnabled = value);
-                //       Settings.shared.save();
-                //     },
-                //     secondary: Settings.shared.locationEnabled
-                //         ? const Icon(Icons.location_searching)
-                //         : const Icon(Icons.location_disabled)),
-                // header("Windowing"),
-                // settingsSlider("Window Duration", "${Settings.shared.windowDuration().inMinutes} minutes", 10, 100,
-                //     Settings.shared.windowDurationValue, (newValue) {
-                //   Settings.shared.recentlyChanged = true;
-                //   Settings.shared.windowDurationValue = newValue;
-                //   setState(() {});
-                // }),
-                header("Classifier"),
-                DropdownButton<Classifier>(
-                    value: Settings.shared.classifier,
-                    items: Classifier.classifiers
-                        .map((e) => DropdownMenuItem<Classifier>(value: e, child: Text(e.name())))
-                        .toList(),
-                    onChanged: (newValue) => setState(() => Settings.shared.classifier = newValue!)),
-                header("Thresholds"),
-                settingsSlider("Scanning Time Threshold", "${Settings.shared.timeThreshold().inSeconds} seconds", 1,
-                    100, Settings.shared.timeThresholdValue, (newValue) {
-                  Settings.shared.recentlyChanged = true;
-                  Settings.shared.timeThresholdValue = newValue;
-                  setState(() {});
-                }),
-                settingsSlider("Scanning Distance Threshold", "${Settings.shared.distanceThreshold().toInt()} meters",
-                    1, 100, Settings.shared.distanceThresholdValue, (newValue) {
-                  Settings.shared.recentlyChanged = true;
-                  Settings.shared.distanceThresholdValue = newValue;
-                  setState(() {});
-                }),
-                header("Safe Zones"),
-                LocationHeader(onAddLocation: _addLocation),
-                ...Settings.shared.safeZones.map(LatLngTile.new),
-                header("Mode"),
-                SwitchListTile(
-                    title: Text("Developer Mode ${Settings.shared.devMode ? "On" : "Off"}"),
-                    value: Settings.shared.devMode,
-                    onChanged: (val) {
-                      setState(() {
-                        Settings.shared.devMode = val;
-                        Settings.shared.demoMode = !Settings.shared.devMode && Settings.shared.demoMode;
-                      });
-                      widget.notify?.call();
-                      Settings.shared.save();
-                    },
-                    secondary: Icon(Icons.circle, color: Settings.shared.devMode ? Colors.green : Colors.red)),
-                SwitchListTile(
-                    title: Text("Demo Mode ${Settings.shared.demoMode ? "On" : "Off"}"),
-                    value: Settings.shared.demoMode,
-                    onChanged: (val) {
-                      setState(() {
-                        Settings.shared.demoMode = val;
-                        Settings.shared.devMode = !Settings.shared.demoMode && Settings.shared.devMode;
-                      });
-                      widget.notify?.call();
-                      Settings.shared.save();
-                    },
-                    secondary: Icon(Icons.circle, color: Settings.shared.demoMode ? Colors.green : Colors.red)),
-              ]))));
+      body: SafeArea(
+          child: SingleChildScrollView(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child:
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+                    BackButton(
+                        onPressed: () {
+                          Settings.shared.save();
+                          Navigator.pop(context);
+                        },
+                        style: buttonWithoutBackground),
+                    header("Classifier"),
+                    DropdownButton<Classifier>(
+                        value: Settings.shared.classifier,
+                        items: Classifier.classifiers
+                            .map((e) => DropdownMenuItem<Classifier>(value: e, child: Text(e.name())))
+                            .toList(),
+                        onChanged: (newValue) => setState(() => Settings.shared.classifier = newValue!)),
+                    header("Thresholds"),
+                    settingsSlider("Scanning Time Threshold", "${Settings.shared.timeThreshold().inSeconds} seconds", 1,
+                        100, Settings.shared.timeThresholdValue, (newValue) {
+                      Settings.shared.recentlyChanged = true;
+                      Settings.shared.timeThresholdValue = newValue;
+                      setState(() {});
+                    }),
+                    settingsSlider(
+                        "Scanning Distance Threshold",
+                        "${Settings.shared.distanceThreshold().toInt()} meters",
+                        1,
+                        100,
+                        Settings.shared.distanceThresholdValue, (newValue) {
+                      Settings.shared.recentlyChanged = true;
+                      Settings.shared.distanceThresholdValue = newValue;
+                      setState(() {});
+                    }),
+                    header("Safe Zones"),
+                    LocationHeader(onAddLocation: _addLocation),
+                    ...Settings.shared.safeZones.map(LatLngTile.new),
+                    header("Mode"),
+                    SwitchListTile(
+                        title: Text("Data Collection Mode ${Settings.shared.dataCollectionMode ? "On" : "Off"}"),
+                        value: Settings.shared.dataCollectionMode,
+                        onChanged: (val) {
+                          setState(() {
+                            Settings.shared.dataCollectionMode = val;
+                            if (val) {
+                              Settings.shared.demoMode = false;
+                              Settings.shared.devMode = false;
+                            }
+                          });
+                          widget.notify?.call();
+                          Settings.shared.save();
+                        },
+                        secondary:
+                            Icon(Icons.circle, color: Settings.shared.dataCollectionMode ? Colors.green : Colors.red)),
+                    SwitchListTile(
+                        title: Text("Developer Mode ${Settings.shared.devMode ? "On" : "Off"}"),
+                        value: Settings.shared.devMode,
+                        onChanged: (val) {
+                          setState(() {
+                            Settings.shared.devMode = val;
+                            if (val) {
+                              Settings.shared.dataCollectionMode = false;
+                              Settings.shared.demoMode = false;
+                            }
+                          });
+                          widget.notify?.call();
+                          Settings.shared.save();
+                        },
+                        secondary: Icon(Icons.circle, color: Settings.shared.devMode ? Colors.green : Colors.red)),
+                    SwitchListTile(
+                        title: Text("Demo Mode ${Settings.shared.demoMode ? "On" : "Off"}"),
+                        value: Settings.shared.demoMode,
+                        onChanged: (val) {
+                          setState(() {
+                            Settings.shared.demoMode = val;
+                            if (val) {
+                              Settings.shared.dataCollectionMode = false;
+                              Settings.shared.devMode = false;
+                            }
+                          });
+                          widget.notify?.call();
+                          Settings.shared.save();
+                        },
+                        secondary: Icon(Icons.circle, color: Settings.shared.demoMode ? Colors.green : Colors.red)),
+                  ])))));
 }

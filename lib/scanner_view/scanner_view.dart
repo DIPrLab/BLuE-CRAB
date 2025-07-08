@@ -53,7 +53,13 @@ class ScannerViewState extends State<ScannerView> {
       [(settingsButton(() => setState(() {})), "Settings"), (reportViewerButton(), "View Report")],
       [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
     ];
-    if (Settings.shared.devMode) {
+    if (Settings.shared.dataCollectionMode) {
+      result = [
+        [(settingsButton(() => setState(() {})), "Settings")],
+        [(shareButton(), "Share Report"), (deleteReportButton(), "Delete Data")],
+        [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+      ];
+    } else if (Settings.shared.devMode) {
       result = [
         [(settingsButton(() => setState(() {})), "Settings"), (reportViewerButton(), "View Report")],
         [(shareButton(), "Share Report"), (deleteReportButton(), "Delete Data")],
@@ -115,18 +121,20 @@ class ScannerViewState extends State<ScannerView> {
 
     _timeStream = Stream.periodic(Settings.shared.scanTime(), (x) => DateTime.now());
     timeStreamSubscription = _timeStream.listen((currentTime) {
-      if (isScanning && !Settings.shared.devMode && !updating) {
-        updating = true;
-        report.refreshCache();
-        write(report);
-        updating = false;
-      }
-      if (isScanning && Settings.shared.devMode) {
-        final Report reportToWrite = report;
-        report = Report({});
-        try {
-          writePartialReport(reportToWrite);
-        } catch (_) {}
+      if (isScanning && !updating) {
+        if (!Settings.shared.devMode && !Settings.shared.dataCollectionMode) {
+          updating = true;
+          report.refreshCache();
+          write(report);
+          updating = false;
+        }
+        if (Settings.shared.dataCollectionMode) {
+          final Report reportToWrite = report;
+          report = Report({});
+          try {
+            writePartialReport(reportToWrite);
+          } catch (_) {}
+        }
       }
     });
   }
@@ -141,8 +149,9 @@ class ScannerViewState extends State<ScannerView> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: Center(
-              child: Row(children: [
+          body: SafeArea(
+              child: Center(
+                  child: Row(children: [
         const Expanded(child: SizedBox.shrink()),
         Column(children: [
           const Expanded(child: SizedBox.shrink()),
@@ -161,5 +170,5 @@ class ScannerViewState extends State<ScannerView> {
                 "$deviceCount devices scanned. $datapointCount datapoints. ${report.riskyDevices.length} suspicious devices."),
         ]),
         const Expanded(child: SizedBox.shrink()),
-      ])));
+      ]))));
 }

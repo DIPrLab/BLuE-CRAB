@@ -52,13 +52,14 @@ class RssiGraphView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: SingleChildScrollView(
-          child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-              child: Column(children: [
-                header(context),
-                Container(
-                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                    child: SizedBox(height: 540, width: 960, child: graph()))
-              ]))));
+      body: SafeArea(
+          child: SingleChildScrollView(
+              child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                  child: Column(children: [
+                    header(context),
+                    Container(
+                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        child: SizedBox(height: 540, width: 960, child: graph()))
+                  ])))));
 }

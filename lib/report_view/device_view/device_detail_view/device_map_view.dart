@@ -13,8 +13,10 @@ class DeviceMapView extends StatelessWidget {
   final Report report;
 
   @override
-  Widget build(BuildContext context) => Stack(children: [
+  Widget build(BuildContext context) => Scaffold(
+          body: SafeArea(
+              child: Stack(children: [
         MapView(device, MapController(location: middlePoint(device.locations().toList()))),
         BackButton(onPressed: () => Navigator.pop(context), style: buttonWithBackground),
-      ]);
+      ])));
 }

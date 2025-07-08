@@ -13,6 +13,9 @@ extension Buttons on ScannerViewState {
       onPressed: () {
         report = Report({});
         write(Report({}));
+        if (Settings.shared.dataCollectionMode) {
+          deletePartialReports();
+        }
       },
       child: const Icon(Icons.delete));
 
@@ -28,7 +31,7 @@ extension Buttons on ScannerViewState {
 
   Widget shareButton() => FloatingActionButton.large(
       heroTag: "Share",
-      onPressed: () => Settings.shared.devMode ? shareCombinedReport(report) : shareReport(report),
+      onPressed: () => Settings.shared.dataCollectionMode ? shareCombinedReport(report) : shareReport(report),
       child: const Icon(Icons.share));
 
   Widget reportViewerButton() => FloatingActionButton.large(
@@ -38,7 +41,7 @@ extension Buttons on ScannerViewState {
           report.refreshCache();
           write(report);
         }
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: report))));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ReportView(report: report)));
       },
       child: const Icon(Icons.newspaper));
 

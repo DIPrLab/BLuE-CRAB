@@ -15,6 +15,7 @@ class Settings {
 
   Classifier classifier = Classifier.classifiers[0];
 
+  late bool dataCollectionMode;
   late bool demoMode;
   late bool devMode;
   late bool autoConnect;
@@ -48,6 +49,7 @@ class Settings {
   Duration skipDuration() => const Duration(seconds: 5);
 
   void loadData() => SharedPreferences.getInstance().then((prefs) {
+        dataCollectionMode = prefs.getBool("dataCollectionMode") ?? false;
         demoMode = prefs.getBool("demoMode") ?? false;
         devMode = prefs.getBool("devMode") ?? false;
         autoConnect = prefs.getBool("autoConnect") ?? false;
@@ -71,6 +73,7 @@ class Settings {
 
   void save() => SharedPreferences.getInstance().then((prefs) {
         [
+          ("dataCollectionMode", dataCollectionMode),
           ("demoMode", demoMode),
           ("devMode", devMode),
           ("autoConnect", autoConnect),

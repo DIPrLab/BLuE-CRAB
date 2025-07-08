@@ -42,13 +42,14 @@ class DeviceDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: SingleChildScrollView(
-          child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-              child: Column(children: [
-                header(context),
-                PropertyTable(device, report),
-                mapButton(context),
-                rssiGraphButton(context),
-              ]))));
+      body: SafeArea(
+          child: SingleChildScrollView(
+              child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                  child: Column(children: [
+                    header(context),
+                    PropertyTable(device, report),
+                    mapButton(context),
+                    rssiGraphButton(context),
+                  ])))));
 }

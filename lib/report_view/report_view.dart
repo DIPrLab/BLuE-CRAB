@@ -72,10 +72,11 @@ class ReportViewState extends State<ReportView> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: SingleChildScrollView(
-              child: Column(children: [
+          body: SafeArea(
+              child: SingleChildScrollView(
+                  child: Column(children: [
         header(context),
         FilterButtonBar(notify: () => setState(() => sort(sortMethod))),
         Column(children: deviceTileList(context)),
-      ])));
+      ]))));
 }
