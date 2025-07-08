@@ -114,8 +114,8 @@ extension CommonElements<T> on Set<Set<T>> {
 }
 
 extension X on List<Datum> {
-  List<Datum> smoothedDatumByMovingAverage(int factor) =>
-      map((item) => where((e) => item.time.difference(e.time).inSeconds.abs() <= factor)
+  List<Datum> smoothedDatumByMovingAverage(Duration factor) =>
+      map((item) => where((e) => item.time.difference(e.time).inSeconds.abs() <= factor.inSeconds)
               .sorted((a, b) => a.time.compareTo(b.time)))
           .map((e) => e.toList())
           .map((e) => Datum(e[(e.length / 2).floor()].location, e.map((f) => f.rssi).average.round()))

@@ -1,11 +1,13 @@
 import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/report/classifiers/classifier.dart';
+import 'package:blue_crab/report/classifiers/jenks.dart';
 import 'package:blue_crab/report/datum.dart';
 import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
+import 'package:logger/logger.dart';
 import 'package:simple_cluster/simple_cluster.dart';
 
 class IQR extends Classifier {
@@ -112,35 +114,18 @@ class RSSI extends Classifier {
   @override
   String name() => "RSSI Confidence";
 
-  List<List<Datum>> segment2(Report report, Device device, Duration segmentLength, Duration skipLength) {
-    final DateTime first = report.data.values
-        .map((e) => e.dataPoints().map((e) => e.time).sorted((a, b) => a.compareTo(b)).first)
-        .sorted((a, b) => a.compareTo(b))
-        .first;
-    final DateTime last = report.data.values
-        .map((e) => e.dataPoints().map((e) => e.time).sorted((a, b) => a.compareTo(b)).last)
-        .sorted((a, b) => a.compareTo(b))
-        .last;
-    return List.generate(
-            (last.difference(first).inSeconds / skipLength.inSeconds).toInt() + 1, (e) => first.add(segmentLength * e))
-        .mapOrderedPairs((e) => device
-            .dataPoints()
-            .where((datum) =>
-                datum.time.isAfter(e.$1) || datum.time.isBefore(e.$2) || datum.time == e.$1 || datum.time == e.$2)
-            .toList());
-  }
-
   @override
   Set<Device> getRiskyDevices(Report report) => report
       .devices()
-      .where((e) => e.timeTravelled.inSeconds > report.devices().map((e) => e.timeTravelled.inSeconds).median())
-      .where((e) => e.distanceTravelled > report.devices().map((e) => e.distanceTravelled).median())
+      .where((e) =>
+          e.timeTravelled.inSeconds > report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1])
+      .where((e) => e.distanceTravelled > report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1])
       .where((device) => device
           .dataPoints()
           .sorted((a, b) => a.time.compareTo(b.time))
-          .smoothedDatumByMovingAverage(5)
+          .smoothedDatumByMovingAverage(const Duration(seconds: 5))
           .segment()
           .map((e) => e.map((f) => f.rssi).standardDeviation())
-          .any((e) => e > 5))
+          .any((e) => e > 100))
       .toSet();
 }
