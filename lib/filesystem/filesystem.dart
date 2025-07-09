@@ -55,5 +55,8 @@ void shareCombinedReport(Report report) => localPartialsDirectory.then((dir) => 
     .map((e) => Report.fromJson(jsonDecode(e.readAsStringSync())))
     .fold(Report({}), (report, partial) => report..combine(partial))));
 
-void shareReport(Report report) =>
-    write(report).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)]).then((_) {})));
+// void shareReport(Report report) =>
+//     write(report).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)]).then((_) {})));
+
+void shareReport(Report report) => write(report).then((_) => localPartialsDirectory
+    .then((dir) => Share.shareXFiles(dir.listSync().map((e) => XFile(e.path)).toList()).then((_) {})));

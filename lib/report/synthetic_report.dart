@@ -6,5 +6,8 @@ extension Synthetic on Report {
       .map((d) => MapEntry(
           d.id,
           Device(d.id, d.name, d.platformName, d.manufacturer,
-              dataPoints: d.dataPoints(testing: true).where((dp) => dp.time.isBefore(ts) || dp.time == ts).toSet())))));
+              dataPoints: d
+                  .dataPoints(testing: true)
+                  .where((dp) => dp.time.isBefore(ts) || dp.time == ts)
+                  .toMap((e) => e.time, (e) => e))))));
 }

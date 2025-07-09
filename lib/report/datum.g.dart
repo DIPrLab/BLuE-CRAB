@@ -19,11 +19,10 @@ LatLng? fromString(String latlng) {
 }
 
 Datum _$DatumFromJson(Map<String, dynamic> json) =>
-    Datum(fromString(json['location'] ?? "" as String?), int.parse(json['rssi']))
-      ..time = DateTime.parse(json['time'] as String);
+    Datum(fromString(json['l'] ?? "" as String?), int.parse(json['r']))..time = DateTime.parse(json['t'] as String);
 
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
-      '"location"': '"${instance.location?.latitude.degrees},${instance.location?.longitude.degrees}"',
-      '"rssi"': '"${instance.rssi}"',
-      '"time"': '"${instance.time.toIso8601String()}"',
+      '"l"': '"${instance.location?.latitude.degrees},${instance.location?.longitude.degrees}"',
+      '"r"': '"${instance.rssi}"',
+      '"t"': '"${instance.time.toIso8601String()}"',
     };

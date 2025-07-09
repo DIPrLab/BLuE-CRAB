@@ -5,6 +5,7 @@ import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/report/report.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
+import 'package:statistics/statistics.dart';
 
 part 'ble_doubt_report.g.dart';
 
@@ -25,7 +26,7 @@ class BleDoubtReport {
               .where((detection) => detection.mac == device.address)
               .map((detection) =>
                   Datum(LatLng.degree(detection.lat, detection.long), detection.rssi)..time = detection.t)
-              .toSet()));
+              .toMap((e) => e.time, (e) => e)));
     });
 
     return report;

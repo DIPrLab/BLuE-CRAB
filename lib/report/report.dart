@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
 import 'package:logger/logger.dart';
+import 'package:statistics/statistics.dart';
 
 part 'report.g.dart';
 part 'report_cache.dart';

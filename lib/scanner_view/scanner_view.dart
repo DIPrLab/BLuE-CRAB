@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:blue_crab/filesystem/filesystem.dart';
+import 'package:blue_crab/map_view/map_functions.dart';
 import 'package:blue_crab/map_view/map_view.dart';
 import 'package:blue_crab/map_view/position.dart';
 import 'package:blue_crab/report/device/device.dart';
@@ -95,7 +96,7 @@ class ScannerViewState extends State<ScannerView> {
 
     _loadData();
 
-    Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream();
+    getLocation().then((_) => Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream());
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
       results

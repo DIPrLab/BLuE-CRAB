@@ -18,8 +18,8 @@ part 'device_stats.dart';
 /// along with metadata that goes along with it
 @JsonSerializable()
 class Device {
-  Device(this.id, this.name, this.platformName, this.manufacturer, {this.isTrusted = false, Set<Datum>? dataPoints}) {
-    _dataPoints = dataPoints ?? {};
+  Device(this.id, this.name, this.platformName, this.manufacturer, {Map<DateTime, Datum>? dataPoints}) {
+    _dataPoints = dataPoints ?? Map.identity();
     updateStatistics();
   }
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
@@ -27,8 +27,7 @@ class Device {
   String name;
   String platformName;
   List<int> manufacturer;
-  Set<Datum> _dataPoints = {};
-  bool isTrusted;
+  Map<DateTime, Datum> _dataPoints = {};
   DateTime lastUpdated = DateTime.now();
 
   late Duration timeTravelled;
@@ -36,7 +35,7 @@ class Device {
   late double distanceTravelled;
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
-  Set<Datum> dataPoints({bool testing = false}) => _dataPoints
+  Set<Datum> dataPoints({bool testing = false}) => _dataPoints.values
       .where((datum) =>
           datum.location == null ||
           !Settings.shared.safeZones.any(
@@ -45,7 +44,8 @@ class Device {
 
   void addDatum(LatLng? location, int rssi) {
     lastUpdated = DateTime.now();
-    _dataPoints.add(Datum(location, rssi));
+    final Datum d = Datum(location, rssi);
+    _dataPoints[d.time] = d;
   }
 
   String deviceLabel() => name.isNotEmpty
