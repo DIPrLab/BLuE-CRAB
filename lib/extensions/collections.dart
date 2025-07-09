@@ -79,7 +79,7 @@ extension ListStats on List<num> {
               : smoothingMethod == SmoothingMethod.resizing
                   ? element.where((e) => 0 <= e && e < length)
                   : element)
-          .map((element) => element.map((e) => this[e]).average)
+          .map((element) => element.map((e) => this[e]).average.round())
           .toList();
 
   List<num> smoothedByExponentiallyWeightedMovingAverage(num alpha) => List.generate(length, (e) => e).fold(
