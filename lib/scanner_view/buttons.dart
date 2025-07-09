@@ -57,8 +57,10 @@ extension Buttons on ScannerViewState {
             if (Platform.isAndroid || Platform.isIOS) {
               Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
             }
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: report))));
+            if (!Settings.shared.dataCollectionMode) {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: report))));
+            }
           },
           child: const Icon(Icons.stop))
       : FloatingActionButton.large(
