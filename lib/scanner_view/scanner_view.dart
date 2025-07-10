@@ -128,13 +128,6 @@ class ScannerViewState extends State<ScannerView> {
           write(report);
           updating = false;
         }
-        if (Settings.shared.dataCollectionMode) {
-          final Report reportToWrite = report;
-          report = Report({});
-          try {
-            writePartialReport(reportToWrite);
-          } catch (_) {}
-        }
       }
     });
   }
