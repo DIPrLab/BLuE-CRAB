@@ -39,7 +39,7 @@ Map<String, dynamic> _$CompactDatasetToJson(CompactDataset instance) => <String,
       '"devices"': instance.devices.map((k, e) => MapEntry('"$k"', <String, dynamic>{
             r'"$1"': '"${e.$1}"',
             r'"$2"': '"${e.$2}"',
-            r'"$3"': '"${e.$3}"',
+            r'"$3"': e.$3,
             r'"$4"': e.$4.map((k, e) => MapEntry('"${k.toIso8601String()}"', e)),
           })),
       '"locationHistory"': instance.locationHistory.map((k, e) => MapEntry(
