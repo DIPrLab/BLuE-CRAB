@@ -14,12 +14,9 @@ Future<Directory> get localFileDirectory async => getApplicationDocumentsDirecto
 Settings readSettings() => Settings()..loadData();
 
 Future<File> get _localReportFile async => localFileDirectory.then((dir) => File("${dir.path}/reports.json"));
-Future<File> get _localReportFileOld async =>
-    localFileDirectory.then((dir) => File("${dir.path}/reports_old_format.json"));
 
-Future<void> write(Report report) async => _localReportFile
-    .then((file) => file.writeAsString("${report.toCompactDataset().toJson()}"))
-    .then((_) => _localReportFileOld.then((file) => file.writeAsString("${report.toJson()}")));
+Future<void> write(Report report) async =>
+    _localReportFile.then((file) => file.writeAsString("${report.toCompactDataset().toJson()}"));
 
 Future<Report> readReport() => (kDebugMode
             ? rootBundle.loadString('assets/bledoubt_logs/bledoubt_log_g.json')
