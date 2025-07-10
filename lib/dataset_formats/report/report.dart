@@ -1,4 +1,5 @@
 import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_report.dart';
+import 'package:blue_crab/dataset_formats/compact_dataset/compact_dataset.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/stats.dart';
 import 'package:blue_crab/settings.dart';
@@ -86,4 +87,29 @@ class Report {
   Set<Device> devices() => data.values.toSet();
   Set<String> deviceIDs() => data.values.map((d) => d.id).toSet();
   Map<String, dynamic> toJson() => _$ReportToJson(this);
+
+  CompactDataset toCompactDataset() => CompactDataset(
+      data.values
+          .map((e) => MapEntry(e.id, (
+                e.name,
+                e.platformName,
+                e.manufacturer,
+                e.dataPoints(testing: true).map((e) => MapEntry(e.time, [e.rssi])).toMap((e) => e.key, (e) => e.value)
+              )))
+          .toMap((e) => e.key, (e) => e.value),
+      data.values
+          .map((e) => e.dataPoints(testing: true).map((e) => (e.time, e.location)).toSet())
+          .fold(Set<(DateTime, LatLng?)>.identity(), (a, b) => a.union(b))
+          .sorted((a, b) => a.$1.compareTo(b.$1))
+          .toList()
+          .fold(
+              List<(DateTime, LatLng?)>.empty(growable: true),
+              (a, b) => a.isEmpty
+                  ? a + [b]
+                  : a.last.$2 == b.$2
+                      ? a
+                      : a + [b])
+          .map((e) => (e.$1, e.$2 == null ? null : (e.$2!.latitude.degrees, e.$2!.longitude.degrees)))
+          .map((e) => MapEntry(e.$1, e.$2))
+          .toMap((e) => e.key, (e) => e.value));
 }
