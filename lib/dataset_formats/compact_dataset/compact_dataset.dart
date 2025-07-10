@@ -18,8 +18,11 @@ class CompactDataset {
   Map<DateTime, (double, double)?> locationHistory;
 
   LatLng? toLatLng((double, double)? location) => location == null ? null : LatLng.degree(location.$1, location.$2);
-  LatLng? getLocationAtTime(DateTime t) => toLatLng(
-      locationHistory.entries.where((e) => e.key.isBefore(t)).sorted((a, b) => a.key.compareTo(b.key)).last.value);
+  LatLng? getLocationAtTime(DateTime t) => toLatLng(locationHistory.entries
+      .where((e) => e.key.isBefore(t) || e.key == t)
+      .sorted((a, b) => a.key.compareTo(b.key))
+      .last
+      .value);
 
   Report toReport() => Report(devices.entries
       .map((e) => MapEntry(
