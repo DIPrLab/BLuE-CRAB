@@ -1,8 +1,8 @@
-import 'package:blue_crab/ble_doubt_report/ble_doubt_detection.dart';
-import 'package:blue_crab/ble_doubt_report/ble_doubt_device.dart';
-import 'package:blue_crab/report/datum.dart';
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_detection.dart';
+import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_device.dart';
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/datum/datum.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
 

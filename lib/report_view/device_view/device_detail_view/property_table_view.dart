@@ -1,6 +1,6 @@
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/date_time.dart';
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
 import 'package:flutter/material.dart';
 
 class PropertyTable extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:blue_crab/report/classifiers/classifier.dart';
+import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:latlng/latlng.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/map_view/map_view.dart';
 import 'package:blue_crab/map_view/position.dart';
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/report_view/report_view.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/settings_view/settings_view.dart';

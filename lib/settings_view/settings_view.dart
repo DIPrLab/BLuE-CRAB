@@ -1,5 +1,5 @@
+import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:blue_crab/map_view/map_functions.dart';
-import 'package:blue_crab/report/classifiers/classifier.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/settings_view/lat_lng_tile.dart';
 import 'package:blue_crab/styles/styles.dart';

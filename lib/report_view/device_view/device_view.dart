@@ -1,5 +1,5 @@
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/report_view/device_view/device_detail_view/device_detail_view.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:blue_crab/styles/themes.dart';

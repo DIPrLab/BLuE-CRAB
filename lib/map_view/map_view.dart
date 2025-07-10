@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/map_view/build_marker_widget.dart';
 import 'package:blue_crab/map_view/tile_servers.dart';
-import 'package:blue_crab/report/device/device.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

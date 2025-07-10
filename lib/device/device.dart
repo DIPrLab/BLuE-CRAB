@@ -1,8 +1,8 @@
 import 'package:blue_crab/assigned_numbers/company_identifiers.dart';
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/datum/datum.dart';
 import 'package:blue_crab/extensions/geolocator.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
-import 'package:blue_crab/report/datum.dart';
-import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';

@@ -1,13 +1,9 @@
+import 'package:blue_crab/classifiers/classifier.dart';
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
-import 'package:blue_crab/extensions/ordered_pairs.dart';
-import 'package:blue_crab/report/classifiers/classifier.dart';
-import 'package:blue_crab/report/classifiers/jenks.dart';
-import 'package:blue_crab/report/datum.dart';
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
-import 'package:logger/logger.dart';
 import 'package:simple_cluster/simple_cluster.dart';
 
 class IQR extends Classifier {
