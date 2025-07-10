@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';

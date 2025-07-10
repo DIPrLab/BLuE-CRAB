@@ -1,9 +1,9 @@
 import "dart:core";
 import "dart:math";
 
+import "package:blue_crab/classifiers/jenks.dart";
+import "package:blue_crab/datum/datum.dart";
 import "package:blue_crab/extensions/ordered_pairs.dart";
-import "package:blue_crab/report/classifiers/jenks.dart";
-import "package:blue_crab/report/datum.dart";
 import "package:blue_crab/settings.dart";
 import "package:collection/collection.dart";
 

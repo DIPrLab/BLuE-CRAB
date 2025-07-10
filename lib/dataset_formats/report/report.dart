@@ -1,6 +1,6 @@
-import 'package:blue_crab/ble_doubt_report/ble_doubt_report.dart';
+import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_report.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/stats.dart';
-import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';

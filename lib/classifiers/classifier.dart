@@ -1,6 +1,6 @@
-import 'package:blue_crab/report/classifiers/classifiers.dart';
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/classifiers/classifiers.dart';
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/device/device.dart';
 
 abstract class Classifier {
   String name();

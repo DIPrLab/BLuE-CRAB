@@ -1,6 +1,5 @@
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
-import 'package:blue_crab/report/datum.dart';
-import 'package:blue_crab/report/device/device.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:blue_crab/styles/themes.dart';
 import 'package:collection/collection.dart';
