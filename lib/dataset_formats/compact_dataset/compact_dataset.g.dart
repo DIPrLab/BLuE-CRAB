@@ -6,8 +6,7 @@ part of 'compact_dataset.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CompactDataset _$CompactDatasetFromJson(Map<String, dynamic> json) =>
-    CompactDataset(
+CompactDataset _$CompactDatasetFromJson(Map<String, dynamic> json) => CompactDataset(
       (json['devices'] as Map<String, dynamic>).map(
         (k, e) => MapEntry(
             k,
@@ -16,15 +15,9 @@ CompactDataset _$CompactDatasetFromJson(Map<String, dynamic> json) =>
               ($jsonValue) => (
                 $jsonValue[r'$1'] as String,
                 $jsonValue[r'$2'] as String,
-                ($jsonValue[r'$3'] as List<dynamic>)
-                    .map((e) => (e as num).toInt())
-                    .toList(),
+                ($jsonValue[r'$3'] as List<dynamic>).map((e) => (e as num).toInt()).toList(),
                 ($jsonValue[r'$4'] as Map<String, dynamic>).map(
-                  (k, e) => MapEntry(
-                      DateTime.parse(k),
-                      (e as List<dynamic>)
-                          .map((e) => (e as num).toInt())
-                          .toList()),
+                  (k, e) => MapEntry(DateTime.parse(k), (e as List<dynamic>).map((e) => (e as num).toInt()).toList()),
                 ),
               ),
             )),
@@ -42,21 +35,20 @@ CompactDataset _$CompactDatasetFromJson(Map<String, dynamic> json) =>
       ),
     );
 
-Map<String, dynamic> _$CompactDatasetToJson(CompactDataset instance) =>
-    <String, dynamic>{
-      'devices': instance.devices.map((k, e) => MapEntry(k, <String, dynamic>{
-            r'$1': e.$1,
-            r'$2': e.$2,
-            r'$3': e.$3,
-            r'$4': e.$4.map((k, e) => MapEntry(k.toIso8601String(), e)),
+Map<String, dynamic> _$CompactDatasetToJson(CompactDataset instance) => <String, dynamic>{
+      '"devices"': instance.devices.map((k, e) => MapEntry('"$k"', <String, dynamic>{
+            r'"$1"': '"${e.$1}"',
+            r'"$2"': '"${e.$2}"',
+            r'"$3"': '"${e.$3}"',
+            r'"$4"': e.$4.map((k, e) => MapEntry('"${k.toIso8601String()}"', e)),
           })),
-      'locationHistory': instance.locationHistory.map((k, e) => MapEntry(
-          k.toIso8601String(),
+      '"locationHistory"': instance.locationHistory.map((k, e) => MapEntry(
+          '"${k.toIso8601String()}"',
           e == null
               ? null
               : <String, dynamic>{
-                  r'$1': e!.$1,
-                  r'$2': e!.$2,
+                  r'"$1"': e!.$1,
+                  r'"$2"': e!.$2,
                 })),
     };
 
