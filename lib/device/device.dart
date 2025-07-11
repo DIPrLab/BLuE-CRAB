@@ -8,7 +8,6 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
 
-part 'device_cache.dart';
 part 'device_stats.dart';
 
 /// Device data type

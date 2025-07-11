@@ -1,6 +1,15 @@
 part of 'device.dart';
 
 extension DeviceStats on Device {
+  void updateStatistics() => [
+        () => distanceTravelled = _distanceTravelled(),
+        () => timeTravelled = _timeTravelled(),
+        () => incidence = _incidence(),
+      ].forEach((f) => f());
+
+  List<Duration> _timeClusterPrefix() =>
+      dataPoints().map((datum) => datum.time).sorted().mapOrderedPairs((pair) => pair.$2.difference(pair.$1)).toList();
+
   double _distanceTravelled() => paths()
       .map((path) => path
           .mapOrderedPairs((pair) => distanceBetween(pair.$1.location, pair.$2.location))
