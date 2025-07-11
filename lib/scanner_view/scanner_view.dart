@@ -17,6 +17,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:latlng/latlng.dart';
+import 'package:statistics/statistics.dart';
 import 'package:vibration/vibration.dart';
 
 part 'buttons.dart';
@@ -47,35 +48,34 @@ class ScannerViewState extends State<ScannerView> {
   int deviceCount = 0;
   int datapointCount = 0;
 
-  List<List<(Widget, String)>> buttonList() {
-    List<List<(Widget, String)>> result = [
-      [(settingsButton(() => setState(() {})), "Settings"), (reportViewerButton(), "View Report")],
-      [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+  List<List<ButtonType>> buttonList() {
+    List<List<ButtonType>> result = [
+      [ButtonType.settings, ButtonType.view],
+      [ButtonType.scan],
     ];
     if (Settings.shared.dataCollectionMode) {
       result = [
-        [(settingsButton(() => setState(() {})), "Settings")],
-        [(shareButton(), "Share Report"), (deleteReportButton(), "Delete Data")],
-        [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+        [ButtonType.settings],
+        [ButtonType.share, ButtonType.delete],
+        [ButtonType.scan],
       ];
     } else if (Settings.shared.devMode) {
       result = [
-        [(settingsButton(() => setState(() {})), "Settings"), (reportViewerButton(), "View Report")],
-        [(shareButton(), "Share Report"), (deleteReportButton(), "Delete Data")],
-        [
-          (testButton(), "Run Tests"),
-          (scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")
-        ],
+        [ButtonType.settings, ButtonType.view],
+        [ButtonType.share, ButtonType.delete],
+        [ButtonType.test, ButtonType.scan],
       ];
     } else if (Settings.shared.demoMode) {
       result = [
-        [(settingsButton(() => setState(() {})), "Settings"), (reportViewerButton(), "View Report")],
-        [(loadReportButton(), "Load Sample Data"), (deleteReportButton(), "Delete Data")],
-        [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+        [ButtonType.settings, ButtonType.view],
+        [ButtonType.load, ButtonType.delete],
+        [ButtonType.scan],
       ];
     }
     return result;
   }
+
+  void notify() => setState(() {});
 
   void enableLocationStream() => positionStream = Geolocator.getPositionStream(
           locationSettings: MapViewState.getLocationSettings(Settings.shared.scanDistance().toInt()))
@@ -149,13 +149,7 @@ class ScannerViewState extends State<ScannerView> {
           const Expanded(child: SizedBox.shrink()),
           Text("BL(u)E CRAB", style: GoogleFonts.irishGrover(textStyle: splashText)),
           const Expanded(child: SizedBox.shrink()),
-          ...buttonList()
-              .map((row) => Row(
-                  children: row
-                      .map((e) =>
-                          Column(children: [Padding(padding: const EdgeInsets.all(16), child: e.$1), Text(e.$2)]))
-                      .toList()))
-              .toList(),
+          ...buttonList().map((row) => Row(children: row.map((e) => buttons()[e]!).toList())).toList(),
           const Expanded(child: SizedBox.shrink()),
           if (FlutterBluePlus.isScanningNow && Settings.shared.demoMode)
             Text(
