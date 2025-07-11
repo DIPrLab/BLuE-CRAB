@@ -1,84 +1,86 @@
 part of 'scanner_view.dart';
 
+enum ButtonType {
+  delete,
+  load,
+  notify,
+  scan,
+  settings,
+  share,
+  test,
+  view,
+}
+
+class ButtonProps {
+  ButtonProps(this.heroTag, this.icon, this.onPressed);
+
+  String heroTag;
+  IconData icon;
+  void Function() onPressed;
+
+  Widget toWidget() => Column(children: [
+        Padding(
+            padding: const EdgeInsets.all(16),
+            child: FloatingActionButton.large(heroTag: heroTag, onPressed: onPressed, child: Icon(icon))),
+        Text(heroTag)
+      ]);
+}
+
 extension Buttons on ScannerViewState {
-  Widget testButton() => FloatingActionButton.large(
-      heroTag: "Test Report",
-      onPressed: () {
-        TestingSuite().test();
-      },
-      child: const Icon(Icons.science));
+  void runTests() => TestingSuite().testBleDoubtFiles();
 
-  Widget deleteReportButton() => FloatingActionButton.large(
-      heroTag: "Delete Report",
-      onPressed: () {
-        widget.report = Report({});
-        write(Report({}));
-      },
-      child: const Icon(Icons.delete));
+  void deleteData() {
+    report = Report({});
+    write(Report({}));
+  }
 
-  Widget loadReportButton() => FloatingActionButton.large(
-      heroTag: "Load Sample Report",
-      onPressed: () {
-        readReport().then((report) {
-          widget.report.combine(report);
-          write(widget.report);
-        });
-      },
-      child: const Icon(Icons.upload));
+  void loadSampleData() => readReport().then((report) {
+        report.combine(report);
+        write(report);
+      });
 
-  Widget shareButton() => FloatingActionButton.large(
-      heroTag: "Share",
-      onPressed: () {
-        write(widget.report);
-        shareReport();
-      },
-      child: const Icon(Icons.share));
+  void viewReport() {
+    if (!updating) {
+      report.refreshCache();
+      write(report);
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ReportView(report: report)));
+  }
 
-  Widget reportViewerButton() => FloatingActionButton.large(
-      heroTag: "Report Viewer Button",
-      onPressed: () {
-        if (!updating) {
-          widget.report.refreshCache();
-        }
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
-      },
-      child: const Icon(Icons.newspaper));
+  void stopScanningAndViewReport() {
+    stopScan();
+    if (Platform.isAndroid || Platform.isIOS) {
+      Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
+    }
+    viewReport();
+  }
 
-  Widget scanButton() => FlutterBluePlus.isScanningNow
-      ? FloatingActionButton.large(
-          heroTag: "Stop Scanning Button",
-          onPressed: () {
-            stopScan().then((_) => write(widget.report));
-            if (!updating) {
-              widget.report.refreshCache();
-            }
-            if (Platform.isAndroid || Platform.isIOS) {
-              Vibration.vibrate(pattern: [100, 1], intensities: [255, 0]);
-            }
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))));
-          },
-          child: const Icon(Icons.stop))
-      : FloatingActionButton.large(
-          heroTag: "Start Scanning Button", onPressed: startScan, child: const Icon(Icons.play_arrow_rounded));
+  void viewSettings() =>
+      Navigator.push(context, MaterialPageRoute(builder: (context) => SafeArea(child: SettingsView(notify: notify))));
 
-  Widget settingsButton() => FloatingActionButton.large(
-      heroTag: "Settings Button",
-      onPressed: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => SafeArea(child: SettingsView(notify: () => setState(() {}))))),
-      child: const Icon(Icons.settings));
+  void sendSampleNotification() => InAppNotification.show(
+      context: context,
+      child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: colors.foreground),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: const Center(
+              child: Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Text("Risky Devices Detected!")))),
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: report)))));
 
-  Widget notifyButton() => FloatingActionButton.large(
-      heroTag: "Notify Button",
-      onPressed: () => InAppNotification.show(
-          context: context,
-          child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: colors.foreground),
-              child: const Center(
-                  child: Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Text("Risky Devices Detected!"))),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8)),
-          onTap: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: widget.report))))),
-      child: const Icon(Icons.notifications));
+  Map<ButtonType, Widget> buttons() => [
+        (ButtonType.delete, ButtonProps("Delete Data", Icons.delete, deleteData)),
+        (ButtonType.load, ButtonProps("Load Sample Data", Icons.upload, loadSampleData)),
+        (ButtonType.notify, ButtonProps("Notify", Icons.notifications, sendSampleNotification)),
+        (
+          ButtonType.scan,
+          FlutterBluePlus.isScanningNow
+              ? ButtonProps("Stop Scanning", Icons.stop_rounded, stopScanningAndViewReport)
+              : ButtonProps("Start Scanning", Icons.play_arrow_rounded, startScan)
+        ),
+        (ButtonType.settings, ButtonProps("Settings", Icons.settings, viewSettings)),
+        (ButtonType.share, ButtonProps("Share Report", Icons.share, () => shareReport(report))),
+        (ButtonType.test, ButtonProps("Run Tests", Icons.science, runTests)),
+        (ButtonType.view, ButtonProps("View Report", Icons.newspaper, viewReport)),
+      ].toMap((e) => e.$1, (e) => e.$2.toWidget());
 }

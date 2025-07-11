@@ -1,40 +1,39 @@
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/date_time.dart';
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
-import 'package:blue_crab/report_view/duration.dart';
 import 'package:flutter/material.dart';
 
 class PropertyTable extends StatelessWidget {
-  PropertyTable(this.device, this.report, {super.key}) {
-    rows.add(Row("UUID", device.id));
+  const PropertyTable(this.device, this.report, {super.key});
+
+  List<DataRow> get rows {
+    final List<DataRow> rows = [dataRow("UUID", device.id)];
     if (device.name.isNotEmpty) {
-      rows.add(Row("Name", device.name));
+      rows.add(dataRow("Name", device.name));
     }
     if (device.platformName.isNotEmpty) {
-      rows.add(Row("Platform", device.platformName));
+      rows.add(dataRow("Platform", device.platformName));
     }
     if (device.manufacturer.isNotEmpty) {
-      rows.add(Row("Manufacturer", device.manufacturers().join(", ")));
+      rows.add(dataRow("Manufacturer", device.manufacturers().join(", ")));
     }
     [
-      Row("Time Travelled", device.timeTravelled.toReadableString()),
-      Row("Distance Travelled", "${device.distanceTravelled.round()} meters"),
-      Row("Incidence", device.incidence.toString()),
-      Row("Areas", device.areas.length.toString()),
-      Row("Duration", device.timeTravelled.printFriendly())
+      dataRow("Duration Travelled", device.timeTravelled.toReadableString()),
+      dataRow("Distance Travelled", "${device.distanceTravelled.round()} meters"),
+      dataRow("Incidence", device.incidence.toString()),
     ].forEach(rows.add);
+    return rows;
   }
 
   final Device device;
   final Report report;
-  List<DataRow> rows = [];
 
-  DataRow Row(String label, String value) => DataRow(cells: [
+  DataRow dataRow(String label, String value) => DataRow(cells: [
         DataCell(Text(label, softWrap: true)),
         DataCell(Text(value, softWrap: true, textAlign: TextAlign.right))
       ]);
 
   @override
-  Widget build(context) => DataTable(
+  Widget build(BuildContext context) => DataTable(
       sortColumnIndex: 1, columns: const [DataColumn(label: Text("")), DataColumn(label: Text(""))], rows: rows);
 }

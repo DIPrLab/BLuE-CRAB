@@ -1,4 +1,4 @@
-Map<String, String> company_identifiers = {
+Map<String, String> companyIdentifiers = {
   "0D99": "Caire Inc.",
   "0D98": "E.F. Johnson Company",
   "0D97": "Zhejiang Huanfu Technology Co., LTD",

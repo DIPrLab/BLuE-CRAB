@@ -20,11 +20,7 @@ class BluetoothOffView extends StatelessWidget {
       child: ElevatedButton(
           child: const Text('TURN ON'),
           onPressed: () async {
-            try {
-              await FlutterBluePlus.turnOn();
-            } catch (e) {
-              // Snackbar.show(ABC.a, prettyException("Error Turning On:", e), success: false);
-            }
+            await FlutterBluePlus.turnOn();
           }));
 
   @override

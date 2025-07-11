@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
+import 'package:blue_crab/map_view/map_functions.dart';
 import 'package:blue_crab/map_view/map_view.dart';
 import 'package:blue_crab/map_view/position.dart';
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
 import 'package:blue_crab/report_view/report_view.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/settings_view/settings_view.dart';
@@ -18,21 +18,21 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 import 'package:latlng/latlng.dart';
+import 'package:statistics/statistics.dart';
 import 'package:vibration/vibration.dart';
 
 part 'buttons.dart';
 part 'scanner.dart';
 
 class ScannerView extends StatefulWidget {
-  ScannerView(this.report, {super.key});
-
-  Report report;
+  const ScannerView({super.key});
 
   @override
   ScannerViewState createState() => ScannerViewState();
 }
 
 class ScannerViewState extends State<ScannerView> {
+  Report report = Report({});
   LatLng? location;
   late StreamSubscription<Position> positionStream;
   Offset? dragStart;
@@ -49,32 +49,37 @@ class ScannerViewState extends State<ScannerView> {
   int deviceCount = 0;
   int datapointCount = 0;
 
-  List<List<(Widget, String)>> buttonList() {
-    List<List<(Widget, String)>> result = [
-      [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
-      [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+  List<List<ButtonType>> buttonList() {
+    List<List<ButtonType>> result = [
+      [ButtonType.settings, ButtonType.view],
+      [ButtonType.scan],
     ];
-    if (Settings.shared.devMode) {
+    if (Settings.shared.dataCollectionMode) {
       result = [
-        [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
-        [(shareButton(), "Share Report"), (deleteReportButton(), "Delete Data")],
-        [
-          (testButton(), "Run Tests"),
-          (scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")
-        ],
+        [ButtonType.settings],
+        [ButtonType.share, ButtonType.delete],
+        [ButtonType.scan],
+      ];
+    } else if (Settings.shared.devMode) {
+      result = [
+        [ButtonType.settings, ButtonType.view],
+        [ButtonType.share, ButtonType.delete],
+        [ButtonType.test, ButtonType.scan],
       ];
     } else if (Settings.shared.demoMode) {
       result = [
-        [(settingsButton(), "Settings"), (reportViewerButton(), "View Report")],
-        [(loadReportButton(), "Load Sample Data"), (deleteReportButton(), "Delete Data")],
-        [(scanButton(), FlutterBluePlus.isScanningNow ? "Stop Scanning" : "Start Scanning")],
+        [ButtonType.settings, ButtonType.view],
+        [ButtonType.load, ButtonType.delete],
+        [ButtonType.scan],
       ];
     }
     return result;
   }
 
+  void notify() => setState(() {});
+
   void enableLocationStream() => positionStream = Geolocator.getPositionStream(
-          locationSettings: Controllers.getLocationSettings(Settings.shared.scanDistance().toInt()))
+          locationSettings: MapViewState.getLocationSettings(Settings.shared.scanDistance().toInt()))
       .listen((position) => location = position.toLatLng());
 
   void disableLocationStream() {
@@ -82,11 +87,15 @@ class ScannerViewState extends State<ScannerView> {
     positionStream.cancel().then((_) => location = null);
   }
 
+  void _loadData() => readReport().then(report.combine);
+
   @override
   void initState() {
     super.initState();
 
-    Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream();
+    _loadData();
+
+    getLocation().then((_) => Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream());
 
     scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
       results
@@ -95,12 +104,12 @@ class ScannerViewState extends State<ScannerView> {
                     sr.advertisementData.manufacturerData.keys.toList()),
                 sr.rssi
               ))
-          .forEach((d) => widget.report.addDatumToDevice(d.$1, location, d.$2));
+          .forEach((d) => report.addDatumToDevice(d.$1, location, d.$2));
       if (Settings.shared.autoConnect) {
         results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       }
-      deviceCount = widget.report.devices().length;
-      datapointCount = widget.report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
+      deviceCount = report.devices().length;
+      datapointCount = report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
       if (mounted) {
         setState(() {});
       }
@@ -112,40 +121,41 @@ class ScannerViewState extends State<ScannerView> {
 
     _timeStream = Stream.periodic(Settings.shared.scanTime(), (x) => DateTime.now());
     timeStreamSubscription = _timeStream.listen((currentTime) {
-      if (isScanning && !Settings.shared.devMode && !updating) {
-        updating = true;
-        widget.report.refreshCache();
-        updating = false;
+      if (isScanning && !updating) {
+        if (!Settings.shared.devMode && !Settings.shared.dataCollectionMode) {
+          updating = true;
+          report.refreshCache();
+          write(report);
+          updating = false;
+        }
       }
     });
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    isScanningSubscription.cancel();
+    scanResultsSubscription.cancel();
+    timeStreamSubscription.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) => Scaffold(
-          body: Center(
-              child: Row(children: [
+          body: SafeArea(
+              child: Center(
+                  child: Row(children: [
         const Expanded(child: SizedBox.shrink()),
         Column(children: [
           const Expanded(child: SizedBox.shrink()),
-          Text("BL(u)E CRAB",
-              // style: GoogleFonts.nothingYouCouldDo(
-              // style: GoogleFonts.sniglet(
-              // style: GoogleFonts.caprasimo(
-              // style: GoogleFonts.mogra(
-              style: GoogleFonts.irishGrover(textStyle: TextStyles.splashText)),
+          Text("BL(u)E CRAB", style: GoogleFonts.irishGrover(textStyle: splashText)),
           const Expanded(child: SizedBox.shrink()),
-          ...buttonList()
-              .map((row) => Row(
-                  children: row
-                      .map((e) =>
-                          Column(children: [Padding(padding: const EdgeInsets.all(16), child: e.$1), Text(e.$2)]))
-                      .toList()))
-              .toList(),
+          ...buttonList().map((row) => Row(children: row.map((e) => buttons()[e]!).toList())).toList(),
           const Expanded(child: SizedBox.shrink()),
           if (FlutterBluePlus.isScanningNow && Settings.shared.demoMode)
             Text(
-                "$deviceCount devices scanned. $datapointCount datapoints. ${widget.report.riskyDevices.length} suspicious devices."),
+                "$deviceCount devices scanned. $datapointCount datapoints. ${report.riskyDevices.length} suspicious devices."),
         ]),
         const Expanded(child: SizedBox.shrink()),
-      ])));
+      ]))));
 }

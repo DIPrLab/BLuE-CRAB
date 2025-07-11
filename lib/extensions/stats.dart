@@ -6,7 +6,7 @@ class Stats {
 
   final List<num> input;
 
-  late num average = input.average();
+  late num average = input.avg();
   late num median = input.median();
   late num standardDeviation = input.standardDeviation();
   late num mad = input.mad();

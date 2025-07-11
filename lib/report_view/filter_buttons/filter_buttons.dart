@@ -3,9 +3,8 @@ import 'package:blue_crab/styles/themes.dart';
 import 'package:flutter/material.dart';
 
 class FilterButtonBar extends StatefulWidget {
-  final VoidCallback? notify;
-
   const FilterButtonBar({super.key, this.notify});
+  final VoidCallback? notify;
 
   @override
   FilterButtonBarState createState() => FilterButtonBarState();
@@ -20,10 +19,6 @@ class FilterButtonBarState extends State<FilterButtonBar> {
     filterButtons = [
       WidgetButtonProperties("Time w/ User", () => Settings.shared.enableTimeWithUserMetric, () {
         Settings.shared.enableTimeWithUserMetric = !Settings.shared.enableTimeWithUserMetric;
-        widget.notify?.call();
-      }),
-      WidgetButtonProperties("Areas", () => Settings.shared.enableAreasMetric, () {
-        Settings.shared.enableAreasMetric = !Settings.shared.enableAreasMetric;
         widget.notify?.call();
       }),
       WidgetButtonProperties("Distance w/ User", () => Settings.shared.enableDistanceWithUserMetric, () {
@@ -43,10 +38,9 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   }
 
   void reorder(List<WidgetButtonProperties> propList) {
-    propList.forEach((props) {
-      filterButtons.remove(props);
-      filterButtons.insert(0, props);
-    });
+    propList.forEach((props) => filterButtons
+      ..remove(props)
+      ..insert(0, props));
     filterButtons.sort((a, b) => (a.value() && b.value()) || !(a.value() || b.value())
         ? 0
         : a.value()
@@ -55,7 +49,6 @@ class FilterButtonBarState extends State<FilterButtonBar> {
   }
 
   Widget filterButton(WidgetButtonProperties props) => TextButton(
-      child: Text(props.label, style: const TextStyle(color: Colors.white)),
       onPressed: () => setState(() {
             props.onPressed();
             Settings.shared.save();
@@ -66,24 +59,21 @@ class FilterButtonBarState extends State<FilterButtonBar> {
           enableFeedback: true,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30), side: const BorderSide(color: colors.altText, width: 2))));
+              borderRadius: BorderRadius.circular(30), side: const BorderSide(color: colors.altText, width: 2))),
+      child: Text(props.label, style: const TextStyle(color: Colors.white)));
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-              children: filterButtons
-                  .map(filterButton)
-                  .expand((e) => e != filterButtons.last ? [e, const SizedBox(width: 12)] : [e])
-                  .toList())));
+          child:
+              Row(children: filterButtons.map(filterButton).expand((e) => [e, const SizedBox(width: 12)]).toList())));
 }
 
 class WidgetButtonProperties {
+  WidgetButtonProperties(this.label, this.value, this.onPressed);
   final String label;
   final VoidCallback onPressed;
   bool Function() value;
-
-  WidgetButtonProperties(this.label, this.value, this.onPressed);
 }

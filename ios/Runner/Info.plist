@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Bluetooth Detector</string>
+	<string>Blue Crab</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,18 +24,18 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>bluetooth plz</string>
+	<string>Bluetooth is required to perform device scanning</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>bluetooth plz</string>
+	<string>Bluetooth is required to perform device scanning</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>ur location plz</string>
+	<string>Location in required to gather distance metrics</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location in required to gather distance metrics</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>ur location plz</string>
+	<string>Location in required to gather distance metrics</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

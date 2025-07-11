@@ -1,23 +1,21 @@
-import 'package:blue_crab/report/classifiers/classifier.dart';
-import 'package:blue_crab/report/classifiers/classifiers.dart';
+import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:latlng/latlng.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings {
-  // The singleton instance
-  static final Settings shared = Settings._internal();
+  // Factory constructor that returns the shared instance
+  factory Settings() => shared;
 
   // Private constructor
   Settings._internal() {
     loadData();
   }
+  // The singleton instance
+  static final Settings shared = Settings._internal();
 
-  static List<Classifier> classifiers = [IQR(), IQRKMeansHybrid(), KMeans(), Permissive()];
-  Classifier classifier = classifiers[0];
+  Classifier classifier = Classifier.classifiers[0];
 
-  // Factory constructor that returns the shared instance
-  factory Settings() => shared;
-
+  late bool dataCollectionMode;
   late bool demoMode;
   late bool devMode;
   late bool autoConnect;
@@ -25,7 +23,6 @@ class Settings {
   late List<LatLng> safeZones;
 
   // Risk Metrics
-  late bool enableAreasMetric;
   late bool enableDistanceWithUserMetric;
   late bool enableIncidenceMetric;
   late bool enableRSSIMetric;
@@ -39,7 +36,7 @@ class Settings {
 
   bool recentlyChanged = false;
   Duration minScanDuration = const Duration(minutes: 10);
-  Duration scanInterval = const Duration(minutes: 10);
+  Duration scanInterval = const Duration(minutes: 1);
 
   // Duration windowDuration() => Duration(hours: windowDurationValue.toInt());
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
@@ -48,7 +45,11 @@ class Settings {
   double scanDistance() => 30;
   double distanceThreshold() => distanceThresholdValue;
 
+  Duration segmentDuration() => const Duration(seconds: 10);
+  Duration skipDuration() => const Duration(seconds: 5);
+
   void loadData() => SharedPreferences.getInstance().then((prefs) {
+        dataCollectionMode = prefs.getBool("dataCollectionMode") ?? false;
         demoMode = prefs.getBool("demoMode") ?? false;
         devMode = prefs.getBool("devMode") ?? false;
         autoConnect = prefs.getBool("autoConnect") ?? false;
@@ -59,7 +60,6 @@ class Settings {
             }).toList() ??
             [];
 
-        enableAreasMetric = prefs.getBool("enableAreasMetric") ?? true;
         enableDistanceWithUserMetric = prefs.getBool("enableDistanceWithUserMetric") ?? true;
         enableIncidenceMetric = prefs.getBool("enableIncidenceMetric") ?? true;
         enableRSSIMetric = prefs.getBool("enableRSSIMetric") ?? true;
@@ -73,11 +73,11 @@ class Settings {
 
   void save() => SharedPreferences.getInstance().then((prefs) {
         [
+          ("dataCollectionMode", dataCollectionMode),
           ("demoMode", demoMode),
           ("devMode", devMode),
           ("autoConnect", autoConnect),
           ("locationEnabled", locationEnabled),
-          ("enableAreasMetric", enableAreasMetric),
           ("enableDistanceWithUserMetric", enableDistanceWithUserMetric),
           ("enableIncidenceMetric", enableIncidenceMetric),
           ("enableRSSIMetric", enableRSSIMetric),

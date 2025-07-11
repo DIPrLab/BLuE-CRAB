@@ -1,24 +1,16 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/map_view/build_marker_widget.dart';
 import 'package:blue_crab/map_view/tile_servers.dart';
-import 'package:blue_crab/report/device/device.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlng/latlng.dart';
 import 'package:map/map.dart';
-
-part 'map_view_controllers.dart';
-
-double clamp(double x, double min, double max) => x < min
-    ? min
-    : x > max
-        ? max
-        : x;
 
 class MapView extends StatefulWidget {
   const MapView(this.device, this.controller, {super.key});
@@ -53,7 +45,7 @@ class MapViewState extends State<MapView> {
                   onPointerSignal: (event) {
                     if (event is PointerScrollEvent) {
                       setState(() => transformer.setZoomInPlace(
-                          clamp(widget.controller.zoom + event.scrollDelta.dy / -1000.0, 2, 18), event.localPosition));
+                          (widget.controller.zoom + event.scrollDelta.dy / -1000.0).clamp(2, 18), event.localPosition));
                     }
                   },
                   child: Stack(children: [
@@ -75,15 +67,65 @@ class MapViewState extends State<MapView> {
                     CustomPaint(painter: PolylinePainter(transformer, widget.device)),
                     ...widget.device
                         .paths()
-                        .map((e) => e.first.location == e.last.location
-                            ? {e.first.location}
-                            : {e.first.location, e.last.location})
+                        .map((e) => e.first == e.last ? {e.first} : {e.first, e.last})
                         .expand((e) => e)
-                        .map((location) => buildMarkerWidget(context, transformer.toOffset(location),
+                        .map((pc) => buildMarkerWidget(context, transformer.toOffset(pc.location),
                             const Icon(Icons.circle, color: Colors.red, size: 24),
-                            backgroundCircle: false))
+                            backgroundCircle: false,
+                            alertContent: Column(mainAxisSize: MainAxisSize.min, children: [
+                              Text("Location: (${[
+                                pc.location.latitude.degrees,
+                                pc.location.longitude.degrees
+                              ].join(", ")})"),
+                              Text("Date: ${[pc.time.month, pc.time.day, pc.time.year].join("/")}"),
+                              Text("Time: ${[pc.time.hour, pc.time.minute, pc.time.second].join(":")}")
+                            ])))
                         .toList(),
                   ])))));
+
+  static LocationSettings getLocationSettings(int distanceFilter) => Platform.isAndroid
+      ? AndroidSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: distanceFilter,
+          forceLocationManager: true,
+          intervalDuration: const Duration(seconds: 10),
+          //(Optional) Set foreground notification config to keep the app alive
+          //when going to the background
+          foregroundNotificationConfig: const ForegroundNotificationConfig(
+              notificationText: "BL(u)E CRAB will continue to receive your location even when you aren't using it",
+              notificationTitle: "Running in Background",
+              enableWakeLock: true))
+      : Platform.isIOS || Platform.isMacOS
+          ? AppleSettings(
+              accuracy: LocationAccuracy.high,
+              activityType: ActivityType.fitness,
+              distanceFilter: distanceFilter,
+              pauseLocationUpdatesAutomatically: true)
+          : LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: distanceFilter);
+
+  void onDoubleTap(MapTransformer transformer, Offset position) =>
+      setState(() => transformer.setZoomInPlace((widget.controller.zoom + 0.5).clamp(2, 18), position));
+
+  void onScaleStart(ScaleStartDetails details) {
+    dragStart = details.focalPoint;
+    scaleStart = 1.0;
+  }
+
+  void onScaleUpdate(ScaleUpdateDetails details, MapTransformer transformer) {
+    final scaleDiff = details.scale - scaleStart;
+    scaleStart = details.scale;
+
+    if (scaleDiff > 0) {
+      setState(() => widget.controller.zoom += 0.02);
+    } else if (scaleDiff < 0) {
+      setState(() => widget.controller.zoom -= 0.02);
+    } else {
+      final now = details.focalPoint;
+      final diff = now - dragStart!;
+      dragStart = now;
+      setState(() => transformer.drag(diff.dx, diff.dy));
+    }
+  }
 }
 
 class PolylinePainter extends CustomPainter {
@@ -101,8 +143,8 @@ class PolylinePainter extends CustomPainter {
         path.forEachMappedOrderedPair(
             (pc) => generateOffsetLatLng(pc.location),
             (offsets) => canvas.drawLine(
-                offsets.$1 as Offset,
-                offsets.$2 as Offset,
+                offsets.$1,
+                offsets.$2,
                 Paint()
                   ..color = Colors.red
                   ..strokeWidth = 4));

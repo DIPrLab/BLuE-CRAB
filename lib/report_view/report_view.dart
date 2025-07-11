@@ -1,5 +1,5 @@
-import 'package:blue_crab/report/device/device.dart';
-import 'package:blue_crab/report/report.dart';
+import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/report_view/device_view/device_view.dart';
 import 'package:blue_crab/report_view/filter_buttons/filter_buttons.dart';
 import 'package:blue_crab/styles/styles.dart';
@@ -7,7 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class ReportView extends StatefulWidget {
-  const ReportView({super.key, required this.report});
+  const ReportView({required this.report, super.key});
 
   final Report report;
 
@@ -26,12 +26,10 @@ class ReportViewState extends State<ReportView> {
     sort(sortMethod);
   }
 
-  void sort(int sortMethod(Device a, Device b)) => setState(() =>
+  void sort(int Function(Device a, Device b) sortMethod) => setState(() =>
       devices = widget.report.riskyDevices.map((d) => widget.report.data[d]!).sorted(sortMethod).reversed.toList());
 
   int byRiskScore(Device a, Device b) => widget.report.riskScore(a).compareTo(widget.report.riskScore(b));
-
-  int byArea(Device a, Device b) => a.areas.length.compareTo(b.areas.length);
 
   int byTime(Device a, Device b) => a.timeTravelled.compareTo(b.timeTravelled);
 
@@ -46,10 +44,9 @@ class ReportViewState extends State<ReportView> {
             ("Incidence", byIncidence),
             ("Location", byLocation),
             ("Time", byTime),
-            ("Areas", byArea),
           ]
               .map((e) => PopupMenuItem(
-                  child: ListTile(title: Text("Sorte By ${e.$1}")),
+                  child: ListTile(title: Text("Sort By ${e.$1}")),
                   onTap: () {
                     sortMethod = e.$2;
                     sort(sortMethod);
@@ -61,10 +58,10 @@ class ReportViewState extends State<ReportView> {
       child: Stack(children: [
         Row(children: [
           const Spacer(),
-          Text("Report", textAlign: TextAlign.center, style: TextStyles.title),
+          Text("Report", textAlign: TextAlign.center, style: titleText),
           const Spacer(),
         ]),
-        BackButton(onPressed: () => Navigator.pop(context), style: AppButtonStyle.buttonWithoutBackground),
+        BackButton(onPressed: () => Navigator.pop(context), style: buttonWithoutBackground),
         Row(children: [const Spacer(), sortButton()])
       ]));
 
@@ -75,10 +72,11 @@ class ReportViewState extends State<ReportView> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: SingleChildScrollView(
-              child: Column(children: [
+          body: SafeArea(
+              child: SingleChildScrollView(
+                  child: Column(children: [
         header(context),
         FilterButtonBar(notify: () => setState(() => sort(sortMethod))),
         Column(children: deviceTileList(context)),
-      ])));
+      ]))));
 }

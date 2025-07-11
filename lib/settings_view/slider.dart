@@ -9,7 +9,7 @@ extension SettingsSlider on SettingsViewState {
             min: minValue,
             max: maxValue,
             value: value,
-            onChanged: (newValue) => setState(() => onChange(newValue)),
+            onChanged: (newValue) => onChange(newValue),
             onChangeEnd: (value) => Settings.shared.save())
       ]);
 }
