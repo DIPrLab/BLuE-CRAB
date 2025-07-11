@@ -9,5 +9,7 @@ extension Synthetic on Report {
               dataPoints: d
                   .dataPoints(testing: true)
                   .where((dp) => dp.time.isBefore(ts) || dp.time == ts)
-                  .toMap((e) => e.time, (e) => e))))));
+                  .toSet()
+                  .map((e) => MapEntry(e.time, e))
+                  .toMap((e) => e.key, (e) => e.value))))));
 }

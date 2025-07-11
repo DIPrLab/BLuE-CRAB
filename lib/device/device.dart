@@ -8,8 +8,6 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
 
-part 'device.g.dart';
-part 'device_cache.dart';
 part 'device_stats.dart';
 
 /// Device data type
@@ -18,22 +16,22 @@ part 'device_stats.dart';
 /// along with metadata that goes along with it
 @JsonSerializable()
 class Device {
-  Device(this.id, this.name, this.platformName, this.manufacturer, {Map<DateTime, Datum>? dataPoints}) {
+  Device(this.id, this.name, this.platformName, this.manufacturer,
+      {this.isTrusted = false, Map<DateTime, Datum>? dataPoints}) {
     _dataPoints = dataPoints ?? Map.identity();
     updateStatistics();
   }
-  factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   String id;
   String name;
   String platformName;
   List<int> manufacturer;
   Map<DateTime, Datum> _dataPoints = {};
+  bool isTrusted;
   DateTime lastUpdated = DateTime.now();
 
   late Duration timeTravelled;
   late int incidence;
   late double distanceTravelled;
-  Map<String, dynamic> toJson() => _$DeviceToJson(this);
 
   Set<Datum> dataPoints({bool testing = false}) => _dataPoints.values
       .where((datum) =>
@@ -45,7 +43,7 @@ class Device {
   void addDatum(LatLng? location, int rssi) {
     lastUpdated = DateTime.now();
     final Datum d = Datum(location, rssi);
-    _dataPoints[d.time] = d;
+    _dataPoints.update(d.time, (e) => e..rssi = rssi, ifAbsent: () => d);
   }
 
   String deviceLabel() => name.isNotEmpty

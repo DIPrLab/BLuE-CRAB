@@ -26,7 +26,9 @@ class BleDoubtReport {
               .where((detection) => detection.mac == device.address)
               .map((detection) =>
                   Datum(LatLng.degree(detection.lat, detection.long), detection.rssi)..time = detection.t)
-              .toMap((e) => e.time, (e) => e)));
+              .toSet()
+              .map((e) => MapEntry(e.time, e))
+              .toMap((e) => e.key, (e) => e.value)));
     });
 
     return report;
