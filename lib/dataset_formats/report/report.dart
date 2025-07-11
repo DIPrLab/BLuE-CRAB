@@ -86,7 +86,6 @@ class Report {
 
   Set<Device> devices() => data.values.toSet();
   Set<String> deviceIDs() => data.values.map((d) => d.id).toSet();
-  Map<String, dynamic> toJson() => _$ReportToJson(this);
 
   CompactDataset toCompactDataset() => CompactDataset(
       data.values
