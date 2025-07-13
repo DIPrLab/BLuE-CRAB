@@ -1,6 +1,8 @@
 PODS:
   - device_info_plus (0.0.1):
     - FlutterMacOS
+  - file_picker (0.0.1):
+    - FlutterMacOS
   - flutter_blue_plus_darwin (0.0.2):
     - Flutter
     - FlutterMacOS
@@ -22,6 +24,7 @@ PODS:
 
 DEPENDENCIES:
   - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
+  - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - flutter_blue_plus_darwin (from `Flutter/ephemeral/.symlinks/plugins/flutter_blue_plus_darwin/darwin`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - geolocator_apple (from `Flutter/ephemeral/.symlinks/plugins/geolocator_apple/darwin`)
@@ -33,6 +36,8 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   device_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
+  file_picker:
+    :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
   flutter_blue_plus_darwin:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_blue_plus_darwin/darwin
   FlutterMacOS:
@@ -50,6 +55,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   device_info_plus: 4fb280989f669696856f8b129e4a5e3cd6c48f76
+  file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   flutter_blue_plus_darwin: 09444a26fb6bdef523e55b68fc1c59af5a877ea6
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   geolocator_apple: ab36aa0e8b7d7a2d7639b3b4e48308394e8cef5e

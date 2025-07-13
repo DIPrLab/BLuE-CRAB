@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/settings.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
@@ -32,3 +33,8 @@ Future<Report> readReport() => (kDebugMode
 
 void shareReport(Report report) =>
     write(report).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)]).then((_) {})));
+
+Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+    ).then((file) => Report.fromJson(jsonDecode(File(file!.xFiles.first.path).readAsStringSync())));

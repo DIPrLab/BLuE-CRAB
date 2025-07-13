@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
-
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';

@@ -34,10 +34,7 @@ extension Buttons on ScannerViewState {
     write(Report({}));
   }
 
-  void loadSampleData() => readReport().then((report) {
-        report.combine(report);
-        write(report);
-      });
+  void loadReportFromFile() => getReportFromFile().then((report) => this.report = report);
 
   void viewReport() {
     if (!updating) {
@@ -70,7 +67,7 @@ extension Buttons on ScannerViewState {
 
   Map<ButtonType, Widget> buttons() => [
         (ButtonType.delete, ButtonProps("Delete Data", Icons.delete, deleteData)),
-        (ButtonType.load, ButtonProps("Load Sample Data", Icons.upload, loadSampleData)),
+        (ButtonType.load, ButtonProps("Load Sample Data", Icons.upload, loadReportFromFile)),
         (ButtonType.notify, ButtonProps("Notify", Icons.notifications, sendSampleNotification)),
         (
           ButtonType.scan,
