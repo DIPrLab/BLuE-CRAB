@@ -49,6 +49,8 @@ class TestingSuite {
       (bleDoubtDir, "bledoubt_log_l"),
       (bleDoubtDir, "bledoubt_log_m"),
       (bleDoubtDir, "bledoubt_log_n"),
+      (assetsDir, "walking_dataset_1"),
+      (assetsDir, "driving_dataset_1"),
     ].map((e) => (e.$2, "assets/${e.$1}/${e.$2}.json")).forEach((e) => testFile(e.$1, e.$2));
   }
 
@@ -76,12 +78,12 @@ class TestingSuite {
     reportDataFile
       ..createSync()
       ..writeAsStringSync(getReportMetrics(report).toString());
-    Isolate.run(() => deviceDataFile
+    deviceDataFile
       ..createSync()
-      ..writeAsStringSync(getDeviceMetrics(report).toString()));
-    Isolate.run(() => flaggedDevicesFile
+      ..writeAsStringSync(getDeviceMetrics(report).toString());
+    flaggedDevicesFile
       ..createSync()
-      ..writeAsStringSync(getFlaggedDevicesAtTime(report, groundTruth).toString()));
+      ..writeAsStringSync(getFlaggedDevicesAtTime(report, groundTruth).toString());
     report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
       ..createSync(recursive: true)
       ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
