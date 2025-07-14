@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/filesystem/dataset.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -19,9 +20,8 @@ Future<File> get _localReportFile async => localFileDirectory.then((dir) => File
 Future<void> write(Report report) async =>
     _localReportFile.then((file) => file.writeAsString("${report.toCompactDataset().toJson()}"));
 
-Future<Report> readReport() => (kDebugMode
-            ? rootBundle.loadString('assets/bledoubt_logs/bledoubt_log_g.json')
-            : _localReportFile.then((file) => file.readAsString()))
+Future<Report> readReport() =>
+    (kDebugMode ? rootBundle.loadString(datasetToLoad) : _localReportFile.then((file) => file.readAsString()))
         .then((jsonData) {
       try {
         return Report.fromJson(jsonDecode(jsonData));
@@ -34,7 +34,16 @@ Future<Report> readReport() => (kDebugMode
 void shareReport(Report report) =>
     write(report).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)]).then((_) {})));
 
-Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['json'],
-    ).then((file) => Report.fromJson(jsonDecode(File(file!.xFiles.first.path).readAsStringSync())));
+// Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
+//       type: FileType.custom,
+//       allowedExtensions: ['json'],
+//     ).then((file) => Report.fromJson(jsonDecode(File(file!.xFiles.first.path).readAsStringSync())));
+
+Future<Report> getReportFromAssets() => rootBundle.loadString(datasetToLoad).then((jsonData) {
+      try {
+        return Report.fromJson(jsonDecode(jsonData));
+      } catch (e) {
+        Logger().e("Failed to load report");
+        return Report({});
+      }
+    });

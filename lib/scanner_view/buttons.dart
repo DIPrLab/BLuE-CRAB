@@ -34,7 +34,7 @@ extension Buttons on ScannerViewState {
     write(Report({}));
   }
 
-  void loadReportFromFile() => getReportFromFile().then((report) => this.report = report);
+  void loadReportFromFile() => getReportFromAssets().then((report) => this.report = report);
 
   void viewReport() {
     if (!updating) {
