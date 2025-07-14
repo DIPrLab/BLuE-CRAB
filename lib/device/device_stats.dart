@@ -7,8 +7,18 @@ extension DeviceStats on Device {
         () => incidence = _incidence(),
       ].forEach((f) => f());
 
-  List<Duration> _timeClusterPrefix() =>
-      dataPoints().map((datum) => datum.time).sorted().mapOrderedPairs((pair) => pair.$2.difference(pair.$1)).toList();
+  List<Duration> _timeClusterPrefix() => dataPoints()
+      .map((datum) => datum.time)
+      .sorted()
+      .fold(
+          List<(DateTime, DateTime)>.empty(),
+          (acc, curr) => acc.isEmpty
+              ? [(curr, curr)]
+              : curr.difference(acc.last.$2) > Settings.shared.timeThreshold()
+                  ? acc + [(curr, curr)]
+                  : (acc..last = (acc.last.$1, curr)))
+      .map((pair) => pair.$2.difference(pair.$1))
+      .toList();
 
   double _distanceTravelled() => paths()
       .map((path) => path
@@ -16,11 +26,9 @@ extension DeviceStats on Device {
           .fold(0.toDouble(), (a, b) => a + b))
       .fold(0.toDouble(), (a, b) => a + b);
 
-  int _incidence() => _timeClusterPrefix().where((duration) => duration > Settings.shared.timeThreshold()).length + 1;
+  int _incidence() => _timeClusterPrefix().length;
 
-  Duration _timeTravelled() => _timeClusterPrefix()
-      .where((duration) => duration <= Settings.shared.timeThreshold())
-      .fold(Duration.zero, (a, b) => a + b);
+  Duration _timeTravelled() => _timeClusterPrefix().fold(Duration.zero, (a, b) => a + b);
 
   // n is path loss exponent
   // c is constant coefficient, obtained through least square fitting

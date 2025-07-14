@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
@@ -8,6 +7,7 @@ import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/testing_suite/csv_data.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/services.dart';
 
 part 'package:blue_crab/testing_suite/device_metrics.dart';
 part 'package:blue_crab/testing_suite/device_signal_information.dart';
@@ -30,22 +30,26 @@ class TestingSuite {
   }
 
   void testBleDoubtFiles() {
+    const String bleDoubtDir = "bledoubt_logs";
+    const String assetsDir = "datasets";
     [
-      "bledoubt_log_a",
-      "bledoubt_log_b",
-      "bledoubt_log_c",
-      "bledoubt_log_d",
-      "bledoubt_log_e",
-      "bledoubt_log_f",
-      "bledoubt_log_g",
-      "bledoubt_log_h",
-      "bledoubt_log_i",
-      "bledoubt_log_j",
-      "bledoubt_log_k",
-      "bledoubt_log_l",
-      "bledoubt_log_m",
-      "bledoubt_log_n",
-    ].forEach(testFile);
+      (bleDoubtDir, "bledoubt_log_a"),
+      (bleDoubtDir, "bledoubt_log_b"),
+      (bleDoubtDir, "bledoubt_log_c"),
+      (bleDoubtDir, "bledoubt_log_d"),
+      (bleDoubtDir, "bledoubt_log_e"),
+      (bleDoubtDir, "bledoubt_log_f"),
+      (bleDoubtDir, "bledoubt_log_g"),
+      (bleDoubtDir, "bledoubt_log_h"),
+      (bleDoubtDir, "bledoubt_log_i"),
+      (bleDoubtDir, "bledoubt_log_j"),
+      (bleDoubtDir, "bledoubt_log_k"),
+      (bleDoubtDir, "bledoubt_log_l"),
+      (bleDoubtDir, "bledoubt_log_m"),
+      (bleDoubtDir, "bledoubt_log_n"),
+      (assetsDir, "walking_dataset_1"),
+      (assetsDir, "driving_dataset_1"),
+    ].map((e) => (e.$2, "assets/${e.$1}/${e.$2}.json")).forEach((e) => testFile(e.$1, e.$2));
   }
 
   Future<Map<String, List<String>>> loadGtMacs(String path) async => File(path)
@@ -53,37 +57,36 @@ class TestingSuite {
       .then((content) => jsonDecode(content) as Map<String, dynamic>)
       .then((raw) => raw.map((key, value) => MapEntry(key, (value as List).map((e) => e as String).toList())));
 
-  void testFile(String filename) =>
-      localFileDirectory.then((currDir) => loadGtMacs([currDir.path, "gt_macs.json"].join("/")).then((gt) =>
-          Directory([currDir.path, "${filename}_reports"].join("/"))
+  void testFile(String dataset, String filename) => rootBundle
+      .loadString(filename)
+      .then((jsonData) => Report.fromJson(jsonDecode(jsonData)))
+      .then((report) => localFileDirectory.then((currDir) => loadGtMacs([currDir.path, "gt_macs.json"].join("/")).then(
+          (gt) => Directory([currDir.path, "${dataset}_reports"].join("/"))
             ..create().then((destDir) => runTest(
-                File([currDir.path, "$filename.json"].join("/"))..createSync(),
-                gt["$filename.json"]?.toSet() ?? {},
-                File([destDir.path, "${filename}_report_data.csv"].join("/"))..createSync(),
-                File([destDir.path, "${filename}_device_data.csv"].join("/"))..createSync(),
-                File([destDir.path, "${filename}_flagged_devices.csv"].join("/"))..createSync(),
-                File([destDir.path, "${filename}_rssi_metrics_5.txt"].join("/"))..createSync(),
-                destDir))));
+                report,
+                gt["$dataset.json"]?.toSet() ?? {},
+                File([destDir.path, "${dataset}_report_data.csv"].join("/"))..createSync(),
+                File([destDir.path, "${dataset}_device_data.csv"].join("/"))..createSync(),
+                File([destDir.path, "${dataset}_flagged_devices.csv"].join("/"))..createSync(),
+                File([destDir.path, "${dataset}_rssi_metrics_5.txt"].join("/"))..createSync(),
+                destDir)))));
 
-  void runTest(File inputFile, Set<String> groundTruth, File reportDataFile, File deviceDataFile,
+  void runTest(Report report, Set<String> groundTruth, File reportDataFile, File deviceDataFile,
       File flaggedDevicesFile, File rssiMetricFile, Directory deviceReportDir) {
-    inputFile.readAsString().then((jsonData) {
-      final Report report = Report.fromJson(jsonDecode(jsonData));
-      reportDataFile
-        ..createSync()
-        ..writeAsStringSync(getReportMetrics(report).toString());
-      deviceDataFile
-        ..createSync()
-        ..writeAsStringSync(getDeviceMetrics(report).toString());
-      flaggedDevicesFile
-        ..createSync()
-        ..writeAsStringSync(getFlaggedDevicesAtTime(report, groundTruth).toString());
-      report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
-        ..createSync(recursive: true)
-        ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
-      rssiMetricFile
-        ..createSync()
-        ..writeAsStringSync(getRssiMetricData(report, groundTruth, 5));
-    });
+    reportDataFile
+      ..createSync()
+      ..writeAsStringSync(getReportMetrics(report).toString());
+    deviceDataFile
+      ..createSync()
+      ..writeAsStringSync(getDeviceMetrics(report).toString());
+    flaggedDevicesFile
+      ..createSync()
+      ..writeAsStringSync(getFlaggedDevicesAtTime(report, groundTruth).toString());
+    report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
+      ..createSync(recursive: true)
+      ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
+    rssiMetricFile
+      ..createSync()
+      ..writeAsStringSync(getRssiMetricData(report, groundTruth, 5));
   }
 }

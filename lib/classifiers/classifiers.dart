@@ -112,8 +112,14 @@ class RSSI extends Classifier {
 
   @override
   Set<Device> getRiskyDevices(Report report) {
-    final num timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
-    final num distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
+    num timeThreshold;
+    num distanceThreshold;
+    try {
+      timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
+      distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
+    } catch (e) {
+      return Set.identity();
+    }
 
     return report
         .devices()
@@ -125,7 +131,7 @@ class RSSI extends Classifier {
             .smoothedDatumByMovingAverage(const Duration(seconds: 5))
             .segment()
             .map((e) => e.map((f) => f.rssi).standardDeviation())
-            .any((e) => e < 7))
+            .any((e) => e < 15))
         .toSet();
   }
 }
