@@ -25,10 +25,11 @@ class MapView extends StatefulWidget {
 class MapViewState extends State<MapView> {
   Offset? dragStart;
   double scaleStart = 1;
-
+  double currentZoom = 0;
   @override
   void initState() {
     super.initState();
+    currentZoom = widget.controller.zoom;
   }
 
   @override
@@ -44,8 +45,10 @@ class MapViewState extends State<MapView> {
                   behavior: HitTestBehavior.opaque,
                   onPointerSignal: (event) {
                     if (event is PointerScrollEvent) {
-                      setState(() => transformer.setZoomInPlace(
-                          (widget.controller.zoom + event.scrollDelta.dy / -1000.0).clamp(2, 18), event.localPosition));
+                      setState(() {
+                        transformer.setZoomInPlace(widget.controller.zoom, event.localPosition);
+                        currentZoom = widget.controller.zoom;
+                      });
                     }
                   },
                   child: Stack(children: [
@@ -64,13 +67,13 @@ class MapViewState extends State<MapView> {
 
                       return CachedNetworkImage(imageUrl: mapbox(z, x, y), fit: BoxFit.cover);
                     }),
-                    CustomPaint(painter: PolylinePainter(transformer, widget.device)),
+                    CustomPaint(painter: PolylinePainter(transformer, widget.device, currentZoom)),
                     ...widget.device
                         .paths()
                         .map((e) => e.first == e.last ? {e.first} : {e.first, e.last})
                         .expand((e) => e)
-                        .map((pc) => buildMarkerWidget(context, transformer.toOffset(pc.location),
-                            const Icon(Icons.circle, color: Colors.red, size: 24),
+                        .map((pc) => buildMarkerWidget(context,transformer.toOffset(pc.location),
+                            Icon(Icons.circle,color: Colors.red, size: ((5 * pow(2, currentZoom - 15)) as double).clamp(8.0, 24.0),),
                             backgroundCircle: false,
                             alertContent: Column(mainAxisSize: MainAxisSize.min, children: [
                               Text("Location: (${[
@@ -103,8 +106,12 @@ class MapViewState extends State<MapView> {
               pauseLocationUpdatesAutomatically: true)
           : LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: distanceFilter);
 
-  void onDoubleTap(MapTransformer transformer, Offset position) =>
-      setState(() => transformer.setZoomInPlace((widget.controller.zoom + 0.5).clamp(2, 18), position));
+  void onDoubleTap(MapTransformer transformer, Offset position) {
+    setState(() {
+      currentZoom = widget.controller.zoom;
+      transformer.setZoomInPlace(widget.controller.zoom, position);
+    });
+  }
 
   void onScaleStart(ScaleStartDetails details) {
     dragStart = details.focalPoint;
@@ -117,22 +124,28 @@ class MapViewState extends State<MapView> {
 
     if (scaleDiff > 0) {
       setState(() => widget.controller.zoom += 0.02);
+      currentZoom = widget.controller.zoom;
     } else if (scaleDiff < 0) {
-      setState(() => widget.controller.zoom -= 0.02);
+      setState(() {
+        widget.controller.zoom -= 0.02;
+        currentZoom = widget.controller.zoom;
+      });
     } else {
       final now = details.focalPoint;
       final diff = now - dragStart!;
       dragStart = now;
       setState(() => transformer.drag(diff.dx, diff.dy));
+      currentZoom = widget.controller.zoom;
     }
   }
 }
 
 class PolylinePainter extends CustomPainter {
-  PolylinePainter(this.transformer, this.device);
+  PolylinePainter(this.transformer, this.device, this.currentZoom);
 
-  Device device;
+  final Device device;
   final MapTransformer transformer;
+  final double currentZoom;
 
   Offset generateOffsetPosition(Position p) => transformer.toOffset(LatLng.degree(p.latitude, p.longitude));
 
@@ -143,11 +156,12 @@ class PolylinePainter extends CustomPainter {
         path.forEachMappedOrderedPair(
             (pc) => generateOffsetLatLng(pc.location),
             (offsets) => canvas.drawLine(
-                offsets.$1,
-                offsets.$2,
-                Paint()
-                  ..color = Colors.red
-                  ..strokeWidth = 4));
+                  offsets.$1,
+                  offsets.$2,
+                  Paint()
+                    ..color = Colors.red
+                    ..strokeWidth = (1 * pow(currentZoom - 15, 2)).toDouble().clamp(1.5, 4.0),
+                ));
       });
 
   // Since this Sky painter has no fields, it always paints
