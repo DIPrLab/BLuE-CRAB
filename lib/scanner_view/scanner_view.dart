@@ -7,6 +7,7 @@ import 'package:blue_crab/map_view/map_functions.dart';
 import 'package:blue_crab/map_view/map_view.dart';
 import 'package:blue_crab/map_view/position.dart';
 import 'package:blue_crab/report_view/report_view.dart';
+import 'package:blue_crab/scanner_view/full_graph_view.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/settings_view/settings_view.dart';
 import 'package:blue_crab/styles/styles.dart';
@@ -38,6 +39,7 @@ class ScannerViewState extends State<ScannerView> {
   Offset? dragStart;
   double scaleStart = 1;
   bool updating = false;
+  Map<String, List<String>> gt = {};
 
   bool isScanning = false;
   late StreamSubscription<bool> isScanningSubscription;
@@ -70,7 +72,7 @@ class ScannerViewState extends State<ScannerView> {
       result = [
         [ButtonType.settings, ButtonType.view],
         [ButtonType.load, ButtonType.delete],
-        [ButtonType.scan],
+        [ButtonType.temp, ButtonType.scan],
       ];
     }
     return result;
@@ -87,13 +89,13 @@ class ScannerViewState extends State<ScannerView> {
     positionStream.cancel().then((_) => location = null);
   }
 
-  void _loadData() => readReport().then(report.combine);
-
   @override
   void initState() {
     super.initState();
 
-    _loadData();
+    readReport().then(report.combine);
+
+    loadGtMacs().then((data) => gt = data);
 
     getLocation().then((_) => Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream());
 

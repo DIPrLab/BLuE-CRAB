@@ -9,6 +9,7 @@ enum ButtonType {
   share,
   test,
   view,
+  temp,
 }
 
 class ButtonProps {
@@ -65,6 +66,9 @@ extension Buttons on ScannerViewState {
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => SafeArea(child: ReportView(report: report)))));
 
+  void viewTempGraph() =>
+      Navigator.push(context, MaterialPageRoute(builder: (context) => SafeArea(child: FullGraphView(report, gt))));
+
   Map<ButtonType, Widget> buttons() => [
         (ButtonType.delete, ButtonProps("Delete Data", Icons.delete, deleteData)),
         (ButtonType.load, ButtonProps("Load Sample Data", Icons.upload, loadReportFromFile)),
@@ -78,6 +82,7 @@ extension Buttons on ScannerViewState {
         (ButtonType.settings, ButtonProps("Settings", Icons.settings, viewSettings)),
         (ButtonType.share, ButtonProps("Share Report", Icons.share, () => shareReport(report))),
         (ButtonType.test, ButtonProps("Run Tests", Icons.science, runTests)),
+        (ButtonType.temp, ButtonProps("View Graph", Icons.auto_graph, viewTempGraph)),
         (ButtonType.view, ButtonProps("View Report", Icons.newspaper, viewReport)),
       ].toMap((e) => e.$1, (e) => e.$2.toWidget());
 }
