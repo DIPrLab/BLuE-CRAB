@@ -34,10 +34,10 @@ Future<Report> readReport() =>
 void shareReport(Report report) =>
     write(report).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)]).then((_) {})));
 
-// Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
-//       type: FileType.custom,
-//       allowedExtensions: ['json'],
-//     ).then((file) => Report.fromJson(jsonDecode(File(file!.xFiles.first.path).readAsStringSync())));
+Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+    ).then((file) => Report.fromJson(jsonDecode(File(file!.xFiles.first.path).readAsStringSync())));
 
 Future<Report> getReportFromAssets() => rootBundle.loadString(datasetToLoad).then((jsonData) {
       try {
