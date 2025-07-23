@@ -21,7 +21,7 @@ Future<void> write(Report report) async =>
     _localReportFile.then((file) => file.writeAsString("${report.toCompactDataset().toJson()}"));
 
 Future<Report> readReport() =>
-    (kDebugMode ? rootBundle.loadString(datasetToLoad) : _localReportFile.then((file) => file.readAsString()))
+    (kDebugMode ? rootBundle.loadString(datasetToLoad()) : _localReportFile.then((file) => file.readAsString()))
         .then((jsonData) {
       try {
         return Report.fromJson(jsonDecode(jsonData));
@@ -34,12 +34,12 @@ Future<Report> readReport() =>
 void shareReport(Report report) =>
     write(report).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)]).then((_) {})));
 
-// Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
-//       type: FileType.custom,
-//       allowedExtensions: ['json'],
-//     ).then((file) => Report.fromJson(jsonDecode(File(file!.xFiles.first.path).readAsStringSync())));
+Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+    ).then((file) => Report.fromJson(jsonDecode(File(file!.xFiles.first.path).readAsStringSync())));
 
-Future<Report> getReportFromAssets() => rootBundle.loadString(datasetToLoad).then((jsonData) {
+Future<Report> getReportFromAssets() => rootBundle.loadString(datasetToLoad()).then((jsonData) {
       try {
         return Report.fromJson(jsonDecode(jsonData));
       } catch (e) {
@@ -47,3 +47,8 @@ Future<Report> getReportFromAssets() => rootBundle.loadString(datasetToLoad).the
         return Report({});
       }
     });
+
+Future<Map<String, List<String>>> loadGtMacs() async => rootBundle
+    .loadString("assets/bledoubt_logs/gt_macs.json")
+    .then((content) => jsonDecode(content) as Map<String, dynamic>)
+    .then((raw) => raw.map((key, value) => MapEntry(key, (value as List).map((e) => e as String).toList())));
