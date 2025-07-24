@@ -99,7 +99,7 @@ def findtime():
             labelsus_t.append(timesus[idx])
         else:
             next
-    print(labelsus, labelsafe)
+
     return(labelsus, labelsus_r, labelsus_t, labelsafe, labelsafe_r, labelsafe_t)
     
 
@@ -118,18 +118,20 @@ def main():
     plt.plot(timesus[0], rssisus[0], color="red", label="Suspicious Device")
     
 
+    
+#the colors were changed to be a lighter verson of the original colors
     for i in range(len(macsafe)):
         sorted_pairs = sorted(zip(timesafe[i], rssisafe[i]), key=lambda x: x[0])
         timesafe_paired, rssisafe_paired = zip(*sorted_pairs)
         plt.plot(timesafe_paired, rssisafe_paired, color="lightskyblue")
-    
-#the colors were changed to be a lighter verson of the original colors
+
     for i in range(len(macsus)):
         sorted_pairs = sorted(zip(timesus[i], rssisus[i]), key=lambda x: x[0])
         timesus_paired, rssisus_paired = zip(*sorted_pairs)
 
         plt.plot(timesus_paired, rssisus_paired, color="tomato")
-    
+        
+
 # specially plot significant devices with bold color
     for i in range(len(labelsafe)):
         sorted_pairs = sorted(zip(labelsafe_t[i], labelsafe_r[i]), key=lambda x: x[0])

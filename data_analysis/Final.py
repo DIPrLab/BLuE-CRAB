@@ -5,16 +5,16 @@ import numpy as np
 
 #making file choice
 x = input("which file should be look at?")
-filename = "bledoubt_log_" + x + ".json"
+y = input("file with known suspicious devices:")
 
 #importing data into dictionaries
 def openfile():
-    with open(filename, "r") as f:
+    with open(x, "r") as f:
         data = json.load(f)
-    with open("gt_macs.json", "r") as f:
+    with open(y, "r") as f:
         datasus = json.load(f)
     #list of suspicious devices
-    setsus = datasus[filename]
+    setsus = datasus[x]
     return data, setsus
 
 #function to pick out desiered information(mac address, RSSI value, time)
