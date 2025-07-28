@@ -14,7 +14,7 @@ class CompactDataset {
   factory CompactDataset.fromJson(Map<String, dynamic> json) => _$CompactDatasetFromJson(json);
   Map<String, dynamic> toJson() => _$CompactDatasetToJson(this);
 
-  Map<String, (String, String, List<int>, Map<DateTime, List<int>>)> devices;
+  Map<String, (String, String, List<int>, Map<DateTime, List<int>>, int?)> devices;
   Map<DateTime, (double, double)?> locationHistory;
 
   LatLng? toLatLng((double, double)? location) => location == null ? null : LatLng.degree(location.$1, location.$2);
