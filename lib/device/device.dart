@@ -16,17 +16,16 @@ part 'device_stats.dart';
 /// along with metadata that goes along with it
 @JsonSerializable()
 class Device {
-  Device(this.id, this.name, this.platformName, this.manufacturer,
-      {this.isTrusted = false, Map<DateTime, Datum>? dataPoints}) {
+  Device(this.id, this.name, this.platformName, this.manufacturer, {this.t, Map<DateTime, Datum>? dataPoints}) {
     _dataPoints = dataPoints ?? Map.identity();
     updateStatistics();
   }
   String id;
   String name;
   String platformName;
+  int? t;
   List<int> manufacturer;
   Map<DateTime, Datum> _dataPoints = {};
-  bool isTrusted;
   DateTime lastUpdated = DateTime.now();
 
   late Duration timeTravelled;

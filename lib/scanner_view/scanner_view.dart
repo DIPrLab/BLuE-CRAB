@@ -103,7 +103,8 @@ class ScannerViewState extends State<ScannerView> {
       results
           .map((sr) => (
                 Device(sr.device.remoteId.toString(), sr.advertisementData.advName, sr.device.platformName,
-                    sr.advertisementData.manufacturerData.keys.toList()),
+                    sr.advertisementData.manufacturerData.keys.toList(),
+                    t: sr.advertisementData.txPowerLevel),
                 sr.rssi
               ))
           .forEach((d) => report.addDatumToDevice(d.$1, location, d.$2));
