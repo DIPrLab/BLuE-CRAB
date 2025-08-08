@@ -106,6 +106,36 @@ class SmallestKCluster extends Classifier {
       .first;
 }
 
+class RSSIoriginal extends Classifier {
+  @override
+  String name() => "Original RSSI Confidence";
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    num timeThreshold;
+    num distanceThreshold;
+    try {
+      timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
+      distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
+    } catch (e) {
+      return Set.identity();
+    }
+
+    return report
+        .devices()
+        .where((e) => e.timeTravelled.inSeconds > timeThreshold)
+        .where((e) => e.distanceTravelled > distanceThreshold)
+        .where((device) => device
+            .dataPoints()
+            .sorted((a, b) => a.time.compareTo(b.time))
+            .smoothedDatumByMovingAverage(const Duration(seconds: 5))
+            .segment()
+            .map((e) => e.map((f) => f.rssi).standardDeviation())
+            .any((e) => e < 15))
+        .toSet();
+  }
+}
+
 class RSSI extends Classifier {
   @override
   String name() => "RSSI Confidence";
@@ -120,6 +150,9 @@ class RSSI extends Classifier {
     } catch (e) {
       return Set.identity();
     }
+
+    final (DateTime, DateTime) timeRange = report.timeRange();
+    final List<(DateTime, DateTime)> segments = segmentTimestamps(timeRange.$1, timeRange.$2);
 
     return report
         .devices()

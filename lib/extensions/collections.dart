@@ -132,3 +132,7 @@ extension X on List<Datum> {
         datum.time.isAfter(e.$1) || datum.time.isBefore(e.$2) || datum.time == e.$1 || datum.time == e.$2).toList());
   }
 }
+
+List<(DateTime, DateTime)> segmentTimestamps(DateTime start, DateTime end) => List.generate(
+    (end.difference(start).inSeconds.abs() / Settings.shared.skipDuration().inSeconds).ceil() + 1,
+    (e) => start.add(Settings().skipDuration() * e)).orderedPairs();

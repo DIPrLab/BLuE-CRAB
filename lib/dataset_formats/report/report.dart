@@ -56,6 +56,15 @@ class Report {
       .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList()
     ..sort();
 
+  (DateTime, DateTime) timeRange() {
+    final List<DateTime> timestamps = devices()
+        .map((e) => e.dataPoints().map((e) => e.time).toSet())
+        .fold(<DateTime>{}, (e, acc) => acc.union(e))
+        .sorted()
+        .toList();
+    return (timestamps.first, timestamps.last);
+  }
+
   Set<Device> getSuspiciousDevices() => Settings.shared.classifier.getRiskyDevices(this);
   Set<String> getSuspiciousDeviceIDs() => Settings.shared.classifier.getRiskyDeviceIDs(this);
 
