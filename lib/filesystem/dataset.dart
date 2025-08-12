@@ -1,2 +1,2 @@
-String datasetToLoad() => "assets/bledoubt_logs/$datasetName";
-String datasetName = "bledoubt_log_d.json";
+String datasetToLoad() => "assets/datasets/$datasetName";
+String datasetName = "walking_dataset_2.json";
