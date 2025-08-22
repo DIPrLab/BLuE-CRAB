@@ -30,15 +30,15 @@ extension DeviceStats on Device {
 
   Duration _timeTravelled() => _timeClusterPrefix().fold(Duration.zero, (a, b) => a + b);
 
-  // n is path loss exponent
-  // c is constant coefficient, obtained through least square fitting
-  // num distance() => exp(log(1 /
-  //         (dataPoints()
-  //                 .sorted((a, b) => a.time.compareTo(b.time))
-  //                 .map((e) => e.rssi)
-  //                 .toList()
-  //                 .smoothedByMovingAverage(5, SmoothingMethod.resizing)
-  //                 .last -
-  //             c)) /
-  //     n);
+  num distance() {
+    const num measuredPower = -59;
+    final num rssi = dataPoints()
+        .sorted((a, b) => a.time.compareTo(b.time))
+        .map((e) => e.rssi)
+        .toList()
+        .smoothedByMovingAverage(5, SmoothingMethod.resizing)
+        .last;
+    const n = 2;
+    return pow(10, (measuredPower - rssi) / (10 * n));
+  }
 }

@@ -48,6 +48,7 @@ class TestingSuite {
       (bleDoubtDir, "bledoubt_log_m"),
       (bleDoubtDir, "bledoubt_log_n"),
       (assetsDir, "walking_dataset_1"),
+      (assetsDir, "walking_dataset_2"),
       (assetsDir, "driving_dataset_1"),
     ].map((e) => (e.$2, "assets/${e.$1}/${e.$2}.json")).forEach((e) => testFile(e.$1, e.$2));
   }
