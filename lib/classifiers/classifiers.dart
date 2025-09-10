@@ -2,6 +2,7 @@ import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
+import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
 import 'package:simple_cluster/simple_cluster.dart';
@@ -136,9 +137,9 @@ class RSSIoriginal extends Classifier {
   }
 }
 
-class RSSI extends Classifier {
+class RSSI_Stability extends Classifier {
   @override
-  String name() => "RSSI Confidence";
+  String name() => "RSSI Stability";
 
   @override
   Set<Device> getRiskyDevices(Report report) {
@@ -165,6 +166,49 @@ class RSSI extends Classifier {
             .segment()
             .map((e) => e.map((f) => f.rssi).standardDeviation())
             .any((e) => e < 15))
+        .toSet();
+  }
+}
+
+class RSSI_Proximity extends Classifier {
+  @override
+  String name() => "RSSI Proximity";
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    num timeThreshold;
+    num distanceThreshold;
+    try {
+      timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
+      distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
+    } catch (e) {
+      return Set.identity();
+    }
+
+    return report
+        .devices()
+        .where((e) => e.timeTravelled.inSeconds > timeThreshold)
+        .where((e) => e.distanceTravelled > distanceThreshold)
+        .where((device) => device
+            .dataPoints()
+            .sorted((a, b) => a.time.compareTo(b.time))
+            .smoothedDatumByMovingAverage(const Duration(seconds: 5))
+            .orderedPairs()
+            .fold(List<(DateTime, DateTime)>.empty(growable: true), (acc, e) {
+              if (e.$2.rssi < -75) {
+                return acc;
+              }
+              if (acc.isEmpty) {
+                acc.add((e.$1.time, e.$2.time));
+              } else if (acc.last.$2 == e.$1.time) {
+                acc.last = (acc.last.$1, e.$2.time);
+              } else {
+                acc.add((e.$2.time, e.$2.time));
+              }
+              return acc;
+            })
+            .map((e) => e.$2.difference(e.$1))
+            .any((e) => e.inSeconds < 15))
         .toSet();
   }
 }
