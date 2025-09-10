@@ -58,8 +58,7 @@ class ScannerViewState extends State<ScannerView> {
     ];
     if (Settings.shared.dataCollectionMode) {
       result = [
-        [ButtonType.settings],
-        [ButtonType.share, ButtonType.delete],
+        [ButtonType.settings, ButtonType.share],
         [ButtonType.scan],
       ];
     } else if (Settings.shared.devMode) {

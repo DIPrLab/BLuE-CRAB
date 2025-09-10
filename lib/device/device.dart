@@ -34,7 +34,7 @@ class Device {
   late int incidence;
   late double distanceTravelled;
 
-  Set<Datum> dataPoints({bool testing = false}) => _dataPoints.values
+  Set<Datum> dataPoints() => _dataPoints.values
       .where((datum) =>
           datum.location == null ||
           !Settings.shared.safeZones.any(

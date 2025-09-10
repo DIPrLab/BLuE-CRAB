@@ -52,7 +52,7 @@ class Report {
       report.data.forEach((id, d) => data.update(id, (device) => device.combine(d), ifAbsent: () => d));
 
   List<DateTime> getTimestamps() => devices()
-      .map((d) => d.dataPoints(testing: true).map((d) => d.time).toSet())
+      .map((d) => d.dataPoints().map((d) => d.time).toSet())
       .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList()
     ..sort();
 
@@ -77,12 +77,12 @@ class Report {
                 e.name,
                 e.platformName,
                 e.manufacturer,
-                e.dataPoints(testing: true).map((e) => MapEntry(e.time, [e.rssi])).toMap((e) => e.key, (e) => e.value),
+                e.dataPoints().map((e) => MapEntry(e.time, [e.rssi])).toMap((e) => e.key, (e) => e.value),
                 e.t
               )))
           .toMap((e) => e.key, (e) => e.value),
       data.values
-          .map((e) => e.dataPoints(testing: true).map((e) => (e.time, e.location)).toSet())
+          .map((e) => e.dataPoints().map((e) => (e.time, e.location)).toSet())
           .fold(Set<(DateTime, LatLng?)>.identity(), (a, b) => a.union(b))
           .sorted((a, b) => a.$1.compareTo(b.$1))
           .toList()
