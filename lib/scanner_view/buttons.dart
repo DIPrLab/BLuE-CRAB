@@ -32,7 +32,7 @@ extension Buttons on ScannerViewState {
 
   void deleteData() {
     report = Report({});
-    write(Report({}));
+    write(Report({}).toCompactDataset());
   }
 
   void loadReportFromFile() => getReportFromFile().then((report) => this.report = report);
@@ -40,7 +40,7 @@ extension Buttons on ScannerViewState {
   void viewReport() {
     if (!updating) {
       report.refreshCache();
-      write(report);
+      write(report.toCompactDataset());
     }
     Navigator.push(context, MaterialPageRoute(builder: (context) => ReportView(report: report)));
   }

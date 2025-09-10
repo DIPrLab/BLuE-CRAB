@@ -4,6 +4,7 @@ import 'package:blue_crab/device/device.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:statistics/statistics.dart';
 
 part 'compact_dataset.g.dart';
@@ -34,4 +35,37 @@ class CompactDataset {
                   .map((e) => MapEntry(e.time, e))
                   .toMap((e) => e.key, (e) => e.value))))
       .toMap((e) => e.key, (e) => e.value));
+
+  Future<Database> toDB() async {
+    final Database db = await openDatabase('my_db.db');
+
+    devices.entries.forEach((device) {
+      final deviceEntry = {
+        "id": device.key,
+        "name": device.value.$1,
+        "platform": device.value.$2,
+        "manufacturer": device.value.$3,
+        "t": device.value.$5,
+      };
+      db.insert("Devices", deviceEntry, conflictAlgorithm: ConflictAlgorithm.replace);
+
+      device.value.$4.entries.forEach((entry) {
+        final scanEntry = {"device_id": device.key, "time": entry.key, "rssi": entry.value[0]};
+        db.insert("ScanData", scanEntry, conflictAlgorithm: ConflictAlgorithm.replace);
+      });
+    });
+
+    locationHistory.entries.forEach((entry) {
+      final locationEntry = {
+        "time": entry.key.toIso8601String(),
+        "latitude": entry.value?.$1,
+        "longitude": entry.value?.$2
+      };
+      db.insert("LocationHistory", locationEntry, conflictAlgorithm: ConflictAlgorithm.replace);
+    });
+
+    await db.close();
+
+    return db;
+  }
 }

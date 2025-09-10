@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:blue_crab/dataset_formats/compact_dataset/compact_dataset.dart';
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/filesystem/dataset.dart';
 import 'package:blue_crab/settings.dart';
@@ -17,8 +18,8 @@ Settings readSettings() => Settings()..loadData();
 
 Future<File> get _localReportFile async => localFileDirectory.then((dir) => File("${dir.path}/reports.json"));
 
-Future<void> write(Report report) async =>
-    _localReportFile.then((file) => file.writeAsString("${report.toCompactDataset().toJson()}"));
+Future<void> write(CompactDataset data) async =>
+    _localReportFile.then((file) => file.writeAsString("${data.toJson()}"));
 
 Future<Report> readReport() =>
     (kDebugMode ? rootBundle.loadString(datasetToLoad()) : _localReportFile.then((file) => file.readAsString()))
@@ -31,8 +32,11 @@ Future<Report> readReport() =>
       }
     });
 
-void shareReport(Report report) =>
-    write(report).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)]).then((_) {})));
+void shareReport(Report report) {
+  final CompactDataset data = report.toCompactDataset();
+  write(data).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)])
+      .then((_) => data.toDB().then((db) => Share.shareXFiles([XFile(db.path)])))));
+}
 
 Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
       type: FileType.custom,

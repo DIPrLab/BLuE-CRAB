@@ -128,7 +128,7 @@ class ScannerViewState extends State<ScannerView> {
         if (!Settings.shared.devMode && !Settings.shared.dataCollectionMode) {
           updating = true;
           report.refreshCache();
-          write(report);
+          write(report.toCompactDataset());
           updating = false;
         }
       }
