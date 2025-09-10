@@ -37,20 +37,28 @@ class CompactDataset {
       .toMap((e) => e.key, (e) => e.value));
 
   Future<Database> toDB() async {
-    final Database db = await openDatabase('my_db.db');
+    final Database db = await openDatabase(
+      'my_db.db',
+      onOpen: (db) async {
+        await db.execute(
+            "create table Devices (id text not null, name text not null, platform text not null, manufacturer text, t integer)");
+        await db.execute("create table ScanData (device_id text not null, time text not null, rssi integer not null)");
+        await db.execute("create table LocationHistory (time text not null, latitude integer, longitude integer)");
+      },
+    );
 
     devices.entries.forEach((device) {
       final deviceEntry = {
         "id": device.key,
         "name": device.value.$1,
         "platform": device.value.$2,
-        "manufacturer": device.value.$3,
+        "manufacturer": device.value.$3.toString(),
         "t": device.value.$5,
       };
       db.insert("Devices", deviceEntry, conflictAlgorithm: ConflictAlgorithm.replace);
 
       device.value.$4.entries.forEach((entry) {
-        final scanEntry = {"device_id": device.key, "time": entry.key, "rssi": entry.value[0]};
+        final scanEntry = {"device_id": device.key, "time": entry.key.toIso8601String(), "rssi": entry.value[0]};
         db.insert("ScanData", scanEntry, conflictAlgorithm: ConflictAlgorithm.replace);
       });
     });
