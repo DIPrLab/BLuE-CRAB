@@ -23,6 +23,7 @@ import 'package:statistics/statistics.dart';
 import 'package:vibration/vibration.dart';
 
 part 'buttons.dart';
+part 'detagtive.dart';
 part 'scanner.dart';
 
 class ScannerView extends StatefulWidget {
@@ -126,6 +127,7 @@ class ScannerViewState extends State<ScannerView> {
       if (isScanning && !updating) {
         if (!Settings.shared.devMode && !Settings.shared.dataCollectionMode) {
           updating = true;
+          detagtive();
           report.refreshCache();
           write(report.toCompactDataset());
           updating = false;

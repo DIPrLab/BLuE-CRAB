@@ -15,6 +15,10 @@ class Settings {
 
   Classifier classifier = Classifier.classifiers[0];
 
+  // DeTagTive
+  Duration deTagTiveMinLength = const Duration(seconds: 30);
+  int deTagTiveRssiThreshold = -100;
+
   late bool dataCollectionMode;
   late bool demoMode;
   late bool devMode;
@@ -40,7 +44,7 @@ class Settings {
 
   // Duration windowDuration() => Duration(hours: windowDurationValue.toInt());
   Duration windowDuration() => Duration(minutes: windowDurationValue.toInt());
-  Duration scanTime() => const Duration(seconds: 10);
+  Duration scanTime() => const Duration(seconds: 60);
   Duration timeThreshold() => Duration(seconds: timeThresholdValue.toInt());
   double scanDistance() => 30;
   double distanceThreshold() => distanceThresholdValue;
