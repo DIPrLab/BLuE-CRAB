@@ -33,17 +33,19 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth is required to perform device scanning</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location in required to gather distance metrics</string>
+	<string>Location is required to gather distance metrics</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Location in required to gather distance metrics</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location in required to gather distance metrics</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access is required to save report data</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
-   		<string>fetch</string>
-   		<string>remote-notification</string>
+		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

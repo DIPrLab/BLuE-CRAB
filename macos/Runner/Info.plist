@@ -33,6 +33,10 @@
 	<string>$(PRODUCT_COPYRIGHT)</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Location Access</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location Access</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location Access</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
