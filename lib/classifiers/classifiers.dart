@@ -48,7 +48,7 @@ class IQRKMeansHybrid extends Classifier {
         clusters.sorted((c1, c2) => c1.location.distanceFromOrigin().compareTo(c2.location.distanceFromOrigin()));
     final num lower = clusters.first.instances.map((i) => report.riskScore(report.data[i.id]!)).max;
     final num upper = clusters.last.instances.map((i) => report.riskScore(report.data[i.id]!)).min;
-    final num limit = (upper - lower) * 3;
+    final num limit = upper + (upper - lower) * 1.5;
     return report.devices().where((d) => report.riskScore(d) > limit).toSet();
   }
 }
