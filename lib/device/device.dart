@@ -30,6 +30,7 @@ class Device {
   Map<DateTime, Datum> _dataPoints = {};
   DateTime lastUpdated = DateTime.now();
 
+  late List<List<(Datum, Datum)>> clusterPrefix;
   late Duration timeTravelled;
   late int incidence;
   late double distanceTravelled;
@@ -90,16 +91,15 @@ class Device {
           .where((dataPoint) => dataPoint.location != null)
           .map((datum) => PathComponent(datum.time, datum.location!))
           .sorted((a, b) => a.time.compareTo(b.time))
-          .fold<List<Path>>([], (paths, curr) {
-        if (paths.isEmpty || curr.time.difference(paths.last.last.time) >= Settings.shared.timeThreshold()) {
-          return [
-            ...paths,
-            [curr]
-          ];
+          .fold(List<Path>.empty(growable: true), (paths, curr) {
+        if (paths.isEmpty) {
+          paths.add([curr]);
+        } else if (curr.time.difference(paths.last.last.time) >= Settings.shared.timeThreshold()) {
+          paths.add([curr]);
         } else {
-          final updatedLast = [...paths.last, curr];
-          return [...paths.take(paths.length - 1), updatedLast];
+          paths.last.add(curr);
         }
+        return paths;
       });
 
   Device combine(Device device) {

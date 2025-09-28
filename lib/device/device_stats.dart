@@ -1,28 +1,6 @@
 part of 'device.dart';
 
 extension DeviceStats on Device {
-  List<Duration> _timeClusterPrefix() => dataPoints()
-      .map((datum) => datum.time)
-      .sorted()
-      .fold(
-          List<(DateTime, DateTime)>.empty(),
-          (acc, curr) => acc.isEmpty
-              ? [(curr, curr)]
-              : curr.difference(acc.last.$2) > Settings.shared.timeThreshold()
-                  ? acc + [(curr, curr)]
-                  : (acc..last = (acc.last.$1, curr)))
-      .map((pair) => pair.$2.difference(pair.$1))
-      .toList();
-
-  double _distanceTravelled() => paths()
-      .map((path) => path
-          .mapOrderedPairs((pair) => distanceBetween(pair.$1.location, pair.$2.location))
-          .fold(0.toDouble(), (a, b) => a + b))
-      .fold(0.toDouble(), (a, b) => a + b);
-
-  int _incidence() => _timeClusterPrefix().length;
-
-  Duration _timeTravelled() => _timeClusterPrefix().fold(Duration.zero, (a, b) => a + b);
   void updateStatistics() {
     clusterPrefix = _clusterPrefix();
     [
@@ -33,6 +11,31 @@ extension DeviceStats on Device {
     ].forEach((f) => f());
   }
 
+  List<List<(Datum, Datum)>> _clusterPrefix() => dataPoints()
+          .sorted((a, b) => a.time.compareTo(b.time))
+          .orderedPairs()
+          .where((e) => e.$2.time.difference(e.$1.time) <= Settings.shared.timeThreshold())
+          .fold(List<List<(Datum, Datum)>>.empty(growable: true), (acc, e) {
+        if (acc.isEmpty) {
+          acc.add([e]);
+        } else if (acc.last.last.$2 == e.$1) {
+          acc.last.add(e);
+        } else {
+          acc.add([e]);
+        }
+        return acc;
+      });
+
+  double _distanceTravelled() => clusterPrefix
+      .fold(List<(Datum, Datum)>.empty(), (acc, e) => acc + e)
+      .where((e) => e.$1.location != null && e.$2.location != null)
+      .map((e) => distanceBetween(e.$1.location!, e.$2.location!))
+      .fold(0.toDouble(), (acc, e) => acc + e);
+
+  int _incidence() => clusterPrefix.length;
+
+  Duration _timeTravelled() =>
+      clusterPrefix.map((e) => e.last.$2.time.difference(e.first.$1.time)).fold(Duration.zero, (a, b) => a + b);
 
   num proximity() {
     const num measuredPower = -59;
