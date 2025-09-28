@@ -32,6 +32,7 @@ class Report {
   late Stats timeTravelledStats;
   late Stats incidenceStats;
   late Stats distanceTravelledStats;
+  late Stats areaCountStats;
   late Stats riskScoreStats;
   DateTime lastUpdated = DateTime(0);
   Set<String> riskyDevices = {};

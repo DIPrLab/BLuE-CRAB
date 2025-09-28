@@ -33,6 +33,10 @@ class FilterButtonBarState extends State<FilterButtonBar> {
         Settings.shared.enableRSSIMetric = !Settings.shared.enableRSSIMetric;
         widget.notify?.call();
       }),
+      WidgetButtonProperties("Area Count", () => Settings.shared.enableAreaCountMetric, () {
+        Settings.shared.enableAreaCountMetric = !Settings.shared.enableAreaCountMetric;
+        widget.notify?.call();
+      }),
     ];
     reorder([]);
   }

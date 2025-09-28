@@ -19,6 +19,7 @@ extension Cache on Report {
     timeTravelledStats = _timeTravelledStats(devices);
     distanceTravelledStats = _distanceTravelledStats(devices);
     incidenceStats = _incidenceStats(devices);
+    areaCountStats = _areaCountStats(devices);
     riskScoreStats = _riskScoreStats(devices);
   }
 
@@ -29,6 +30,8 @@ extension Cache on Report {
 
   Stats _distanceTravelledStats(Iterable<Device> devices) =>
       Stats.fromData(devices.map((device) => device.distanceTravelled));
+
+  Stats _areaCountStats(Iterable<Device> devices) => Stats.fromData(devices.map((device) => device.areaCount));
 
   Stats _riskScoreStats(Iterable<Device> devices) => Stats.fromData(devices.map(riskScore));
 }

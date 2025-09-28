@@ -33,6 +33,7 @@ class Device {
   late Duration timeTravelled;
   late int incidence;
   late double distanceTravelled;
+  late int areaCount;
 
   Set<Datum> dataPoints() => _dataPoints.values
       .where((datum) =>
