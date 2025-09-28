@@ -29,9 +29,6 @@ extension IterableStats on Iterable<num> {
 }
 
 extension ListStats on List<num> {
-  // num mad() => map((x) => x - average().abs()).average();
-  num mad() => map((x) => (x - median()).abs()).toList().median();
-
   (List<num>, List<num>) split() => (getRange(0, length ~/ 2).toList(), getRange((length / 2).ceil(), length).toList());
 
   num q3() => split().$2.median();

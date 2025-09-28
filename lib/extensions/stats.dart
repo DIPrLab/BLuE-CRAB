@@ -9,7 +9,6 @@ class Stats {
   late num average = input.avg();
   late num median = input.median();
   late num standardDeviation = input.standardDeviation();
-  late num mad = input.mad();
   late num iqr = input.iqr();
   late num iqrLowerLimit = input.iqrLimits().$1;
   late num iqrUpperLimit = input.iqrLimits().$2;
