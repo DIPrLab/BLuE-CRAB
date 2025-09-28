@@ -22,7 +22,7 @@ extension DeviceSignalInformation on TestingSuite {
           smoothEMA[e.$1],
           smoothMAPadding[e.$1],
           smoothMAResizing[e.$1],
-          device.distance()
+          device.proximity()
         ].map((e) => e.toString()).toList()));
     return csv;
   }

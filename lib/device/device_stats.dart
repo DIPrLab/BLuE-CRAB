@@ -30,7 +30,7 @@ extension DeviceStats on Device {
 
   Duration _timeTravelled() => _timeClusterPrefix().fold(Duration.zero, (a, b) => a + b);
 
-  num distance() {
+  num proximity() {
     const num measuredPower = -59;
     final num rssi = dataPoints()
         .sorted((a, b) => a.time.compareTo(b.time))
