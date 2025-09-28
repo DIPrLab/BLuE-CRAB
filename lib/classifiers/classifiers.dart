@@ -137,7 +137,7 @@ class RSSIoriginal extends Classifier {
   }
 }
 
-class RSSI_Stability extends Classifier {
+class RssiStability extends Classifier {
   @override
   String name() => "RSSI Stability";
 
@@ -170,7 +170,7 @@ class RSSI_Stability extends Classifier {
   }
 }
 
-class RSSI_Proximity extends Classifier {
+class RssiProximity extends Classifier {
   @override
   String name() => "RSSI Proximity";
 
