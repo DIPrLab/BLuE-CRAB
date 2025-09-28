@@ -44,12 +44,10 @@ class IQRKMeansHybrid extends Classifier {
         report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
     List<Cluster> clusters = initialClusters(5, instances, seed: 0);
     kMeans(clusters: clusters, instances: instances);
-    clusters = clusters.sorted((c1, c2) => c1.instances
-        .map((i) => i.location.fold<double>(0, (a, b) => a + b))
-        .fold<double>(0, (a, b) => a + b)
-        .compareTo(c2.instances.map((i) => i.location.fold<double>(0, (a, b) => a + b)).average));
+    clusters =
+        clusters.sorted((c1, c2) => c1.location.distanceFromOrigin().compareTo(c2.location.distanceFromOrigin()));
     final num lower = clusters.first.instances.map((i) => report.riskScore(report.data[i.id]!)).max;
-    final num upper = clusters.reversed.toList()[1].instances.map((i) => report.riskScore(report.data[i.id]!)).min;
+    final num upper = clusters.last.instances.map((i) => report.riskScore(report.data[i.id]!)).min;
     final num limit = (upper - lower) * 3;
     return report.devices().where((d) => report.riskScore(d) > limit).toSet();
   }
