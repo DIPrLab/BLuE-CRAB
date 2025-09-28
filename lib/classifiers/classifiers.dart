@@ -147,9 +147,6 @@ class RssiStability extends Classifier {
       return Set.identity();
     }
 
-    final (DateTime, DateTime) timeRange = report.timeRange();
-    final List<(DateTime, DateTime)> segments = segmentTimestamps(timeRange.$1, timeRange.$2);
-
     return report
         .devices()
         .where((e) => e.timeTravelled.inSeconds > timeThreshold)
@@ -160,7 +157,7 @@ class RssiStability extends Classifier {
             .smoothedDatumByMovingAverage(const Duration(seconds: 5))
             .segment()
             .map((e) => e.map((f) => f.rssi).standardDeviation())
-            .any((e) => e < 15))
+            .any((e) => e < 5))
         .toSet();
   }
 }
@@ -203,7 +200,7 @@ class RssiProximity extends Classifier {
               return acc;
             })
             .map((e) => e.$2.difference(e.$1))
-            .any((e) => e.inSeconds < 15))
+            .any((e) => e.inSeconds > 30))
         .toSet();
   }
 }
