@@ -85,7 +85,7 @@ class SmallestKCluster extends Classifier {
   String name() => "Smallest K-Cluster";
 
   @override
-  Set<Device> getRiskyDevices(Report report) => List.generate(5, (x) => x + 2)
+  Set<Device> getRiskyDevices(Report report) => List.generate(8, (x) => x + 2)
       .map((k) {
         final List<Instance> instances =
             report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
@@ -93,16 +93,13 @@ class SmallestKCluster extends Classifier {
         kMeans(clusters: clusters, instances: instances);
         return clusters;
       })
-      .map((clusters) => clusters.sorted((c1, c2) =>
-          c1.location.fold<double>(0, (a, b) => a + b).compareTo(c2.location.fold<double>(0, (a, b) => a + b))))
-      .map((clusters) {
-        final num lower = clusters.first.instances.map((i) => report.riskScore(report.data[i.id]!)).max;
-        final num upper = clusters.reversed.toList()[1].instances.map((i) => report.riskScore(report.data[i.id]!)).min;
-        final num limit = (upper - lower) * 3;
-        return report.devices().where((d) => report.riskScore(d) > limit).toSet();
-      })
+      .map((clusters) =>
+          clusters.sorted((c1, c2) => c1.location.distanceFromOrigin().compareTo(c2.location.distanceFromOrigin())))
+      .map((e) => e.last.instances)
       .sorted((a, b) => a.length.compareTo(b.length))
-      .first;
+      .first
+      .map((e) => report.data[e.id]!)
+      .toSet();
 }
 
 class RSSIoriginal extends Classifier {
