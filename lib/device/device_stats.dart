@@ -7,12 +7,11 @@ extension DeviceStats on Device {
       () => distanceTravelled = _distanceTravelled(),
       () => timeTravelled = _timeTravelled(),
       () => incidence = _incidence(),
-      () => areaCount = _areaCount(),
+      // () => areaCount = _areaCount(),
     ].forEach((f) => f());
   }
 
   List<List<(Datum, Datum)>> _clusterPrefix() => dataPoints()
-          .sorted((a, b) => a.time.compareTo(b.time))
           .orderedPairs()
           .where((e) => e.$2.time.difference(e.$1.time) <= Settings.shared.timeThreshold())
           .fold(List<List<(Datum, Datum)>>.empty(growable: true), (acc, e) {
@@ -39,12 +38,7 @@ extension DeviceStats on Device {
 
   num proximity() {
     const num measuredPower = -59;
-    final num rssi = dataPoints()
-        .sorted((a, b) => a.time.compareTo(b.time))
-        .map((e) => e.rssi)
-        .toList()
-        .smoothedByMovingAverage(5, SmoothingMethod.resizing)
-        .last;
+    final num rssi = dataPoints().map((e) => e.rssi).toList().smoothedByMovingAverage(5, SmoothingMethod.resizing).last;
     const n = 2;
     return pow(10, (measuredPower - rssi) / (10 * n));
   }
@@ -89,6 +83,7 @@ extension DeviceStats on Device {
             (acc, e) => acc
               ..add(e.$1)
               ..add(e.$2));
-    return locationsToRemove.isEmpty ? locationsToRemove : findThread(locationPairs, locationsToRemove);
+    return locationsToRemove.isEmpty ? locationsToRemove : locationsToRemove
+      ..addAll(findThread(locationPairs, locationsToRemove));
   }
 }
