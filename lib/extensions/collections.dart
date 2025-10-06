@@ -14,6 +14,14 @@ enum SmoothingMethod {
 // skipping
 }
 
+extension ForEachAsync<E> on Iterable<E> {
+  Future<void> forEachAsync(Future<void> Function(E element) action) async {
+    for (final E element in this) {
+      await action(element);
+    }
+  }
+}
+
 extension IterableStats on Iterable<num> {
   num avg() => fold(0.toDouble(), (a, b) => a + b) / length;
 

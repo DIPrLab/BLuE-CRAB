@@ -7,7 +7,7 @@ extension DeviceStats on Device {
       () => distanceTravelled = _distanceTravelled(),
       () => timeTravelled = _timeTravelled(),
       () => incidence = _incidence(),
-      // () => areaCount = _areaCount(),
+      () => areaCount = _areaCount(),
     ].forEach((f) => f());
   }
 
@@ -44,6 +44,7 @@ extension DeviceStats on Device {
   }
 
   int _areaCount() {
+    return 1;
     int result = 0;
 
     final Set<LatLng> locations = dataPoints().where((e) => e.location != null).map((e) => e.location!).toSet();
