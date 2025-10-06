@@ -6,9 +6,9 @@ import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/extensions/geolocator.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/settings.dart';
-import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
+import 'package:sorted_list/sorted_list.dart';
 
 part 'device_stats.dart';
 
@@ -36,12 +36,13 @@ class Device {
   late double distanceTravelled;
   late int areaCount;
 
-  Set<Datum> dataPoints() => _dataPoints.values
-      .where((datum) =>
-          datum.location == null ||
-          !Settings.shared.safeZones.any(
-              (safeLocation) => distanceBetween(datum.location!, safeLocation) < Settings.shared.distanceThreshold()))
-      .toSet();
+  SortedList<Datum> dataPoints() => SortedList<Datum>((a, b) => a.time.compareTo(b.time))
+    ..addAll(_dataPoints.values
+        .where((datum) =>
+            datum.location == null ||
+            !Settings.shared.safeZones.any(
+                (safeLocation) => distanceBetween(datum.location!, safeLocation) < Settings.shared.distanceThreshold()))
+        .toSet());
 
   void addDatum(LatLng? location, int rssi) {
     lastUpdated = DateTime.now();
@@ -65,11 +66,11 @@ class Device {
 
   List<Path> paths2() {
     final List<Path> paths = <Path>[];
-    final List<PathComponent> dataPoints = this
-        .dataPoints()
-        .where((dataPoint) => dataPoint.location != null)
-        .map((datum) => PathComponent(datum.time, datum.location!))
-        .sorted((a, b) => a.time.compareTo(b.time));
+    final SortedList<PathComponent> dataPoints = SortedList<PathComponent>((a, b) => a.time.compareTo(b.time))
+      ..addAll(this
+          .dataPoints()
+          .where((dataPoint) => dataPoint.location != null)
+          .map((datum) => PathComponent(datum.time, datum.location!)));
 
     while (dataPoints.isNotEmpty) {
       final PathComponent curr = dataPoints.first;
@@ -90,7 +91,6 @@ class Device {
   List<Path> paths() => dataPoints()
           .where((dataPoint) => dataPoint.location != null)
           .map((datum) => PathComponent(datum.time, datum.location!))
-          .sorted((a, b) => a.time.compareTo(b.time))
           .fold(List<Path>.empty(growable: true), (paths, curr) {
         if (paths.isEmpty) {
           paths.add([curr]);

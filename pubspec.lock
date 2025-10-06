@@ -933,6 +933,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  sorted_list:
+    dependency: "direct main"
+    description:
+      name: sorted_list
+      sha256: "7987fc570a942f8dfcb3f39af7ad7e4c580ba641616156a2fffda7a3d70c385e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   source_gen:
     dependency: transitive
     description:

@@ -123,7 +123,6 @@ class RssiStability extends Classifier {
         .where((e) => e.distanceTravelled > distanceThreshold)
         .where((device) => device
             .dataPoints()
-            .sorted((a, b) => a.time.compareTo(b.time))
             .smoothedDatumByMovingAverage(const Duration(seconds: 5))
             .segment()
             .map((e) => e.map((f) => f.rssi).standardDeviation())
@@ -153,7 +152,6 @@ class RssiProximity extends Classifier {
         .where((e) => e.distanceTravelled > distanceThreshold)
         .where((device) => device
             .dataPoints()
-            .sorted((a, b) => a.time.compareTo(b.time))
             .smoothedDatumByMovingAverage(const Duration(seconds: 5))
             .orderedPairs()
             .fold(List<(DateTime, DateTime)>.empty(growable: true), (acc, e) {

@@ -2,7 +2,6 @@ import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/styles/styles.dart';
 import 'package:blue_crab/styles/themes.dart';
-import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -22,24 +21,12 @@ class RssiGraphView extends StatelessWidget {
   Widget graph() {
     final List<FlSpot> smoothedData = device
         .dataPoints()
-        .sorted((a, b) => a.time.compareTo(b.time))
         .smoothedDatumByMovingAverage(const Duration(seconds: 15))
-        .map((e) => FlSpot(
-            e.time
-                .difference(device.dataPoints().map((e) => e.time).sorted((a, b) => a.compareTo(b)).first)
-                .inSeconds
-                .toDouble(),
-            e.rssi.toDouble()))
+        .map((e) => FlSpot(e.time.difference(device.dataPoints().first.time).inSeconds.toDouble(), e.rssi.toDouble()))
         .toList();
     final List<FlSpot> realData = device
         .dataPoints()
-        .sorted((a, b) => a.time.compareTo(b.time))
-        .map((e) => FlSpot(
-            e.time
-                .difference(device.dataPoints().map((e) => e.time).sorted((a, b) => a.compareTo(b)).first)
-                .inSeconds
-                .toDouble(),
-            e.rssi.toDouble()))
+        .map((e) => FlSpot(e.time.difference(device.dataPoints().first.time).inSeconds.toDouble(), e.rssi.toDouble()))
         .toList();
     return Scaffold(
         body: LineChart(

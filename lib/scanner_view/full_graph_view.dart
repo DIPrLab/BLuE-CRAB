@@ -22,8 +22,7 @@ class FullGraphView extends StatelessWidget {
       ]);
 
   Widget graph() {
-    final DateTime origin =
-        report.devices().map((d) => d.dataPoints().map((dp) => dp.time).sorted((a, b) => a.compareTo(b)).first).first;
+    final DateTime origin = report.devices().map((d) => d.dataPoints().first.time).sorted().first;
 
     final Set<String> gtMacs = gt[datasetName]?.toSet() ?? {};
 
@@ -33,7 +32,6 @@ class FullGraphView extends StatelessWidget {
               d.id,
               d
                   .dataPoints()
-                  .sorted((a, b) => a.time.compareTo(b.time))
                   .smoothedDatumByMovingAverage(const Duration(seconds: 5))
                   .map((dp) => FlSpot(dp.time.difference(origin).inSeconds.toDouble(), dp.rssi.toDouble()))
                   .toList()

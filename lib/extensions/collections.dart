@@ -6,6 +6,7 @@ import "package:blue_crab/datum/datum.dart";
 import "package:blue_crab/extensions/ordered_pairs.dart";
 import "package:blue_crab/settings.dart";
 import "package:collection/collection.dart";
+import "package:sorted_list/sorted_list.dart";
 
 enum SmoothingMethod {
   padding,
@@ -110,14 +111,13 @@ extension CommonElements<T> on Set<Set<T>> {
   }
 }
 
-extension X on List<Datum> {
-  List<Datum> smoothedDatumByMovingAverage(Duration factor) =>
-      map((item) => where((e) => item.time.difference(e.time).inSeconds.abs() <= factor.inSeconds)
-              .sorted((a, b) => a.time.compareTo(b.time)))
-          .map((e) => e.toList())
-          .map((e) => Datum(e[(e.length / 2).floor()].location, e.map((f) => f.rssi).average.round())
-            ..time = (e[(e.length / 2).floor()].time))
-          .toList();
+extension X on SortedList<Datum> {
+  SortedList<Datum> smoothedDatumByMovingAverage(Duration factor) => SortedList((a, b) => a.time.compareTo(b.time))
+    ..addAll(map((item) => where((e) => item.time.difference(e.time).inSeconds.abs() <= factor.inSeconds)
+            .sorted((a, b) => a.time.compareTo(b.time)))
+        .map((e) => e.toList())
+        .map((e) => Datum(e[(e.length / 2).floor()].location, e.map((f) => f.rssi).average.round())
+          ..time = (e[(e.length / 2).floor()].time)));
 
   List<List<Datum>> segment() {
     final DateTime first = map((e) => e.time).sorted((a, b) => a.compareTo(b)).first;
