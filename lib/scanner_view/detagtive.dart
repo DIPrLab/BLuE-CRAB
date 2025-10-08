@@ -1,22 +1,11 @@
 part of 'scanner_view.dart';
 
 extension DeTagTive on ScannerViewState {
-  bool traceIsStrong(Device device) {
-    bool result = false;
-    try {
-      result = device.dataPoints().map((e) => e.rssi).average > Settings.shared.deTagTiveRssiThreshold;
-    } catch (e) {}
-    return result;
-  }
+  bool traceIsStrong(Device device) =>
+      device.dataPoints().map((e) => e.rssi).average > Settings.shared.deTagTiveRssiThreshold;
 
-  bool traceIsLong(Device device) {
-    bool result = false;
-    try {
-      result =
-          device.dataPoints().last.time.difference(device.dataPoints().first.time) > Settings.shared.deTagTiveMinLength;
-    } catch (e) {}
-    return result;
-  }
+  bool traceIsLong(Device device) =>
+      device.dataPoints().last.time.difference(device.dataPoints().first.time) > Settings.shared.deTagTiveMinLength;
 
   bool traceEndedRecently(Device device) =>
       DateTime.now().difference(device.dataPoints().last.time) < Settings.shared.deTagTiveEndThreshold;
@@ -33,7 +22,9 @@ extension DeTagTive on ScannerViewState {
     double result = 0;
     try {
       result = datapoints.map((e) => e.rssi).average;
-    } catch (e) {}
+    } catch (e) {
+      Logger().e("Error calculating avg rssi value: $e");
+    }
     return result;
   }
 
@@ -41,7 +32,9 @@ extension DeTagTive on ScannerViewState {
     double result = 0;
     try {
       result = datapoints.map((e) => e.rssi).standardDeviation;
-    } catch (e) {}
+    } catch (e) {
+      Logger().e("Error calculating std dev of rssi values: $e");
+    }
     return result;
   }
 
@@ -49,7 +42,9 @@ extension DeTagTive on ScannerViewState {
     double result = 0;
     try {
       result = datapoints.orderedPairs().map((e) => e.$2.time.difference(e.$1.time).inSeconds).average;
-    } catch (e) {}
+    } catch (e) {
+      Logger().e("Error calculating avg transmission interval: $e");
+    }
     return result;
   }
 
