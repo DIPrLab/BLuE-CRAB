@@ -10,13 +10,11 @@ extension DeviceSignalInformation on TestingSuite {
       "SMOOTHED_MA_RESIZED",
       "DISTANCE_FROM_USER",
     ]);
-    final List<num> smoothEMA =
-        device.dataPoints().map((e) => e.rssi).toList().smoothedByExponentiallyWeightedMovingAverage(0.7);
-    final List<num> smoothMAPadding =
-        device.dataPoints().map((e) => e.rssi).toList().smoothedByMovingAverage(5, SmoothingMethod.padding);
-    final List<num> smoothMAResizing =
-        device.dataPoints().map((e) => e.rssi).toList().smoothedByMovingAverage(3, SmoothingMethod.resizing);
-    device.dataPoints().indexed.toList().forEach((e) => csv.addRow([
+    final List<num> rssiValues = device.dataPoints().map((e) => e.rssi).toList();
+    final List<num> smoothEMA = rssiValues.smoothedByExponentiallyWeightedMovingAverage(0.7);
+    final List<num> smoothMAPadding = rssiValues.smoothedByMovingAverage(5, SmoothingMethod.padding);
+    final List<num> smoothMAResizing = rssiValues.smoothedByMovingAverage(3, SmoothingMethod.resizing);
+    device.dataPoints().indexed.forEach((e) => csv.addRow([
           e.$2.time.difference(device.dataPoints().first.time).inSeconds,
           e.$2.rssi,
           smoothEMA[e.$1],
