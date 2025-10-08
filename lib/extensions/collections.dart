@@ -125,8 +125,8 @@ extension X on SortedList<Datum> {
         .map((e) => Datum(e.$1.location, e.$2.map((f) => f.rssi).average.round(), time: e.$1.time)));
 
   List<List<Datum>> segment() {
-    final DateTime first = map((e) => e.time).sorted((a, b) => a.compareTo(b)).first;
-    final DateTime last = map((e) => e.time).sorted((a, b) => a.compareTo(b)).last;
+    final DateTime first = this.first.time;
+    final DateTime last = this.last.time;
     return List.generate(
         (last.difference(first).inSeconds.abs() / Settings.shared.skipDuration().inSeconds).toInt() + 1,
         (e) =>
