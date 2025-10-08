@@ -16,8 +16,10 @@ class Settings {
   Classifier classifier = Classifier.classifiers[0];
 
   // DeTagTive
-  Duration deTagTiveMinLength = const Duration(seconds: 30);
-  int deTagTiveRssiThreshold = -100;
+  Duration deTagTiveMinLength = const Duration(minutes: 1);
+  int deTagTiveRssiThreshold = -50;
+  Duration deTagTiveEndThreshold = const Duration(minutes: 1);
+  double deTagTiveThresholdScore = 1000;
 
   late bool dataCollectionMode;
   late bool demoMode;
@@ -50,7 +52,7 @@ class Settings {
   double scanDistance() => 30;
   double distanceThreshold() => distanceThresholdValue;
 
-  Duration segmentDuration() => const Duration(seconds: 10);
+  Duration segmentDuration() => const Duration(seconds: 30);
   Duration skipDuration() => const Duration(seconds: 5);
 
   void loadData() => SharedPreferences.getInstance().then((prefs) {
