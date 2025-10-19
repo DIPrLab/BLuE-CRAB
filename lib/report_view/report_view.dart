@@ -29,6 +29,8 @@ class ReportViewState extends State<ReportView> {
   void sort(int Function(Device a, Device b) sortMethod) => setState(() =>
       devices = widget.report.riskyDevices.map((d) => widget.report.data[d]!).sorted(sortMethod).reversed.toList());
 
+  int byAreaCount(Device a, Device b) => a.areaCount.compareTo(b.areaCount);
+
   int byRiskScore(Device a, Device b) => widget.report.riskScore(a).compareTo(widget.report.riskScore(b));
 
   int byTime(Device a, Device b) => a.timeTravelled.compareTo(b.timeTravelled);
@@ -41,6 +43,7 @@ class ReportViewState extends State<ReportView> {
       icon: const Icon(Icons.sort),
       itemBuilder: (context) => [
             ("Risk", byRiskScore),
+            ("Area Count", byAreaCount),
             ("Incidence", byIncidence),
             ("Location", byLocation),
             ("Time", byTime),

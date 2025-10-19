@@ -44,7 +44,6 @@ extension DeviceStats on Device {
   }
 
   int _areaCount() {
-    return 1;
     int result = 0;
 
     final Set<LatLng> locations = dataPoints().where((e) => e.location != null).map((e) => e.location!).toSet();
@@ -67,9 +66,7 @@ extension DeviceStats on Device {
       result++;
       final (LatLng, LatLng) pair = locationPairs.first;
       final Set<LatLng> locationsToRemove = findThread(locationPairs, {pair.$1, pair.$2});
-      locationPairs
-        ..remove(pair)
-        ..removeWhere((e) => locationsToRemove.contains(e.$1) || locationsToRemove.contains(e.$2));
+      locationPairs.removeWhere((e) => locationsToRemove.contains(e.$1) || locationsToRemove.contains(e.$2));
     }
 
     assert(locationPairs.isEmpty, "Location pairs should be empty after processing.");
@@ -78,13 +75,16 @@ extension DeviceStats on Device {
   }
 
   Set<LatLng> findThread(Set<(LatLng, LatLng)> locationPairs, Set<LatLng> locations) {
-    final Set<LatLng> locationsToRemove =
-        locationPairs.where((e) => locations.contains(e.$1) || locations.contains(e.$2)).fold(
-            Set<LatLng>.identity(),
-            (acc, e) => acc
-              ..add(e.$1)
-              ..add(e.$2));
-    return locationsToRemove.isEmpty ? locationsToRemove : locationsToRemove
-      ..addAll(findThread(locationPairs, locationsToRemove));
+    Set<LatLng> result = locations;
+    int size = -1;
+    while (result.length != size) {
+      size = result.length;
+      result = locationPairs.where((e) => result.contains(e.$1) || result.contains(e.$2)).fold(
+          Set<LatLng>.identity(),
+          (acc, e) => acc
+            ..add(e.$1)
+            ..add(e.$2));
+    }
+    return result;
   }
 }

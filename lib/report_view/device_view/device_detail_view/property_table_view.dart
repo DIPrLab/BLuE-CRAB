@@ -21,6 +21,7 @@ class PropertyTable extends StatelessWidget {
       dataRow("Duration Travelled", device.timeTravelled.toReadableString()),
       dataRow("Distance Travelled", "${device.distanceTravelled.round()} meters"),
       dataRow("Incidence", device.incidence.toString()),
+      dataRow("Area Count", device.areaCount.toString()),
     ].forEach(rows.add);
     return rows;
   }
