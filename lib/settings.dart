@@ -20,6 +20,7 @@ class Settings {
   int deTagTiveRssiThreshold = -50;
   Duration deTagTiveEndThreshold = const Duration(minutes: 1);
   double deTagTiveThresholdScore = 1000;
+  Duration deTagTiveMaxAvgAdvertisementInterval = const Duration(seconds: 10);
 
   late bool dataCollectionMode;
   late bool demoMode;
@@ -76,7 +77,7 @@ class Settings {
         // windowDurationValue = prefs.getInt("windowDurationValue") ?? 10;
         windowDurationValue = prefs.getDouble("windowDurationValue") ?? 10;
         timeThresholdValue = prefs.getDouble("timeThresholdValue") ?? 10;
-        distanceThresholdValue = prefs.getDouble("distanceThresholdValue") ?? 10;
+        distanceThresholdValue = prefs.getDouble("distanceThresholdValue") ?? 30;
       });
 
   void save() => SharedPreferences.getInstance().then((prefs) {

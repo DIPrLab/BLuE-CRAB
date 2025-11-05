@@ -116,8 +116,10 @@ class ScannerViewState extends State<ScannerView> {
       if (Settings.shared.autoConnect) {
         results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
       }
-      deviceCount = report.devices().length;
-      datapointCount = report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
+      if (Settings.shared.demoMode) {
+        deviceCount = report.devices().length;
+        datapointCount = report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
+      }
       if (mounted) {
         setState(() {});
       }
