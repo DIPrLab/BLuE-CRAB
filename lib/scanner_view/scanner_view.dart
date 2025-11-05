@@ -4,6 +4,7 @@ import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/datum/datum.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
+import 'package:blue_crab/filesystem/database.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/map_view/map_functions.dart';
 import 'package:blue_crab/map_view/map_view.dart';
@@ -46,6 +47,7 @@ class ScannerViewState extends State<ScannerView> {
   double scaleStart = 1;
   bool updating = false;
   Map<String, List<String>> gt = {};
+  late ReportDatabase db;
 
   bool isScanning = false;
   late StreamSubscription<bool> isScanningSubscription;
@@ -97,6 +99,8 @@ class ScannerViewState extends State<ScannerView> {
   @override
   void initState() {
     super.initState();
+
+    db.initDatabase();
 
     readReport().then(report.combine);
 
