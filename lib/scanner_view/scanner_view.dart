@@ -108,33 +108,11 @@ class ScannerViewState extends State<ScannerView> {
 
     getLocation().then((_) => Settings.shared.locationEnabled ? enableLocationStream() : disableLocationStream());
 
-    scanResultsSubscription = FlutterBluePlus.onScanResults.listen((results) {
-      results
-          .map((sr) => (
-                Device(sr.device.remoteId.toString(), sr.advertisementData.advName, sr.device.platformName,
-                    sr.advertisementData.manufacturerData.keys.toList(),
-                    t: sr.advertisementData.txPowerLevel),
-                sr.rssi
-              ))
-          .forEach((d) => report.addDatumToDevice(d.$1, location, d.$2));
-      if (Settings.shared.autoConnect) {
-        results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
-      }
-      if (Settings.shared.demoMode) {
-        deviceCount = report.devices().length;
-        datapointCount = report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
-      }
-      if (mounted) {
-        setState(() {});
-      }
-    }, onError: (e) {
-      // Snackbar.show(ABC.b, prettyException("Scan Error:", e), success: false);
-    });
+    scanResultsSubscription = FlutterBluePlus.onScanResults.listen(handleScannedData);
 
     isScanningSubscription = FlutterBluePlus.isScanning.listen((state) => setState(() => isScanning = state));
 
-    _timeStream = Stream.periodic(Settings.shared.scanTime(), (x) => DateTime.now());
-    timeStreamSubscription = _timeStream.listen((currentTime) {
+    timeStreamSubscription = Stream.periodic(Settings.shared.scanTime(), (x) => DateTime.now()).listen((currentTime) {
       if (isScanning && !updating) {
         if (!Settings.shared.devMode && !Settings.shared.dataCollectionMode) {
           updating = true;

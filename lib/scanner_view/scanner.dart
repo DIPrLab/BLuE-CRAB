@@ -5,6 +5,27 @@ extension Scanner on ScannerViewState {
       .cancel()
       .then((_) => isScanningSubscription.cancel().then((_) => disableLocationStream()));
 
+  void handleScannedData(List<ScanResult> results) {
+    results
+        .map((sr) => (
+              Device(sr.device.remoteId.toString(), sr.advertisementData.advName, sr.device.platformName,
+                  sr.advertisementData.manufacturerData.keys.toList(),
+                  t: sr.advertisementData.txPowerLevel),
+              sr.rssi
+            ))
+        .forEach((d) => report.addDatumToDevice(d.$1, location, d.$2));
+    if (Settings.shared.autoConnect) {
+      results.where((d) => d.advertisementData.connectable).forEach((result) => probe(result.device));
+    }
+    if (Settings.shared.demoMode) {
+      deviceCount = report.devices().length;
+      datapointCount = report.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b);
+    }
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   // android is slow when asking for all advertisements,
   // so instead we only ask for 1/8 of them
   Future<void> startScan() async => FlutterBluePlus.startScan(
