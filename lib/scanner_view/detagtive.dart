@@ -55,7 +55,7 @@ extension DeTagTive on ScannerViewState {
     return result;
   }
 
-  (Device, double) matchScore(Device candidate, Device device, double shift) {
+  double matchScore(Device candidate, Device device, double shift) {
     final SortedList<Datum> deviceDatapoints = device.dataPoints();
     final SortedList<Datum> candidateDatapoints = candidate.dataPoints();
 
@@ -73,13 +73,14 @@ extension DeTagTive on ScannerViewState {
       stdDevOfRssiValues,
       averageTransmissionDurationInSeconds,
     ].map((e) => (e.$1 - e.$2).abs()).fold(0, (acc, curr) => acc + curr);
-    return (candidate, matchScore);
+    return matchScore;
   }
 
   double getShift(DateTime t) {
     final (List<int>, List<int>) rssi = report
         .devices()
-        .where((d) => d.dataPoints().any((e) => e.time.isBefore(t)) && d.dataPoints().any((e) => e.time.isAfter(t)))
+        .where((d) => d.dataPoints().any((e) => e.time.isBefore(t)))
+        .where((d) => d.dataPoints().any((e) => e.time.isAfter(t)))
         .map((d) => (d.dataPoints().where((e) => e.time.isBefore(t)), d.dataPoints().where((e) => e.time.isAfter(t))))
         .map((e) => (e.$1.map((datum) => datum.rssi).toList(), e.$2.map((datum) => datum.rssi).toList()))
         .fold((List<int>.empty(growable: true), List<int>.empty(growable: true)),
@@ -92,7 +93,7 @@ extension DeTagTive on ScannerViewState {
       .difference({device})
       .where((candidate) => candidateTracesStartInWindow(candidate, device.dataPoints().last.time))
       .where(candidateHasShortAdvertisements)
-      .map((candidate) => matchScore(candidate, device, getShift(device.dataPoints().last.time)))
+      .map((candidate) => (candidate, matchScore(candidate, device, getShift(device.dataPoints().last.time))))
       .where((e) => e.$2 < Settings.shared.deTagTiveThresholdScore)
       .sorted((a, b) => a.$2.compareTo(b.$2))
       .first
