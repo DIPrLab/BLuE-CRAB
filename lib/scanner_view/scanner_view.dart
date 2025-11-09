@@ -66,6 +66,7 @@ class ScannerViewState extends State<ScannerView> {
     ];
     if (Settings.shared.dataCollectionMode) {
       result = [
+        [ButtonType.toggleEnvironment],
         [ButtonType.settings, ButtonType.share],
         [ButtonType.scan],
       ];
