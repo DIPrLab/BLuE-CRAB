@@ -30,6 +30,7 @@ class TestingSuite {
   }
 
   Future<void> testBleDoubtFiles() async {
+    final Map<String, List<String>> gt = await loadGtMacs([(await localFileDirectory).path, "gt_macs.json"].join("/"));
     const String bleDoubtDir = "bledoubt_logs";
     const String assetsDir = "datasets";
     await [
@@ -50,18 +51,19 @@ class TestingSuite {
       (assetsDir, "walking_dataset_1"),
       (assetsDir, "walking_dataset_2"),
       (assetsDir, "driving_dataset_1"),
-    ].map((e) => (e.$2, "assets/${e.$1}/${e.$2}.json")).forEachAsync((e) async => testFile(e.$1, e.$2));
+    ]
+        .map((e) => (e.$2, "assets/${e.$1}/${e.$2}.json", "assets/${e.$1}/gt_macs.json"))
+        .forEachAsync((e) async => testFile(e.$1, e.$2, gt));
   }
 
   Future<Map<String, List<String>>> loadGtMacs(String path) async =>
       (jsonDecode(await File(path).readAsString()) as Map<String, dynamic>)
           .map((key, value) => MapEntry(key, (value as List).map((e) => e as String).toList()));
 
-  Future<void> testFile(String dataset, String filename) async {
+  Future<void> testFile(String dataset, String filename, Map<String, List<String>> gt) async {
     final Report report = Report.fromJson(jsonDecode(await rootBundle.loadString(filename)));
     final Directory currDir = await localFileDirectory;
     final Directory destDir = Directory([currDir.path, "${dataset}_reports"].join("/"))..createSync();
-    final Map<String, List<String>> gt = await loadGtMacs([currDir.path, "gt_macs.json"].join("/"));
 
     runTest(
         report,
