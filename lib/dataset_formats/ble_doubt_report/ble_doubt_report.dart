@@ -24,8 +24,8 @@ class BleDoubtReport {
       report.addDevice(Device(device.address, device.name, "", [device.manufacturer],
           dataPoints: detections
               .where((detection) => detection.mac == device.address)
-              .map(
-                  (detection) => Datum(LatLng.degree(detection.lat, detection.long), detection.rssi, time: detection.t))
+              .map((detection) =>
+                  Datum(LatLng.degree(detection.lat, detection.long), [detection.rssi], time: detection.t))
               .toSet()
               .map((e) => MapEntry(e.time, e))
               .toMap((e) => e.key, (e) => e.value)));

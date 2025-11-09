@@ -19,7 +19,8 @@ part 'device_stats.dart';
 @JsonSerializable()
 class Device {
   Device(this.id, this.name, this.platformName, this.manufacturer, {this.t, Map<DateTime, Datum>? dataPoints}) {
-    _dataPoints = dataPoints ?? Map.identity();
+    // _dataPoints = dataPoints ?? Map.identity();
+    _dataPoints = dataPoints ?? <DateTime, Datum>{};
     updateStatistics();
   }
   String id;
@@ -46,8 +47,8 @@ class Device {
 
   void addDatum(LatLng? location, int rssi) {
     lastUpdated = DateTime.now();
-    final Datum d = Datum(location, rssi);
-    _dataPoints.update(d.time, (e) => e..rssi = rssi, ifAbsent: () => d);
+    final Datum d = Datum(location, [rssi]);
+    _dataPoints.update(d.time, (e) => Datum(e.location, e.rssiBackingData() + [rssi], time: e.time), ifAbsent: () => d);
   }
 
   String deviceLabel() => name.isNotEmpty

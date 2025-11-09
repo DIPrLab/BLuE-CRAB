@@ -5,7 +5,7 @@ extension RssiMetricData on TestingSuite {
     final Iterable<List<num>> rssiPrefix = report
         .devices()
         .map((device) => device.dataPoints())
-        .map((e) => e.map((datum) => datum.rssi))
+        .map((e) => e.map((datum) => datum.rssi()))
         .map((e) => e.toList().smoothedByMovingAverage(factor, SmoothingMethod.padding));
     final Iterable<double> rssiAverages = rssiPrefix.map((e) => e.average);
     final Iterable<num> rssiStdDevs = rssiPrefix.map((e) => e.standardDeviation());

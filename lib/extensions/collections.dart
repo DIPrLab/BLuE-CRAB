@@ -121,8 +121,10 @@ extension CommonElements<T> on Set<Set<T>> {
 
 extension X on SortedList<Datum> {
   SortedList<Datum> smoothedDatumByMovingAverage(Duration factor) => SortedList((a, b) => a.time.compareTo(b.time))
-    ..addAll(map((item) => (item, where((e) => item.time.difference(e.time).inSeconds.abs() <= factor.inSeconds)))
-        .map((e) => Datum(e.$1.location, e.$2.map((f) => f.rssi).average.round(), time: e.$1.time)));
+    ..addAll(map((item) => (item, where((e) => item.time.difference(e.time).inSeconds.abs() <= factor.inSeconds))).map(
+        (e) => Datum(e.$1.location,
+            e.$2.map((f) => f.rssiBackingData()).fold(List<int>.empty(growable: true), (acc, e) => acc + e),
+            time: e.$1.time)));
 
   List<List<Datum>> segment() {
     final DateTime first = this.first.time;

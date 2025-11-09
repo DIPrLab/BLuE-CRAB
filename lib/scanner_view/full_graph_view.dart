@@ -33,7 +33,7 @@ class FullGraphView extends StatelessWidget {
               d
                   .dataPoints()
                   .smoothedDatumByMovingAverage(const Duration(seconds: 5))
-                  .map((dp) => FlSpot(dp.time.difference(origin).inSeconds.toDouble(), dp.rssi.toDouble()))
+                  .map((dp) => FlSpot(dp.time.difference(origin).inSeconds.toDouble(), dp.rssi().toDouble()))
                   .toList()
             ))
         .map((data) => LineChartBarData(

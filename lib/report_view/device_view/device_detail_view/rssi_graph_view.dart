@@ -22,11 +22,11 @@ class RssiGraphView extends StatelessWidget {
     final List<FlSpot> smoothedData = device
         .dataPoints()
         .smoothedDatumByMovingAverage(const Duration(seconds: 15))
-        .map((e) => FlSpot(e.time.difference(device.dataPoints().first.time).inSeconds.toDouble(), e.rssi.toDouble()))
+        .map((e) => FlSpot(e.time.difference(device.dataPoints().first.time).inSeconds.toDouble(), e.rssi().toDouble()))
         .toList();
     final List<FlSpot> realData = device
         .dataPoints()
-        .map((e) => FlSpot(e.time.difference(device.dataPoints().first.time).inSeconds.toDouble(), e.rssi.toDouble()))
+        .map((e) => FlSpot(e.time.difference(device.dataPoints().first.time).inSeconds.toDouble(), e.rssi().toDouble()))
         .toList();
     return Scaffold(
         body: LineChart(

@@ -30,8 +30,7 @@ class CompactDataset {
           e.key,
           Device(e.key, e.value.$1, e.value.$2, e.value.$3,
               dataPoints: e.value.$4.entries
-                  .map((e) => Datum(getLocationAtTime(e.key), e.value.average.round(), time: e.key))
-                  .toSet()
+                  .map((e) => Datum(getLocationAtTime(e.key), e.value, time: e.key))
                   .map((e) => MapEntry(e.time, e))
                   .toMap((e) => e.key, (e) => e.value))))
       .toMap((e) => e.key, (e) => e.value));

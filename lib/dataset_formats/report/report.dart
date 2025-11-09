@@ -78,7 +78,7 @@ class Report {
                 e.name,
                 e.platformName,
                 e.manufacturer,
-                e.dataPoints().map((e) => MapEntry(e.time, [e.rssi])).toMap((e) => e.key, (e) => e.value),
+                e.dataPoints().map((e) => MapEntry(e.time, e.rssiBackingData())).toMap((e) => e.key, (e) => e.value),
                 e.t
               )))
           .toMap((e) => e.key, (e) => e.value),

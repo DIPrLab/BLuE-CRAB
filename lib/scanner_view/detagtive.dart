@@ -2,7 +2,7 @@ part of 'scanner_view.dart';
 
 extension DeTagTive on ScannerViewState {
   bool traceIsStrong(Device device) =>
-      device.dataPoints().map((e) => e.rssi).average > Settings.shared.deTagTiveRssiThreshold;
+      device.dataPoints().map((e) => e.rssi()).average > Settings.shared.deTagTiveRssiThreshold;
 
   bool traceIsLong(Device device) =>
       device.dataPoints().last.time.difference(device.dataPoints().first.time) > Settings.shared.deTagTiveMinLength;
@@ -28,7 +28,7 @@ extension DeTagTive on ScannerViewState {
   double getAvgRssiValue(SortedList<Datum> datapoints) {
     double result = 0;
     try {
-      result = datapoints.map((e) => e.rssi).average;
+      result = datapoints.map((e) => e.rssi()).average;
     } catch (e) {
       Logger().e("Error calculating avg rssi value: $e");
     }
@@ -38,7 +38,7 @@ extension DeTagTive on ScannerViewState {
   double getStdDevOfRssiValues(SortedList<Datum> datapoints) {
     double result = 0;
     try {
-      result = datapoints.map((e) => e.rssi).standardDeviation;
+      result = datapoints.map((e) => e.rssi()).standardDeviation;
     } catch (e) {
       Logger().e("Error calculating std dev of rssi values: $e");
     }
@@ -82,7 +82,7 @@ extension DeTagTive on ScannerViewState {
         .where((d) => d.dataPoints().any((e) => e.time.isBefore(t)))
         .where((d) => d.dataPoints().any((e) => e.time.isAfter(t)))
         .map((d) => (d.dataPoints().where((e) => e.time.isBefore(t)), d.dataPoints().where((e) => e.time.isAfter(t))))
-        .map((e) => (e.$1.map((datum) => datum.rssi).toList(), e.$2.map((datum) => datum.rssi).toList()))
+        .map((e) => (e.$1.map((datum) => datum.rssi()).toList(), e.$2.map((datum) => datum.rssi()).toList()))
         .fold((List<int>.empty(growable: true), List<int>.empty(growable: true)),
             (acc, curr) => (acc.$1 + curr.$1, acc.$2 + curr.$2));
     return rssi.$2.average - rssi.$1.average;

@@ -47,7 +47,7 @@ class ScannerViewState extends State<ScannerView> {
   double scaleStart = 1;
   bool updating = false;
   Map<String, List<String>> gt = {};
-  late ReportDatabase db;
+  // late ReportDatabase db;
 
   bool isScanning = false;
   late StreamSubscription<bool> isScanningSubscription;
@@ -100,7 +100,7 @@ class ScannerViewState extends State<ScannerView> {
   void initState() {
     super.initState();
 
-    db.initDatabase();
+    // db.initDatabase();
 
     readReport().then(report.combine);
 

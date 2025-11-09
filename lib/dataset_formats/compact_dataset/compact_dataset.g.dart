@@ -37,7 +37,7 @@ CompactDataset _$CompactDatasetFromJson(Map<String, dynamic> json) => CompactDat
     );
 
 Map<String, dynamic> _$CompactDatasetToJson(CompactDataset instance) => <String, dynamic>{
-      'devices': instance.devices.map((k, e) => MapEntry(k, <String, dynamic>{
+      '"devices"': instance.devices.map((k, e) => MapEntry('"$k"', <String, dynamic>{
             r'"$1"': '"${e.$1}"',
             r'"$2"': '"${e.$2}"',
             r'"$3"': '"${e.$3}"',

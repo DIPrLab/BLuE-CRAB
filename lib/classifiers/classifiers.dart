@@ -138,7 +138,10 @@ class RssiStability extends Classifier {
             .dataPoints()
             .smoothedDatumByMovingAverage(const Duration(seconds: 5))
             .segment()
-            .map((e) => e.map((f) => f.rssi).standardDeviation())
+            .map((e) => e
+                .map((f) => f.rssiBackingData())
+                .fold(List<int>.empty(growable: true), (acc, e) => acc + e)
+                .standardDeviation())
             .any((e) => e < 5))
         .toSet();
   }
@@ -168,7 +171,7 @@ class RssiProximity extends Classifier {
             .smoothedDatumByMovingAverage(const Duration(seconds: 5))
             .orderedPairs()
             .fold(List<(DateTime, DateTime)>.empty(growable: true), (acc, e) {
-              if (e.$2.rssi < -75) {
+              if (e.$2.rssi() < -75) {
                 return acc;
               }
               if (acc.isEmpty) {

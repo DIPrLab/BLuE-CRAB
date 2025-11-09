@@ -38,7 +38,8 @@ extension DeviceStats on Device {
 
   num proximity() {
     const num measuredPower = -59;
-    final num rssi = dataPoints().map((e) => e.rssi).toList().smoothedByMovingAverage(5, SmoothingMethod.resizing).last;
+    final num rssi =
+        dataPoints().map((e) => e.rssi()).toList().smoothedByMovingAverage(5, SmoothingMethod.resizing).last;
     const n = 2;
     return pow(10, (measuredPower - rssi) / (10 * n));
   }
