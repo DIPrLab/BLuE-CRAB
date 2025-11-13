@@ -7,6 +7,7 @@ import 'package:blue_crab/filesystem/dataset.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -32,10 +33,21 @@ Future<Report> readReport() =>
       }
     });
 
-void shareReport(Report report) {
+// void shareReport(Report report) {
+//   final CompactDataset data = report.toCompactDataset();
+//   write(data).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)])
+//       .then((_) => data.toDB().then((db) => Share.shareXFiles([XFile(db.path)])))));
+// }
+
+void shareReport(Report report, BuildContext context) {
+  // final box = context.findRenderObject() as RenderBox?;
+  // if (box == null || box.hasSize == false) return;
+  // final origin = box.localToGlobal(Offset.zero) & box.size;
+  final size = MediaQuery.of(context).size;
+  final origin = Rect.fromLTWH(0, 0, size.width, kToolbarHeight);
   final CompactDataset data = report.toCompactDataset();
-  write(data).then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)])
-      .then((_) => data.toDB().then((db) => Share.shareXFiles([XFile(db.path)])))));
+  write(data)
+      .then((_) => _localReportFile.then((file) => Share.shareXFiles([XFile(file.path)], sharePositionOrigin: origin)));
 }
 
 Future<Report> getReportFromFile() => FilePicker.platform.pickFiles(
