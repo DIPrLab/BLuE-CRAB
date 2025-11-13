@@ -27,13 +27,13 @@ class KMeans extends Classifier {
     List<Cluster> clusters = initialClusters(3, instances, seed: 0);
     kMeans(clusters: clusters, instances: instances);
     clusters = clusters.sorted((c1, c2) {
-      double a = 0;
-      double b = 0;
+      num a = 0;
+      num b = 0;
       try {
-        a = c1.instances.map((i) => i.location.fold(0.toDouble(), (a, b) => a + b)).average;
+        a = c1.location.distanceFromOrigin();
       } catch (e) {}
       try {
-        b = c2.instances.map((i) => i.location.fold(0.toDouble(), (a, b) => a + b)).average;
+        b = c2.location.distanceFromOrigin();
       } catch (e) {}
       return a.compareTo(b);
     });
