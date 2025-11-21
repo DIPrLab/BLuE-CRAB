@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:blue_crab/dataset_formats/report/report.dart';
+import 'package:blue_crab/datum/datum.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
+import 'package:blue_crab/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
 import 'package:simple_cluster/simple_cluster.dart';
@@ -115,41 +119,37 @@ class SmallestKCluster extends Classifier {
       .toSet();
 }
 
-class RssiStability extends Classifier {
+class RssiProximityAndStability extends Classifier {
   @override
-  String name() => "RSSI Stability";
+  String name() => "RSSI Proximity and Stability";
 
-  @override
-  Set<Device> getRiskyDevices(Report report) {
-    num timeThreshold;
-    num distanceThreshold;
-    try {
-      timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
-      distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
-    } catch (e) {
-      return Set.identity();
-    }
+  List<List<Datum>> closeSegments(Device device) => device
+      .dataPoints()
+      .smoothedDatumByMovingAverage(const Duration(seconds: 5))
+      .orderedPairs()
+      .fold(List<List<(Datum, Datum)>>.empty(growable: true), (acc, e) {
+        if (e.$1.rssi() < -75 || e.$2.rssi() < -75) {
+          return acc;
+        }
+        if (acc.isEmpty || acc.last.last.$2.time != e.$1.time) {
+          acc.add([e]);
+        } else {
+          acc.last.add(e);
+        }
+        return acc;
+      })
+      .map((segment) => [segment.first.$1, ...segment.map((pair) => pair.$2)])
+      .toList();
 
-    return report
-        .devices()
-        .where((e) => e.timeTravelled.inSeconds > timeThreshold)
-        .where((e) => e.distanceTravelled > distanceThreshold)
-        .where((device) => device
-            .dataPoints()
-            .smoothedDatumByMovingAverage(const Duration(seconds: 5))
-            .segment()
-            .map((e) => e
-                .map((f) => f.rssiBackingData())
-                .fold(List<int>.empty(growable: true), (acc, e) => acc + e)
-                .standardDeviation())
-            .any((e) => e < 5))
-        .toSet();
-  }
-}
+  bool isStable(List<List<Datum>> segments) => segments
+      .map((e) => e
+          .map((f) => f.rssiBackingData())
+          .fold(List<int>.empty(growable: true), (acc, e) => acc + e)
+          .standardDeviation())
+      .any((e) => e < 5);
 
-class RssiProximity extends Classifier {
-  @override
-  String name() => "RSSI Proximity";
+  bool hasBeenClose(List<List<Datum>> segments) =>
+      segments.map((e) => e.last.time.difference(e.first.time)).any((e) => e.inSeconds > 30);
 
   @override
   Set<Device> getRiskyDevices(Report report) {
@@ -164,27 +164,12 @@ class RssiProximity extends Classifier {
 
     return report
         .devices()
-        .where((e) => e.timeTravelled.inSeconds > timeThreshold)
-        .where((e) => e.distanceTravelled > distanceThreshold)
-        .where((device) => device
-            .dataPoints()
-            .smoothedDatumByMovingAverage(const Duration(seconds: 5))
-            .orderedPairs()
-            .fold(List<(DateTime, DateTime)>.empty(growable: true), (acc, e) {
-              if (e.$2.rssi() < -75) {
-                return acc;
-              }
-              if (acc.isEmpty) {
-                acc.add((e.$1.time, e.$2.time));
-              } else if (acc.last.$2 == e.$1.time) {
-                acc.last = (acc.last.$1, e.$2.time);
-              } else {
-                acc.add((e.$2.time, e.$2.time));
-              }
-              return acc;
-            })
-            .map((e) => e.$2.difference(e.$1))
-            .any((e) => e.inSeconds > 30))
+        .where((d) => d.timeTravelled.inSeconds > timeThreshold)
+        .where((d) => d.distanceTravelled > distanceThreshold)
+        .map((d) => (d, closeSegments(d)))
+        .where((d) => !Settings().proximityMetricEnabled || hasBeenClose(d.$2))
+        .where((d) => !Settings().stabilityMetricEnabled || isStable(d.$2))
+        .map((d) => d.$1)
         .toSet();
   }
 }

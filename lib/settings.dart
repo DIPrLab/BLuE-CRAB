@@ -35,6 +35,8 @@ class Settings {
   late bool enableRSSIMetric;
   late bool enableTimeWithUserMetric;
   late bool enableAreaCountMetric;
+  late bool proximityMetricEnabled;
+  late bool stabilityMetricEnabled;
 
   // Properties that will be turned into calculated values
   // late int windowDurationValue;
@@ -73,6 +75,8 @@ class Settings {
         enableRSSIMetric = prefs.getBool("enableRSSIMetric") ?? true;
         enableTimeWithUserMetric = prefs.getBool("enableTimeWithUserMetric") ?? true;
         enableAreaCountMetric = prefs.getBool("enableAreaCountMetric") ?? true;
+        proximityMetricEnabled = prefs.getBool("proximityMetricEnabled") ?? true;
+        stabilityMetricEnabled = prefs.getBool("stabilityMetricEnabled") ?? true;
 
         // windowDurationValue = prefs.getInt("windowDurationValue") ?? 10;
         windowDurationValue = prefs.getDouble("windowDurationValue") ?? 10;
@@ -91,6 +95,8 @@ class Settings {
           ("enableIncidenceMetric", enableIncidenceMetric),
           ("enableRSSIMetric", enableRSSIMetric),
           ("enableAreaCountMetric", enableAreaCountMetric),
+          ("enableProximityMetric", proximityMetricEnabled),
+          ("enableStabilityMetric", stabilityMetricEnabled),
           ("enableTimeWithUserMetric", enableTimeWithUserMetric),
         ].forEach((s) => prefs.setBool(s.$1, s.$2));
 

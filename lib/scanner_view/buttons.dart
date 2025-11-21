@@ -85,7 +85,7 @@ extension Buttons on ScannerViewState {
               : ButtonProps("Start Scanning", Icons.play_arrow_rounded, startScan)
         ),
         (ButtonType.settings, ButtonProps("Settings", Icons.settings, viewSettings)),
-        (ButtonType.share, ButtonProps("Share Report", Icons.share, () => shareReport(report))),
+        (ButtonType.share, ButtonProps("Share Report", Icons.share, () => shareReport(report, context))),
         (ButtonType.test, ButtonProps("Run Tests", Icons.science, runTests)),
         (ButtonType.toggleEnvironment, ButtonProps("Toggle Environment", Icons.compare_arrows, x)),
         (ButtonType.temp, ButtonProps("View Graph", Icons.auto_graph, viewTempGraph)),
