@@ -560,6 +560,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.1"
+  kmeans:
+    dependency: "direct main"
+    description:
+      name: kmeans
+      sha256: f0a62569a661d992e1f3a2fc27447b1058429115eb9c42f8976614fa8dfd45e9
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   latlng:
     dependency: "direct main"
     description:

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
@@ -14,6 +15,7 @@ part 'package:blue_crab/testing_suite/device_signal_information.dart';
 part 'package:blue_crab/testing_suite/flagged_devices_at_time.dart';
 part 'package:blue_crab/testing_suite/report_metrics.dart';
 part 'package:blue_crab/testing_suite/rssi_metric_data.dart';
+part 'package:blue_crab/testing_suite/classifier_accuracy.dart';
 
 class TestingSuite {
   List<DateTime> generateTimestamps(List<DateTime> timestamps) {
@@ -72,11 +74,12 @@ class TestingSuite {
         File([destDir.path, "${dataset}_device_data.csv"].join("/")),
         File([destDir.path, "${dataset}_flagged_devices.csv"].join("/")),
         File([destDir.path, "${dataset}_rssi_metrics_5.txt"].join("/")),
+        File([destDir.path, "${dataset}_classifier_accuracy.csv"].join("/")),
         destDir);
   }
 
   void runTest(Report report, Set<String> groundTruth, File reportDataFile, File deviceDataFile,
-      File flaggedDevicesFile, File rssiMetricFile, Directory deviceReportDir) {
+      File flaggedDevicesFile, File rssiMetricFile, File classifierAccuracyFile, Directory deviceReportDir) {
     reportDataFile
       ..createSync()
       ..writeAsStringSync(getReportMetrics(report).toString());
@@ -92,5 +95,8 @@ class TestingSuite {
     rssiMetricFile
       ..createSync()
       ..writeAsStringSync(getRssiMetricData(report, groundTruth, 5));
+    classifierAccuracyFile
+      ..createSync()
+      ..writeAsStringSync(classifierAccuracy(report, groundTruth).toString());
   }
 }

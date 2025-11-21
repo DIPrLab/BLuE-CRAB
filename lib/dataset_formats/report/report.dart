@@ -1,3 +1,4 @@
+import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_report.dart';
 import 'package:blue_crab/dataset_formats/compact_dataset/compact_dataset.dart';
 import 'package:blue_crab/device/device.dart';
@@ -66,8 +67,10 @@ class Report {
     return (timestamps.first, timestamps.last);
   }
 
-  Set<Device> getSuspiciousDevices() => Settings.shared.classifier.getRiskyDevices(this);
-  Set<String> getSuspiciousDeviceIDs() => Settings.shared.classifier.getRiskyDeviceIDs(this);
+  Set<Device> getSuspiciousDevices({Classifier? classifier}) =>
+      (classifier ?? Settings.shared.classifier).getRiskyDevices(this);
+  Set<String> getSuspiciousDeviceIDs({Classifier? classifier}) =>
+      getSuspiciousDevices(classifier: classifier).map((d) => d.id).toSet();
 
   Set<Device> devices() => data.values.toSet();
   Set<String> deviceIDs() => data.values.map((d) => d.id).toSet();

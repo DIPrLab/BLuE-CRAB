@@ -44,6 +44,7 @@ dependencies:
   in_app_notification: ^1.1.2
   json_annotation: ^4.9.0
   k_means_cluster: ^0.3.0
+  kmeans: ^1.0.0
   latlng: ^2.0.7
   logger: ^2.5.0
   map: ^2.0.2
