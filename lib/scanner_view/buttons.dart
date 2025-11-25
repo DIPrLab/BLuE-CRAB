@@ -30,6 +30,10 @@ class ButtonProps {
 
 extension Buttons on ScannerViewState {
   void runTests() => TestingSuite().testBleDoubtFiles().then((_) => Logger().i("Testing Complete"));
+  // void runTests() {
+  //   detagtive();
+  //   Logger().i("Done");
+  // }
 
   void deleteData() {
     report = Report({});

@@ -16,7 +16,7 @@ extension DeviceSignalInformation on TestingSuite {
     final List<num> smoothMAResizing = rssiValues.smoothedByMovingAverage(3, SmoothingMethod.resizing);
     device.dataPoints().indexed.forEach((e) => csv.addRow([
           e.$2.time.difference(device.dataPoints().first.time).inSeconds,
-          e.$2.rssi,
+          e.$2.rssi(),
           smoothEMA[e.$1],
           smoothMAPadding[e.$1],
           smoothMAResizing[e.$1],
