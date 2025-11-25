@@ -39,14 +39,16 @@ extension FlaggedDevicesAtTime on TestingSuite {
       devicesToUnflag = r.deviceIDs().difference(r.getSuspiciousDeviceIDs()).where(flaggedDevices.contains).toSet();
       flaggedDevices.removeAll(devicesToUnflag);
 
+      final int truePositives = flaggedDevices.intersection(gt).length;
+      final int falsePositives = flaggedDevices.difference(gt).length;
+      final int falseNegatives =
+          r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length;
+
       final double accuracy = (flaggedDevices.intersection(gt).length +
               r.deviceIDs().difference(flaggedDevices).intersection(r.deviceIDs().difference(gt)).length) /
           r.deviceIDs().length;
-      final double recall = flaggedDevices.intersection(gt).length /
-          (flaggedDevices.intersection(gt).length +
-              r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length);
-      final double precision = flaggedDevices.intersection(gt).length /
-          (flaggedDevices.intersection(gt).length + flaggedDevices.difference(gt).length);
+      final double recall = truePositives / (truePositives + falseNegatives);
+      final double precision = truePositives / (truePositives + falsePositives);
       final double f1 = 2 * ((precision * recall) / (precision + recall));
 
       csv.addRow([
@@ -59,13 +61,13 @@ extension FlaggedDevicesAtTime on TestingSuite {
         // Number of devices to un-flag
         devicesToUnflag.length,
         // True positives
-        flaggedDevices.intersection(gt).length,
+        truePositives,
         // False positives
         flaggedDevices.difference(gt).length,
         // True negatives
         r.deviceIDs().difference(flaggedDevices).intersection(r.deviceIDs().difference(gt)).length,
         // False negatives
-        r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length,
+        falseNegatives,
         // True positive rate
         flaggedDevices.intersection(gt).length / r.deviceIDs().length,
         // False positive rate
