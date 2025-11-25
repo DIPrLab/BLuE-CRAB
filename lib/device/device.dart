@@ -19,7 +19,6 @@ part 'device_stats.dart';
 @JsonSerializable()
 class Device {
   Device(this.id, this.name, this.platformName, this.manufacturer, {this.t, Map<DateTime, Datum>? dataPoints}) {
-    // _dataPoints = dataPoints ?? Map.identity();
     _dataPoints = dataPoints ?? <DateTime, Datum>{};
     updateStatistics();
   }
