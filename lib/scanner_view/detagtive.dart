@@ -16,14 +16,20 @@ extension DeTagTive on ScannerViewState {
     return deviceEnd == candidateStart || deviceEnd.isBefore(candidateStart);
   }
 
-  bool candidateHasShortAdvertisements(Device candidate) =>
-      candidate
+  bool candidateHasShortAdvertisements(Device candidate) {
+    double averageIntervalInSeconds;
+    try {
+      averageIntervalInSeconds = candidate
           .dataPoints()
           .map((e) => e.time)
           .toList()
           .mapOrderedPairs((e) => e.$2.difference(e.$1).inSeconds)
-          .average <
-      Settings.shared.deTagTiveMaxAvgAdvertisementInterval.inSeconds;
+          .average;
+    } catch (e) {
+      return false;
+    }
+    return averageIntervalInSeconds < Settings.shared.deTagTiveMaxAvgAdvertisementInterval.inSeconds;
+  }
 
   double getAvgRssiValue(SortedList<Datum> datapoints) {
     double result = 0;
@@ -50,7 +56,7 @@ extension DeTagTive on ScannerViewState {
     try {
       result = datapoints.orderedPairs().map((e) => e.$2.time.difference(e.$1.time).inSeconds).average;
     } catch (e) {
-      Logger().e("Error calculating avg transmission interval: $e");
+      result = double.infinity;
     }
     return result;
   }
@@ -88,19 +94,33 @@ extension DeTagTive on ScannerViewState {
     return rssi.$2.average - rssi.$1.average;
   }
 
-  Device? findMatch(Report report, Device device) => report
-      .devices()
-      .difference({device})
-      .where((candidate) => candidateTracesStartInWindow(candidate, device.dataPoints().last.time))
-      .where(candidateHasShortAdvertisements)
-      .map((candidate) => (candidate, matchScore(candidate, device, getShift(device.dataPoints().last.time))))
-      .where((e) => e.$2 < Settings.shared.deTagTiveThresholdScore)
-      .sorted((a, b) => a.$2.compareTo(b.$2))
-      .first
-      .$1;
+  Device? findMatch(Report report, Device device) {
+    Device? match;
+    try {
+      final List<(Device, double)> matches = report
+          .devices()
+          .difference({device})
+          .where((candidate) => candidateTracesStartInWindow(candidate, device.dataPoints().last.time))
+          .where(candidateHasShortAdvertisements)
+          .map((candidate) => (candidate, matchScore(candidate, device, getShift(device.dataPoints().last.time))))
+          .where((e) => e.$2 < Settings.shared.deTagTiveThresholdScore)
+          .where((e) => e.$2 < 10)
+          .where((e) => e.$1.name == device.name)
+          .where((e) => e.$1.platformName == device.platformName)
+          .where((e) => e.$1.manufacturer == device.manufacturer)
+          .sorted((a, b) => a.$2.compareTo(b.$2));
+      match = matches.first.$1;
+    } catch (e) {}
+    return match;
+  }
 
-  void detagtive() =>
-      report.devices().where(traceIsStrong).where(traceIsLong).where(traceEndedRecently).forEach((device) {
+  void detagtive() => report
+          .devices()
+          .where(traceIsStrong)
+          .where(traceIsLong)
+          .where(traceEndedRecently)
+          // .where((d) => d.name.isNotEmpty || d.platformName.isNotEmpty || d.manufacturer.isNotEmpty)
+          .forEach((device) {
         final Device? match = findMatch(report, device);
 
         if (match != null) {
