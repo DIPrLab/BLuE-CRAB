@@ -12,14 +12,17 @@ extension ClassifierAccuracy on TestingSuite {
       r.refreshCache();
 
       final List<(String, double)> x = Classifier.classifiers.map((classifier) {
-        final Set<String> flaggedDevices = r.getSuspiciousDeviceIDs(classifier: classifier).toSet();
-        final double recall = flaggedDevices.intersection(gt).length /
-            (flaggedDevices.intersection(gt).length +
-                r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length);
-        final double precision = flaggedDevices.intersection(gt).length /
-            (flaggedDevices.intersection(gt).length + flaggedDevices.difference(gt).length);
-        final double f1 = 2 * ((precision * recall) / (precision + recall));
-        return (classifier.name(), f1);
+        final Iterable<double> results = List.generate(5, (e) {
+          final Set<String> flaggedDevices = r.getSuspiciousDeviceIDs(classifier: classifier).toSet();
+          final double recall = flaggedDevices.intersection(gt).length /
+              (flaggedDevices.intersection(gt).length +
+                  r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length);
+          final double precision = flaggedDevices.intersection(gt).length /
+              (flaggedDevices.intersection(gt).length + flaggedDevices.difference(gt).length);
+          final double f1 = 2 * ((precision * recall) / (precision + recall));
+          return f1;
+        }).map((e) => e.isNaN ? 0.0 : e);
+        return (classifier.name(), results.average);
       }).toList();
 
       csv.addRow(([ts.difference(timeStamps.first).inMinutes.toString()] +
