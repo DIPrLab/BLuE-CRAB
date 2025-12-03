@@ -133,7 +133,7 @@ class Permissive extends Classifier {
   String name() => "Permissive";
 
   @override
-  Set<Device> getRiskyDevices(Report report) => report.devices().toSet();
+  Set<Device> getRiskyDevices(Report report) => report.devices();
 }
 
 class DbScan extends Classifier {
