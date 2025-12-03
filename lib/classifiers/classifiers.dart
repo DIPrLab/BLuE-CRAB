@@ -1,15 +1,57 @@
-import 'dart:math';
-
 import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/datum/datum.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
+import 'package:blue_crab/extensions/geolocator.dart';
 import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:k_means_cluster/k_means_cluster.dart';
 import 'package:simple_cluster/simple_cluster.dart';
+
+class BLEDoubt extends Classifier {
+  @override
+  String name() => "BLEDoubt";
+
+  double distanceThreshold = 420;
+  Duration timeThreshold = const Duration(minutes: 10);
+
+  @override
+  Set<Device> getRiskyDevices(Report report) => report
+      .devices()
+      .where((d) => d.paths().any((path) {
+            final Duration time = path.last.time.difference(path.first.time);
+            final double distance = path
+                .mapOrderedPairs((e) => distanceBetween(e.$1.location, e.$2.location))
+                .fold(0.toDouble(), (acc, e) => acc + e);
+            return distance > distanceThreshold && time > timeThreshold;
+          }))
+      .toSet();
+}
+
+class AirGuard extends Classifier {
+  @override
+  String name() => "AirGuard";
+
+  Duration seenRecentlyThreshold = const Duration(minutes: 5);
+  double distanceThreshold = 420;
+  Duration timeThreshold = const Duration(seconds: 300);
+
+  bool seenRecently(Device d, DateTime t) => t.difference(d.dataPoints().last.time) <= seenRecentlyThreshold;
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    final DateTime lastTimestamp =
+        report.devices().map((d) => d.dataPoints().last.time).sorted((a, b) => a.compareTo(b)).last;
+    return report
+        .devices()
+        .where((d) => seenRecently(d, lastTimestamp))
+        .where((d) => d.distanceTravelled > distanceThreshold)
+        .where((d) => d.timeTravelled > timeThreshold)
+        .toSet();
+  }
+}
 
 class IQR extends Classifier {
   @override
