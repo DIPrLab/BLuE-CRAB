@@ -104,20 +104,27 @@ class IQRKMeansHybrid extends Classifier {
   Set<Device> getRiskyDevices(Report report) {
     final List<Instance> instances =
         report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
-    List<Cluster> clusters = initialClusters(5, instances, seed: 0);
-    kMeans(clusters: clusters, instances: instances);
-    clusters =
-        clusters.sorted((c1, c2) => c1.location.distanceFromOrigin().compareTo(c2.location.distanceFromOrigin()));
     num lower;
     num upper;
-    try {
-      lower = clusters.first.instances.map((i) => report.riskScore(report.data[i.id]!)).max;
-      upper = clusters.last.instances.map((i) => report.riskScore(report.data[i.id]!)).min;
-    } catch (e) {
-      return Set.identity();
+    num? limit;
+    for (int k = 10; k > 2; k--) {
+      List<Cluster> clusters = initialClusters(k, instances);
+      kMeans(clusters: clusters, instances: instances);
+      clusters = clusters
+          .map((c) => (cluster: c, distance: c.location.fold(0.toDouble(), (acc, e) => acc + e)))
+          .sorted((c1, c2) => c1.distance.compareTo(c2.distance))
+          .map((e) => e.cluster)
+          .toList();
+      try {
+        lower = clusters.first.instances.map((i) => report.riskScore(report.data[i.id]!)).max;
+        upper = clusters.elementAt(clusters.length - 2).instances.map((i) => report.riskScore(report.data[i.id]!)).min;
+        limit = upper + (upper - lower) * 1.5;
+      } catch (e) {
+        continue;
+      }
+      break;
     }
-    final num limit = upper + (upper - lower) * 1.5;
-    return report.devices().where((d) => report.riskScore(d) > limit).toSet();
+    return report.devices().where((d) => report.riskScore(d) > (limit ?? double.infinity)).toSet();
   }
 }
 
