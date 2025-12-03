@@ -106,6 +106,8 @@ extension Intersperse<T> on List<T> {
 
     return result;
   }
+
+  List<({int index, T value})> enumerate() => List.generate(length, (index) => (index: index, value: this[index]));
 }
 
 extension CommonElements<T> on Set<Set<T>> {
