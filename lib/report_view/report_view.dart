@@ -39,6 +39,8 @@ class ReportViewState extends State<ReportView> {
 
   int byLocation(Device a, Device b) => a.locations().length.compareTo(b.locations().length);
 
+  int byDistance(Device a, Device b) => a.distanceTravelled.compareTo(b.distanceTravelled);
+
   Widget sortButton() => PopupMenuButton<dynamic>(
       icon: const Icon(Icons.sort),
       itemBuilder: (context) => [
@@ -47,6 +49,7 @@ class ReportViewState extends State<ReportView> {
             ("Incidence", byIncidence),
             ("Location", byLocation),
             ("Time", byTime),
+            ("Distance", byDistance),
           ]
               .map((e) => PopupMenuItem(
                   child: ListTile(title: Text("Sort By ${e.$1}")),
