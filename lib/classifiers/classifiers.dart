@@ -142,16 +142,27 @@ class DbScan extends Classifier {
 
   @override
   Set<Device> getRiskyDevices(Report report) {
-    final DBSCAN dbscan = DBSCAN(epsilon: 3)
-      ..run(report.devices().map((d) => report.riskScores(d).map((x) => x.toDouble()).toList()).toList());
-    final Map<int, Set<Device>> clusters = {};
-    List.generate(dbscan.dataset.length, (i) => i).forEach((i) {
-      if (!clusters.keys.contains(dbscan.label![i])) {
-        clusters[dbscan.label![i]] = {};
-      }
-      clusters[dbscan.label![i]]!.addAll(report.devices().where((d) => report.riskScores(d).equals(dbscan.dataset[i])));
-    });
-    return clusters[-1] ?? {};
+    final Set<Device> result = {};
+    Set<Device> newDevices = {};
+    do {
+      final DBSCAN dbscan = DBSCAN()
+        ..run(report
+            .devices()
+            .difference(result)
+            .map((d) => report.riskScores(d).map((x) => x.toDouble()).toList())
+            .toList());
+      final Map<int, Set<Device>> clusters = {};
+      List.generate(dbscan.dataset.length, (i) => i).forEach((i) {
+        if (!clusters.keys.contains(dbscan.label![i])) {
+          clusters[dbscan.label![i]] = {};
+        }
+        clusters[dbscan.label![i]]!
+            .addAll(report.devices().where((d) => report.riskScores(d).equals(dbscan.dataset[i])));
+      });
+      newDevices = clusters[-1] ?? {};
+      result.addAll(newDevices);
+    } while (newDevices.isNotEmpty);
+    return result;
   }
 }
 
