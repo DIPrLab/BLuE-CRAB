@@ -161,16 +161,7 @@ class SmallestKCluster extends Classifier {
 
   @override
   Set<Device> getRiskyDevices(Report report) => List.generate(8, (x) => x + 2)
-      .map((k) {
-        final List<Instance> instances =
-            report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
-        final List<Cluster> clusters = initialClusters(k, instances, seed: 0);
-        kMeans(clusters: clusters, instances: instances);
-        return clusters;
-      })
-      .map((clusters) =>
-          clusters.sorted((c1, c2) => c1.location.distanceFromOrigin().compareTo(c2.location.distanceFromOrigin())))
-      .map((e) => e.last.instances)
+      .map((k) => (KMeans()..k = k).getRiskyDevices(report))
       .sorted((a, b) => a.length.compareTo(b.length))
       .first
       .map((e) => report.data[e.id]!)
