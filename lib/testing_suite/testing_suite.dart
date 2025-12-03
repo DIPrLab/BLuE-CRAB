@@ -20,9 +20,9 @@ part 'package:blue_crab/testing_suite/classifier_accuracy.dart';
 class TestingSuite {
   List<DateTime> generateTimestamps(List<DateTime> timestamps) {
     final List<DateTime> result = [];
-    DateTime curr = timestamps.first.add(Settings.shared.minScanDuration);
+    DateTime curr = timestamps.first;
 
-    while (curr.isBefore(timestamps.last) || curr == timestamps.last) {
+    while (curr.isBefore(timestamps.last)) {
       result.add(curr);
       curr = curr.add(Settings.shared.scanInterval);
     }
