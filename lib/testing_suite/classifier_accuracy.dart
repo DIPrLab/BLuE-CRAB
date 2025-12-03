@@ -4,8 +4,9 @@ extension ClassifierAccuracy on TestingSuite {
   CSVData classifierAccuracy(Report report, Set<String> gt) {
     final CSVData csv = CSVData(["MINUTES_SINCE_INIT"] + Classifier.classifiers.map((c) => c.name()).sorted().toList());
     final List<DateTime> timeStamps = report.getTimestamps();
-    generateTimestamps(timeStamps).forEach((ts) {
-      final Report r = report.syntheticReportAtTime(ts);
+    final List<({int index, DateTime value})> timestamps = generateTimestamps(timeStamps).enumerate().toList();
+    timestamps.forEach((ts) {
+      final Report r = report.syntheticReportAtTime(ts.value);
       if (r.devices().length < 2) {
         return;
       }
@@ -25,9 +26,12 @@ extension ClassifierAccuracy on TestingSuite {
         return (classifier.name(), results.average);
       }).toList();
 
-      csv.addRow(([ts.difference(timeStamps.first).inMinutes.toString()] +
+      csv.addRow(([ts.value.difference(timeStamps.first).inMinutes.toString()] +
               x.sorted((a, b) => a.$1.compareTo(b.$1)).map((e) => e.$2.toString()).toList())
           .toList());
+
+      final int percentageDone = ((ts.index / timestamps.length) * 100).toInt();
+      Logger().i("$percentageDone % - ${ts.index} / ${timestamps.length}");
     });
     return csv;
   }

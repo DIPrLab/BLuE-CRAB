@@ -8,6 +8,7 @@ import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/testing_suite/csv_data.dart';
 import 'package:collection/collection.dart';
+import 'package:logger/logger.dart';
 import 'package:flutter/services.dart';
 
 part 'package:blue_crab/testing_suite/device_metrics.dart';
