@@ -66,24 +66,33 @@ class KMeans extends Classifier {
   @override
   String name() => "K-Means";
 
+  int k = 5;
+
   @override
   Set<Device> getRiskyDevices(Report report) {
+    Set<Device> result = {};
     final List<Instance> instances =
         report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
-    List<Cluster> clusters = initialClusters(3, instances, seed: 0);
+    final List<Cluster> clusters = initialClusters(k, instances);
     kMeans(clusters: clusters, instances: instances);
-    clusters = clusters.sorted((c1, c2) {
-      num a = 0;
-      num b = 0;
-      try {
-        a = c1.location.distanceFromOrigin();
-      } catch (e) {}
-      try {
-        b = c2.location.distanceFromOrigin();
-      } catch (e) {}
-      return a.compareTo(b);
-    });
-    return clusters.last.instances.map((e) => report.data[e.id]!).toSet();
+    try {
+      result = clusters
+          .where((c) => c.location.any((e) => e > 0))
+          .map((c) {
+            num distance = 0;
+            try {
+              distance = c.location.distanceFromOrigin();
+            } catch (e) {}
+            return (cluster: c, distance: distance);
+          })
+          .sorted((c1, c2) => c1.distance.compareTo(c2.distance))
+          .last
+          .cluster
+          .instances
+          .map((e) => report.data[e.id]!)
+          .toSet();
+    } catch (e) {}
+    return result;
   }
 }
 
