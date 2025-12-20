@@ -14,6 +14,9 @@ class BLEDoubt extends Classifier {
   @override
   String name() => "BLEDoubt";
 
+  @override
+  String csvName() => "BLE_DOUBT";
+
   double distanceThreshold = 420;
   Duration timeThreshold = const Duration(minutes: 10);
 
@@ -33,6 +36,9 @@ class BLEDoubt extends Classifier {
 class AirGuard extends Classifier {
   @override
   String name() => "AirGuard";
+
+  @override
+  String csvName() => "AIRGUARD";
 
   Duration seenRecentlyThreshold = const Duration(minutes: 5);
   double distanceThreshold = 420;
@@ -58,6 +64,9 @@ class IQR extends Classifier {
   String name() => "IQR";
 
   @override
+  String csvName() => name();
+
+  @override
   Set<Device> getRiskyDevices(Report report) =>
       report.devices().where((d) => report.riskScore(d) > report.riskScoreStats.tukeyMildUpperLimit).toSet();
 }
@@ -65,6 +74,9 @@ class IQR extends Classifier {
 class KMeans extends Classifier {
   @override
   String name() => "K-Means";
+
+  @override
+  String csvName() => "K_MEANS";
 
   int k = 5;
 
@@ -101,6 +113,9 @@ class IQRKMeansHybrid extends Classifier {
   String name() => "IQR / K-Means Hybrid";
 
   @override
+  String csvName() => "IQR_K_MEANS_HYBRID";
+
+  @override
   Set<Device> getRiskyDevices(Report report) {
     final List<Instance> instances =
         report.devices().map((d) => Instance(location: report.riskScores(d), id: d.id)).toList();
@@ -133,12 +148,18 @@ class Permissive extends Classifier {
   String name() => "Permissive";
 
   @override
+  String csvName() => "PERMISSIVE";
+
+  @override
   Set<Device> getRiskyDevices(Report report) => report.devices();
 }
 
 class DbScan extends Classifier {
   @override
   String name() => "DB Scan";
+
+  @override
+  String csvName() => "DB_SCAN";
 
   @override
   Set<Device> getRiskyDevices(Report report) {
@@ -171,17 +192,29 @@ class SmallestKCluster extends Classifier {
   String name() => "Smallest K-Cluster";
 
   @override
-  Set<Device> getRiskyDevices(Report report) => List.generate(8, (x) => x + 2)
-      .map((k) => (KMeans()..k = k).getRiskyDevices(report))
-      .sorted((a, b) => a.length.compareTo(b.length))
-      .first
-      .map((e) => report.data[e.id]!)
-      .toSet();
+  String csvName() => "SMALLEST_K_CLUSTER";
+
+  int? k;
+  Set<Device>? cluster;
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    final ({Set<Device> cluster, int k}) result = List.generate(8, (x) => x + 2)
+        .map((k) => (k: k, cluster: (KMeans()..k = k).getRiskyDevices(report)))
+        .sorted((a, b) => a.cluster.length.compareTo(b.cluster.length))
+        .first;
+    k = result.k;
+    cluster = result.cluster;
+    return result.cluster.map((e) => report.data[e.id]!).toSet();
+  }
 }
 
-class RssiProximityAndStability extends Classifier {
+class SCORE extends Classifier {
   @override
-  String name() => "RSSI Proximity and Stability";
+  String name() => "SCORE";
+
+  @override
+  String csvName() => name();
 
   List<List<Datum>> closeSegments(Device device) => device
       .dataPoints()
@@ -229,6 +262,232 @@ class RssiProximityAndStability extends Classifier {
         .map((d) => (d, closeSegments(d)))
         .where((d) => !Settings().proximityMetricEnabled || hasBeenClose(d.$2))
         .where((d) => !Settings().stabilityMetricEnabled || isStable(d.$2))
+        .map((d) => d.$1)
+        .toSet();
+  }
+}
+
+class SCORE_00 extends Classifier {
+  @override
+  String name() => "SCORE_00";
+
+  @override
+  String csvName() => name();
+
+  List<List<Datum>> closeSegments(Device device) => device
+      .dataPoints()
+      .smoothedDatumByMovingAverage(const Duration(seconds: 5))
+      .orderedPairs()
+      .fold(List<List<(Datum, Datum)>>.empty(growable: true), (acc, e) {
+        if (e.$1.rssi() < -75 || e.$2.rssi() < -75) {
+          return acc;
+        }
+        if (acc.isEmpty || acc.last.last.$2.time != e.$1.time) {
+          acc.add([e]);
+        } else {
+          acc.last.add(e);
+        }
+        return acc;
+      })
+      .map((segment) => [segment.first.$1, ...segment.map((pair) => pair.$2)])
+      .toList();
+
+  bool isStable(List<List<Datum>> segments) => segments
+      .map((e) => e
+          .map((f) => f.rssiBackingData())
+          .fold(List<int>.empty(growable: true), (acc, e) => acc + e)
+          .standardDeviation())
+      .any((e) => e < 5);
+
+  bool hasBeenClose(List<List<Datum>> segments) =>
+      segments.map((e) => e.last.time.difference(e.first.time)).any((e) => e.inSeconds > 30);
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    num timeThreshold;
+    num distanceThreshold;
+    try {
+      timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
+      distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
+    } catch (e) {
+      return Set.identity();
+    }
+
+    return report
+        .devices()
+        .where((d) => d.timeTravelled.inSeconds > timeThreshold)
+        .where((d) => d.distanceTravelled > distanceThreshold)
+        .toSet();
+  }
+}
+
+class SCORE_01 extends Classifier {
+  @override
+  String name() => "SCORE_01";
+
+  @override
+  String csvName() => name();
+
+  List<List<Datum>> closeSegments(Device device) => device
+      .dataPoints()
+      .smoothedDatumByMovingAverage(const Duration(seconds: 5))
+      .orderedPairs()
+      .fold(List<List<(Datum, Datum)>>.empty(growable: true), (acc, e) {
+        if (e.$1.rssi() < -75 || e.$2.rssi() < -75) {
+          return acc;
+        }
+        if (acc.isEmpty || acc.last.last.$2.time != e.$1.time) {
+          acc.add([e]);
+        } else {
+          acc.last.add(e);
+        }
+        return acc;
+      })
+      .map((segment) => [segment.first.$1, ...segment.map((pair) => pair.$2)])
+      .toList();
+
+  bool isStable(List<List<Datum>> segments) => segments
+      .map((e) => e
+          .map((f) => f.rssiBackingData())
+          .fold(List<int>.empty(growable: true), (acc, e) => acc + e)
+          .standardDeviation())
+      .any((e) => e < 5);
+
+  bool hasBeenClose(List<List<Datum>> segments) =>
+      segments.map((e) => e.last.time.difference(e.first.time)).any((e) => e.inSeconds > 30);
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    num timeThreshold;
+    num distanceThreshold;
+    try {
+      timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
+      distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
+    } catch (e) {
+      return Set.identity();
+    }
+
+    return report
+        .devices()
+        .where((d) => d.timeTravelled.inSeconds > timeThreshold)
+        .where((d) => d.distanceTravelled > distanceThreshold)
+        .map((d) => (d, closeSegments(d)))
+        .where((d) => isStable(d.$2))
+        .map((d) => d.$1)
+        .toSet();
+  }
+}
+
+class SCORE_10 extends Classifier {
+  @override
+  String name() => "SCORE_10";
+
+  @override
+  String csvName() => name();
+
+  List<List<Datum>> closeSegments(Device device) => device
+      .dataPoints()
+      .smoothedDatumByMovingAverage(const Duration(seconds: 5))
+      .orderedPairs()
+      .fold(List<List<(Datum, Datum)>>.empty(growable: true), (acc, e) {
+        if (e.$1.rssi() < -75 || e.$2.rssi() < -75) {
+          return acc;
+        }
+        if (acc.isEmpty || acc.last.last.$2.time != e.$1.time) {
+          acc.add([e]);
+        } else {
+          acc.last.add(e);
+        }
+        return acc;
+      })
+      .map((segment) => [segment.first.$1, ...segment.map((pair) => pair.$2)])
+      .toList();
+
+  bool isStable(List<List<Datum>> segments) => segments
+      .map((e) => e
+          .map((f) => f.rssiBackingData())
+          .fold(List<int>.empty(growable: true), (acc, e) => acc + e)
+          .standardDeviation())
+      .any((e) => e < 5);
+
+  bool hasBeenClose(List<List<Datum>> segments) =>
+      segments.map((e) => e.last.time.difference(e.first.time)).any((e) => e.inSeconds > 30);
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    num timeThreshold;
+    num distanceThreshold;
+    try {
+      timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
+      distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
+    } catch (e) {
+      return Set.identity();
+    }
+
+    return report
+        .devices()
+        .where((d) => d.timeTravelled.inSeconds > timeThreshold)
+        .where((d) => d.distanceTravelled > distanceThreshold)
+        .map((d) => (d, closeSegments(d)))
+        .where((d) => hasBeenClose(d.$2))
+        .map((d) => d.$1)
+        .toSet();
+  }
+}
+
+class SCORE_11 extends Classifier {
+  @override
+  String name() => "SCORE_11";
+
+  @override
+  String csvName() => name();
+
+  List<List<Datum>> closeSegments(Device device) => device
+      .dataPoints()
+      .smoothedDatumByMovingAverage(const Duration(seconds: 5))
+      .orderedPairs()
+      .fold(List<List<(Datum, Datum)>>.empty(growable: true), (acc, e) {
+        if (e.$1.rssi() < -75 || e.$2.rssi() < -75) {
+          return acc;
+        }
+        if (acc.isEmpty || acc.last.last.$2.time != e.$1.time) {
+          acc.add([e]);
+        } else {
+          acc.last.add(e);
+        }
+        return acc;
+      })
+      .map((segment) => [segment.first.$1, ...segment.map((pair) => pair.$2)])
+      .toList();
+
+  bool isStable(List<List<Datum>> segments) => segments
+      .map((e) => e
+          .map((f) => f.rssiBackingData())
+          .fold(List<int>.empty(growable: true), (acc, e) => acc + e)
+          .standardDeviation())
+      .any((e) => e < 5);
+
+  bool hasBeenClose(List<List<Datum>> segments) =>
+      segments.map((e) => e.last.time.difference(e.first.time)).any((e) => e.inSeconds > 30);
+
+  @override
+  Set<Device> getRiskyDevices(Report report) {
+    num timeThreshold;
+    num distanceThreshold;
+    try {
+      timeThreshold = report.devices().map((e) => e.timeTravelled.inSeconds).getBreaks().sorted()[1];
+      distanceThreshold = report.devices().map((e) => e.distanceTravelled).getBreaks().sorted()[1];
+    } catch (e) {
+      return Set.identity();
+    }
+
+    return report
+        .devices()
+        .where((d) => d.timeTravelled.inSeconds > timeThreshold)
+        .where((d) => d.distanceTravelled > distanceThreshold)
+        .map((d) => (d, closeSegments(d)))
+        .where((d) => hasBeenClose(d.$2))
+        .where((d) => isStable(d.$2))
         .map((d) => d.$1)
         .toSet();
   }

@@ -5,26 +5,26 @@ import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
-import 'package:blue_crab/settings.dart';
 import 'package:blue_crab/testing_suite/csv_data.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+import 'package:sorted_list/sorted_list.dart';
+import 'package:statistics/statistics.dart';
 
-part 'package:blue_crab/testing_suite/device_metrics.dart';
-part 'package:blue_crab/testing_suite/device_signal_information.dart';
+part 'package:blue_crab/testing_suite/classifier_accuracy.dart';
+part 'package:blue_crab/testing_suite/device_risk_factors.dart';
 part 'package:blue_crab/testing_suite/flagged_devices_at_time.dart';
 part 'package:blue_crab/testing_suite/report_metrics.dart';
-part 'package:blue_crab/testing_suite/classifier_accuracy.dart';
 
 class TestingSuite {
-  List<DateTime> generateTimestamps(List<DateTime> timestamps) {
-    final List<DateTime> result = [];
+  SortedList<DateTime> generateTimestamps(SortedList<DateTime> timestamps, Duration interval) {
+    final SortedList<DateTime> result = SortedList<DateTime>();
     DateTime curr = timestamps.first;
 
     while (curr.isBefore(timestamps.last)) {
       result.add(curr);
-      curr = curr.add(Settings.shared.scanInterval);
+      curr = curr.add(interval);
     }
     result.add(timestamps.last);
 
@@ -34,6 +34,7 @@ class TestingSuite {
   Future<void> testBleDoubtFiles() async {
     final Map<String, List<String>> gt = await loadGtMacs([(await localFileDirectory).path, "gt_macs.json"].join("/"));
     const String bleDoubtDir = "bledoubt_logs";
+    const String bleDoubtDirNoSus = "bledoubt_logs_no_suspicious_devices";
     const String assetsDir = "datasets";
     await [
       (bleDoubtDir, "bledoubt_log_a"),
@@ -50,9 +51,27 @@ class TestingSuite {
       (bleDoubtDir, "bledoubt_log_l"),
       (bleDoubtDir, "bledoubt_log_m"),
       (bleDoubtDir, "bledoubt_log_n"),
+      // (bleDoubtDirNoSus, "bledoubt_log_a_a"),
+      // (bleDoubtDirNoSus, "bledoubt_log_b_b"),
+      // (bleDoubtDirNoSus, "bledoubt_log_c_c"),
+      // (bleDoubtDirNoSus, "bledoubt_log_d_d"),
+      // (bleDoubtDirNoSus, "bledoubt_log_e_e"),
+      // (bleDoubtDirNoSus, "bledoubt_log_f_f"),
+      // (bleDoubtDirNoSus, "bledoubt_log_g_g"),
+      // (bleDoubtDirNoSus, "bledoubt_log_h_h"),
+      // (bleDoubtDirNoSus, "bledoubt_log_i_i"),
+      // (bleDoubtDirNoSus, "bledoubt_log_j_j"),
+      // (bleDoubtDirNoSus, "bledoubt_log_k_k"),
+      // (bleDoubtDirNoSus, "bledoubt_log_l_l"),
+      // (bleDoubtDirNoSus, "bledoubt_log_m_m"),
+      // (bleDoubtDirNoSus, "bledoubt_log_n_n"),
       (assetsDir, "walking_dataset_1"),
       (assetsDir, "walking_dataset_2"),
-      (assetsDir, "driving_dataset_1"),
+      // (assetsDir, "walking_dataset_3"),
+      // (assetsDir, "walking_dataset_4"),
+      (assetsDir, "bus_dataset_1"),
+      // (assetsDir, "bus_dataset_2"),
+      // (assetsDir, "driving_dataset_1"),
     ]
         .map((e) => (e.$2, "assets/${e.$1}/${e.$2}.json", "assets/${e.$1}/gt_macs.json"))
         .forEachAsync((e) async => testFile(e.$1, e.$2, gt));
@@ -71,28 +90,64 @@ class TestingSuite {
         report,
         gt["$dataset.json"]?.toSet() ?? {},
         File([destDir.path, "${dataset}_report_data.csv"].join("/")),
-        File([destDir.path, "${dataset}_device_data.csv"].join("/")),
-        File([destDir.path, "${dataset}_flagged_devices.csv"].join("/")),
-        File([destDir.path, "${dataset}_classifier_accuracy.csv"].join("/")),
+        File([destDir.path, "${dataset}_classifier_tp.csv"].join("/")),
+        File([destDir.path, "${dataset}_classifier_fp.csv"].join("/")),
+        File([destDir.path, "${dataset}_classifier_fn.csv"].join("/")),
+        File([destDir.path, "${dataset}_classifier_tn.csv"].join("/")),
+        File([destDir.path, "${dataset}_classifier_precision.csv"].join("/")),
+        File([destDir.path, "${dataset}_classifier_recall.csv"].join("/")),
+        File([destDir.path, "${dataset}_classifier_f1.csv"].join("/")),
         destDir);
   }
 
-  void runTest(Report report, Set<String> groundTruth, File reportDataFile, File deviceDataFile,
-      File flaggedDevicesFile, File classifierAccuracyFile, Directory deviceReportDir) {
+  void runTest(
+      Report report,
+      Set<String> groundTruth,
+      File reportDataFile,
+      File classifierTpFile,
+      File classifierFpFile,
+      File classifierFnFile,
+      File classifierTnFile,
+      File classifierPrecisionFile,
+      File classifierRecallFile,
+      File classifierF1File,
+      Directory deviceReportDir) {
+    final SortedList<DateTime> shortTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 1));
+    final SortedList<DateTime> longTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 10));
+
+    final CSVData reportData = getReportMetrics(report, shortTimestamps);
     reportDataFile
       ..createSync()
-      ..writeAsStringSync(getReportMetrics(report).toString());
-    deviceDataFile
-      ..createSync()
-      ..writeAsStringSync(getDeviceMetrics(report).toString());
-    flaggedDevicesFile
-      ..createSync()
-      ..writeAsStringSync(getFlaggedDevicesAtTime(report, groundTruth).toString());
-    report.devices().forEach((e) => File([deviceReportDir.path, "${e.id}.csv"].join("/"))
-      ..createSync(recursive: true)
-      ..writeAsStringSync(getDeviceSignalInformation(e).toString()));
-    classifierAccuracyFile
-      ..createSync()
-      ..writeAsStringSync(classifierAccuracy(report, groundTruth).toString());
+      ..writeAsStringSync(reportData.toString());
+
+    report.devices().forEach((device) {
+      final CSVData deviceRiskFactorData = getDeviceRiskFactors(device, shortTimestamps);
+      File([deviceReportDir.path, "devices", "${device.id}.csv"].join("/"))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(deviceRiskFactorData.toString());
+    });
+
+    final List<({Classifier classifier, CSVData data})> classifierData = Classifier.classifiers
+        .map((classifier) =>
+            (classifier: classifier, data: getFlaggedDevicesAtTime(report, groundTruth, classifier, longTimestamps)))
+        .toList()
+      ..forEach((e) {
+        File([deviceReportDir.path, "classifiers", "${e.classifier.csvName()}.csv"].join("/"))
+          ..createSync(recursive: true)
+          ..writeAsStringSync(e.data.toString());
+      });
+
+    ["TRUE_POSITIVES", "FALSE_POSITIVES", "TRUE_NEGATIVES", "FALSE_NEGATIVES", "PRECISION", "RECALL", "F1_SCORE"]
+        .forEach((column) {
+      final key = classifierData.first.data.getColumnByIndex(0);
+      final data = classifierData
+          .map((e) => e.data.getColumnByName(column)..first = e.classifier.csvName())
+          .sorted((a, b) => a.first.compareTo(b.first))
+          .toList();
+      final CSVData report = CSVData.alt(key, data);
+      File([deviceReportDir.path, "metrics", "$column.csv"].join("/"))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(report.toString());
+    });
   }
 }

@@ -2,12 +2,14 @@ import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_report.dart';
 import 'package:blue_crab/dataset_formats/compact_dataset/compact_dataset.dart';
 import 'package:blue_crab/device/device.dart';
+import 'package:blue_crab/extensions/collections.dart';
 import 'package:blue_crab/extensions/stats.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlng/latlng.dart';
 import 'package:logger/logger.dart';
+import 'package:sorted_list/sorted_list.dart';
 import 'package:statistics/statistics.dart';
 
 part 'report.g.dart';
@@ -53,10 +55,11 @@ class Report {
   void combine(Report report) =>
       report.data.forEach((id, d) => data.update(id, (device) => device.combine(d), ifAbsent: () => d));
 
-  List<DateTime> getTimestamps() => devices()
-      .map((d) => d.dataPoints().map((d) => d.time).toSet())
-      .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList()
-    ..sort();
+  SortedList<DateTime> getTimestamps() => SortedList<DateTime>()
+    ..addAll(devices()
+        .map((d) => d.dataPoints().map((d) => d.time).toSet())
+        .fold(<DateTime>{}, (a, b) => a..addAll(b)).toList())
+    ..unique();
 
   (DateTime, DateTime) timeRange() {
     final List<DateTime> timestamps = devices()

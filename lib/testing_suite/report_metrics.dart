@@ -1,29 +1,55 @@
 part of 'package:blue_crab/testing_suite/testing_suite.dart';
 
 extension ReportMetrics on TestingSuite {
-  CSVData getReportMetrics(Report report) {
+  CSVData getReportMetrics(Report report, SortedList<DateTime> timestamps) {
     final CSVData csv = CSVData([
-      "SECONDS_SINCE_INIT",
+      "MINUTES_SINCE_INIT",
       "DEVICE_COUNT",
       "DATAPOINT_COUNT",
-      "RISKY_DEVICE_COUNT",
+      "AVERAGE_TIME_WITH_USER",
+      "AVERAGE_DISTANCE_WITH_USER",
+      "AVERAGE_INCIDENCE_COUNT",
+      "AVERAGE_AREA_COUNT",
     ]);
-    final List<DateTime> timeStamps = report.getTimestamps();
-    generateTimestamps(timeStamps).forEach((ts) {
-      final Report r = report.syntheticReportAtTime(ts);
-      if (r.data.entries.length < 2) {
-        return;
+    timestamps.forEach((t) {
+      final Report r = report.syntheticReportAtTime(t);
+
+      double avgTimeWithUser;
+      try {
+        avgTimeWithUser = r.devices().map((d) => d.timeTravelled.inSeconds).average;
+      } catch (e) {
+        avgTimeWithUser = 0;
       }
-      r.refreshCache();
+
+      double avgDistanceWithUser;
+      try {
+        avgDistanceWithUser = r.devices().map((d) => d.distanceTravelled).average;
+      } catch (e) {
+        avgDistanceWithUser = 0;
+      }
+
+      double avgIncidenceCount;
+      try {
+        avgIncidenceCount = r.devices().map((d) => d.incidence).average;
+      } catch (e) {
+        avgIncidenceCount = 0;
+      }
+
+      double avgAreaCount;
+      try {
+        avgAreaCount = r.devices().map((d) => d.areaCount).average;
+      } catch (e) {
+        avgAreaCount = 0;
+      }
+
       csv.addRow([
-        // Time since starting scan
-        ts.difference(timeStamps.first).inSeconds,
-        // Number of devices in Report
+        t.difference(timestamps.first).inMinutes,
         r.devices().length,
-        // Number of data points in Report
         r.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b),
-        // Number of risky devices
-        r.getSuspiciousDeviceIDs().length,
+        avgTimeWithUser,
+        avgDistanceWithUser,
+        avgIncidenceCount,
+        avgAreaCount,
       ].map((e) => e.toString()).toList());
     });
     return csv;

@@ -1,90 +1,83 @@
 part of 'package:blue_crab/testing_suite/testing_suite.dart';
 
 extension FlaggedDevicesAtTime on TestingSuite {
-  CSVData getFlaggedDevicesAtTime(Report report, Set<String> gt) {
+  CSVData getFlaggedDevicesAtTime(
+      Report report, Set<String> gt, Classifier classifier, SortedList<DateTime> timestamps) {
     final CSVData csv = CSVData([
       "MINUTES_SINCE_INIT",
-      "NUMBER_OF_SUSPICIOUS_DEVICES",
-      "NUMBER_OF_DEVICES_TO_FLAG",
-      "NUMBER_OF_DEVICES_TO_UNFLAG",
       "TRUE_POSITIVES",
       "FALSE_POSITIVES",
       "TRUE_NEGATIVES",
       "FALSE_NEGATIVES",
-      "TRUE_POSITIVES_RATE",
-      "FALSE_POSITIVES_RATE",
-      "TRUE_NEGATIVES_RATE",
-      "FALSE_NEGATIVES_RATE",
-      "POSITIVES_ACCURACY",
-      "NEGATIVES_ACCURACY",
-      "OVERALL_ACCURACY",
+      "PRECISION",
+      "RECALL",
       "F1_SCORE",
     ]);
-    Set<String> devicesToFlag = {};
-    Set<String> devicesToUnflag = {};
-    final Set<String> flaggedDevices = {};
-    final List<DateTime> timeStamps = report.getTimestamps();
-    generateTimestamps(timeStamps).forEach((ts) {
+    Set<String> flaggedDevices = {};
+    timestamps.forEach((ts) {
       final Report r = report.syntheticReportAtTime(ts);
       if (r.devices().length < 2) {
         return;
       }
       r.refreshCache();
 
-      // Get all suspicious devices not currently flagged and add them to flagged devices
-      devicesToFlag = r.getSuspiciousDeviceIDs().where((d) => !flaggedDevices.contains(d)).toSet();
-      flaggedDevices.addAll(devicesToFlag);
+      final ({
+        ({List<int> fn, List<int> fp, List<int> tn, List<int> tp}) matrix,
+        ({List<double> f1, List<double> precision, List<double> recall}) accuracy,
+      }) results = List.generate(25, (index) {
+        flaggedDevices = r.getSuspiciousDeviceIDs(classifier: classifier);
 
-      // Get all non-suspicious devices currently flagged and remove them to flagged devices
-      devicesToUnflag = r.deviceIDs().difference(r.getSuspiciousDeviceIDs()).where(flaggedDevices.contains).toSet();
-      flaggedDevices.removeAll(devicesToUnflag);
+        final int tp = flaggedDevices.intersection(gt).length;
+        final int fp = flaggedDevices.difference(gt).length;
+        final int fn = r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length;
+        final int tn = r.deviceIDs().difference(flaggedDevices).intersection(r.deviceIDs().difference(gt)).length;
 
-      final int truePositives = flaggedDevices.intersection(gt).length;
-      final int falsePositives = flaggedDevices.difference(gt).length;
-      final int falseNegatives =
-          r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length;
+        double recall = tp / (tp + fn);
+        double precision = tp / (tp + fp);
+        double f1 = 2 * ((precision * recall) / (precision + recall));
 
-      final double accuracy = (flaggedDevices.intersection(gt).length +
-              r.deviceIDs().difference(flaggedDevices).intersection(r.deviceIDs().difference(gt)).length) /
-          r.deviceIDs().length;
-      final double recall = truePositives / (truePositives + falseNegatives);
-      final double precision = truePositives / (truePositives + falsePositives);
-      final double f1 = 2 * ((precision * recall) / (precision + recall));
+        recall = recall.isNaN ? 0.0 : recall;
+        precision = precision.isNaN ? 0.0 : precision;
+        f1 = f1.isNaN ? 0.0 : f1;
+
+        return (maxtrix: (tp: tp, fp: fp, tn: tn, fn: fn), accuracy: (precision: precision, recall: recall, f1: f1));
+      }).fold(
+          (
+            matrix: (
+              tp: List<int>.empty(growable: true),
+              fp: List<int>.empty(growable: true),
+              tn: List<int>.empty(growable: true),
+              fn: List<int>.empty(growable: true),
+            ),
+            accuracy: (
+              precision: List<double>.empty(growable: true),
+              recall: List<double>.empty(growable: true),
+              f1: List<double>.empty(growable: true)
+            ),
+          ),
+          (acc, e) => (
+                matrix: (
+                  tp: [...acc.matrix.tp, e.maxtrix.tp],
+                  fp: [...acc.matrix.fp, e.maxtrix.fp],
+                  tn: [...acc.matrix.tn, e.maxtrix.tn],
+                  fn: [...acc.matrix.fn, e.maxtrix.fn],
+                ),
+                accuracy: (
+                  precision: [...acc.accuracy.precision, e.accuracy.precision],
+                  recall: [...acc.accuracy.recall, e.accuracy.recall],
+                  f1: [...acc.accuracy.f1, e.accuracy.f1],
+                ),
+              ));
 
       csv.addRow([
-        // Time since starting scan
-        ts.difference(timeStamps.first).inMinutes,
-        // Number of suspicious devices
-        flaggedDevices.length,
-        // Number of devices to flag
-        devicesToFlag.length,
-        // Number of devices to un-flag
-        devicesToUnflag.length,
-        // True positives
-        truePositives,
-        // False positives
-        flaggedDevices.difference(gt).length,
-        // True negatives
-        r.deviceIDs().difference(flaggedDevices).intersection(r.deviceIDs().difference(gt)).length,
-        // False negatives
-        falseNegatives,
-        // True positive rate
-        flaggedDevices.intersection(gt).length / r.deviceIDs().length,
-        // False positive rate
-        flaggedDevices.difference(gt).length / r.deviceIDs().length,
-        // True negative rate
-        r.deviceIDs().difference(flaggedDevices).intersection(r.deviceIDs().difference(gt)).length /
-            r.deviceIDs().length,
-        // False negative rate
-        r.deviceIDs().difference(flaggedDevices).difference(r.deviceIDs().difference(gt)).length / r.deviceIDs().length,
-        // Positives accuracy
-        flaggedDevices.intersection(gt).length / gt.length,
-        // Negatives Accuracy
-        r.deviceIDs().difference(gt).difference(flaggedDevices).length / r.deviceIDs().difference(gt).length,
-        // Overall Accuracy
-        accuracy,
-        // F1 Score
-        f1,
+        ts.difference(timestamps.first).inMinutes,
+        results.matrix.tp.average,
+        results.matrix.fp.average,
+        results.matrix.tn.average,
+        results.matrix.fn.average,
+        results.accuracy.precision.average,
+        results.accuracy.recall.average,
+        results.accuracy.f1.average,
       ].map((e) => e.toString()).toList());
     });
     return csv;
