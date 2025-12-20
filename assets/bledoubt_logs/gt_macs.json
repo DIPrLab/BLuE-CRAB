@@ -69,12 +69,29 @@
   "bledoubt_log_l.json": ["00:00:00:00:23:98", "00:00:00:00:23:ae"],
   "bledoubt_log_m.json": ["00:00:00:00:26:0a", "00:00:00:00:26:03"],
   "bledoubt_log_n.json": ["00:00:00:00:26:0a", "00:00:00:00:26:03"],
+  "bledoubt_log_a_a.json": [],
+  "bledoubt_log_b_b.json": [],
+  "bledoubt_log_c_c.json": [],
+  "bledoubt_log_d_d.json": [],
+  "bledoubt_log_e_e.json": [],
+  "bledoubt_log_f_f.json": [],
+  "bledoubt_log_g_g.json": [],
+  "bledoubt_log_h_h.json": [],
+  "bledoubt_log_i_i.json": [],
+  "bledoubt_log_j_j.json": [],
+  "bledoubt_log_k_k.json": [],
+  "bledoubt_log_l_l.json": [],
+  "bledoubt_log_m_m.json": [],
+  "bledoubt_log_n_n.json": [],
   "bus_dataset_1": ["1C20B144-1EA0-86DD-9E1C-782D1DBB8F9D"],
+  "bus_dataset_2": [],
   "walking_dataset_1.json": [
     "B8366627-A3C0-A604-6CDB-53E9246EECB5",
     "D9118EAB-BC4C-FCD1-02E8-9DAD5C38B965",
     "1CB3C1F9-8CEC-AD38-4749-70EDBA409B20",
     "838A552C-FCB1-C13A-0867-FD21B9AE6349"
   ],
-  "walking_dataset_2.json": ["1C20B144-1EA0-86DD-9E1C-782D1DBB8F9D"]
+  "walking_dataset_2.json": ["1C20B144-1EA0-86DD-9E1C-782D1DBB8F9D"],
+  "walking_dataset_3.json": [],
+  "walking_dataset_4.json": []
 }
