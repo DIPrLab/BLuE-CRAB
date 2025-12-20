@@ -142,3 +142,14 @@ extension X on SortedList<Datum> {
 List<(DateTime, DateTime)> segmentTimestamps(DateTime start, DateTime end) => List.generate(
     (end.difference(start).inSeconds.abs() / Settings.shared.skipDuration().inSeconds).ceil() + 1,
     (e) => start.add(Settings().skipDuration() * e)).orderedPairs();
+
+extension Unique<T> on SortedList<T> {
+  SortedList<T> unique() {
+    final Set<T> elements = toSet();
+    while (firstOrNull != null) {
+      remove(first);
+    }
+    addAll(elements);
+    return this;
+  }
+}
