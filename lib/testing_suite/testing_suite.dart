@@ -113,7 +113,7 @@ class TestingSuite {
       File classifierF1File,
       Directory deviceReportDir) {
     final SortedList<DateTime> shortTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 1));
-    final SortedList<DateTime> longTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 10));
+    // final SortedList<DateTime> longTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 10));
 
     final CSVData reportData = getReportMetrics(report, shortTimestamps);
     reportDataFile
@@ -129,7 +129,7 @@ class TestingSuite {
 
     final List<({Classifier classifier, CSVData data})> classifierData = Classifier.classifiers
         .map((classifier) =>
-            (classifier: classifier, data: getFlaggedDevicesAtTime(report, groundTruth, classifier, longTimestamps)))
+            (classifier: classifier, data: getFlaggedDevicesAtTime(report, groundTruth, classifier, shortTimestamps)))
         .toList()
       ..forEach((e) {
         File([deviceReportDir.path, "classifiers", "${e.classifier.csvName()}.csv"].join("/"))
