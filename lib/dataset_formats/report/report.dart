@@ -3,6 +3,8 @@ import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_report.dart
 import 'package:blue_crab/dataset_formats/compact_dataset/compact_dataset.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
+import 'package:blue_crab/extensions/geolocator.dart';
+import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/extensions/stats.dart';
 import 'package:blue_crab/settings.dart';
 import 'package:collection/collection.dart';
@@ -70,6 +72,24 @@ class Report {
     return (timestamps.first, timestamps.last);
   }
 
+  double distanceTravelled() =>
+      locationHistory().mapOrderedPairs((e) => e.$1.$2.distanceTo(e.$2.$2)).fold(0, (a, b) => a + b);
+
+  SortedList<(DateTime, LatLng)> locationHistory() => SortedList((a, b) => a.$1.compareTo(b.$1))
+    ..addAll(data.values
+        .map((e) => e.dataPoints().map((e) => (e.time, e.location)).toSet())
+        .fold(Set<(DateTime, LatLng?)>.identity(), (a, b) => a.union(b))
+        .where((e) => e.$2 != null)
+        .map((e) => (e.$1, e.$2!))
+        .sorted((a, b) => a.$1.compareTo(b.$1))
+        .fold(
+            List<(DateTime, LatLng)>.empty(growable: true),
+            (a, b) => a.isEmpty
+                ? [...a, b]
+                : a.last.$2 == b.$2
+                    ? a
+                    : [...a, b]));
+
   Set<Device> getSuspiciousDevices({Classifier? classifier}) =>
       (classifier ?? Settings.shared.classifier).getRiskyDevices(this);
   Set<String> getSuspiciousDeviceIDs({Classifier? classifier}) =>
@@ -88,19 +108,8 @@ class Report {
                 e.t
               )))
           .toMap((e) => e.key, (e) => e.value),
-      data.values
-          .map((e) => e.dataPoints().map((e) => (e.time, e.location)).toSet())
-          .fold(Set<(DateTime, LatLng?)>.identity(), (a, b) => a.union(b))
-          .sorted((a, b) => a.$1.compareTo(b.$1))
-          .toList()
-          .fold(
-              List<(DateTime, LatLng?)>.empty(growable: true),
-              (a, b) => a.isEmpty
-                  ? a + [b]
-                  : a.last.$2 == b.$2
-                      ? a
-                      : a + [b])
-          .map((e) => (e.$1, e.$2 == null ? null : (e.$2!.latitude.degrees, e.$2!.longitude.degrees)))
+      locationHistory()
+          .map((e) => (e.$1, (e.$2.latitude.degrees, e.$2.longitude.degrees)))
           .map((e) => MapEntry(e.$1, e.$2))
           .toMap((e) => e.key, (e) => e.value));
 }
