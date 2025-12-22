@@ -4,6 +4,7 @@ extension ReportMetrics on TestingSuite {
   CSVData getReportMetrics(Report report, SortedList<DateTime> timestamps) {
     final CSVData csv = CSVData([
       "MINUTES_SINCE_INIT",
+      "DISTANCE_TRAVELLED",
       "DEVICE_COUNT",
       "DATAPOINT_COUNT",
       "AVERAGE_TIME_WITH_USER",
@@ -44,6 +45,7 @@ extension ReportMetrics on TestingSuite {
 
       csv.addRow([
         t.difference(timestamps.first).inMinutes,
+        r.distanceTravelled(),
         r.devices().length,
         r.devices().map((d) => d.dataPoints().length).fold(0, (a, b) => a + b),
         avgTimeWithUser,

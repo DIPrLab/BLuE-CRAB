@@ -4,10 +4,13 @@ import 'package:blue_crab/classifiers/classifier.dart';
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
+import 'package:blue_crab/extensions/geolocator.dart';
+import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/testing_suite/csv_data.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:latlng/latlng.dart';
 import 'package:logger/logger.dart';
 import 'package:sorted_list/sorted_list.dart';
 import 'package:statistics/statistics.dart';
@@ -86,37 +89,15 @@ class TestingSuite {
     final Directory currDir = await localFileDirectory;
     final Directory destDir = Directory([currDir.path, "${dataset}_reports"].join("/"))..createSync();
 
-    runTest(
-        report,
-        gt["$dataset.json"]?.toSet() ?? {},
-        File([destDir.path, "${dataset}_report_data.csv"].join("/")),
-        File([destDir.path, "${dataset}_classifier_tp.csv"].join("/")),
-        File([destDir.path, "${dataset}_classifier_fp.csv"].join("/")),
-        File([destDir.path, "${dataset}_classifier_fn.csv"].join("/")),
-        File([destDir.path, "${dataset}_classifier_tn.csv"].join("/")),
-        File([destDir.path, "${dataset}_classifier_precision.csv"].join("/")),
-        File([destDir.path, "${dataset}_classifier_recall.csv"].join("/")),
-        File([destDir.path, "${dataset}_classifier_f1.csv"].join("/")),
-        destDir);
+    runTest(report, gt["$dataset.json"]?.toSet() ?? {}, destDir);
   }
 
-  void runTest(
-      Report report,
-      Set<String> groundTruth,
-      File reportDataFile,
-      File classifierTpFile,
-      File classifierFpFile,
-      File classifierFnFile,
-      File classifierTnFile,
-      File classifierPrecisionFile,
-      File classifierRecallFile,
-      File classifierF1File,
-      Directory deviceReportDir) {
+  void runTest(Report report, Set<String> groundTruth, Directory deviceReportDir) {
     final SortedList<DateTime> shortTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 1));
-    // final SortedList<DateTime> longTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 10));
+    final SortedList<DateTime> longTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 10));
 
     final CSVData reportData = getReportMetrics(report, shortTimestamps);
-    reportDataFile
+    File([deviceReportDir.path, "report_data.csv"].join("/"))
       ..createSync()
       ..writeAsStringSync(reportData.toString());
 
