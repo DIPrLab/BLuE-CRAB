@@ -1,16 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:blue_crab/classifiers/classifier.dart';
+import 'package:blue_crab/classifiers/classifiers.dart';
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/collections.dart';
-import 'package:blue_crab/extensions/geolocator.dart';
-import 'package:blue_crab/extensions/ordered_pairs.dart';
 import 'package:blue_crab/filesystem/filesystem.dart';
 import 'package:blue_crab/testing_suite/csv_data.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
-import 'package:latlng/latlng.dart';
 import 'package:logger/logger.dart';
 import 'package:sorted_list/sorted_list.dart';
 import 'package:statistics/statistics.dart';
@@ -18,6 +16,7 @@ import 'package:statistics/statistics.dart';
 part 'package:blue_crab/testing_suite/classifier_accuracy.dart';
 part 'package:blue_crab/testing_suite/device_risk_factors.dart';
 part 'package:blue_crab/testing_suite/flagged_devices_at_time.dart';
+part 'package:blue_crab/testing_suite/k_means_accuracy.dart';
 part 'package:blue_crab/testing_suite/report_metrics.dart';
 
 class TestingSuite {
@@ -89,10 +88,10 @@ class TestingSuite {
     final Directory currDir = await localFileDirectory;
     final Directory destDir = Directory([currDir.path, "${dataset}_reports"].join("/"))..createSync();
 
-    runTest(report, gt["$dataset.json"]?.toSet() ?? {}, destDir);
+    runTest(report, gt["$dataset.json"]?.toSet() ?? {}, destDir, filename);
   }
 
-  void runTest(Report report, Set<String> groundTruth, Directory deviceReportDir) {
+  void runTest(Report report, Set<String> groundTruth, Directory deviceReportDir, String filename) {
     final SortedList<DateTime> shortTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 1));
     final SortedList<DateTime> longTimestamps = generateTimestamps(report.getTimestamps(), const Duration(minutes: 10));
 
@@ -117,6 +116,11 @@ class TestingSuite {
           ..createSync(recursive: true)
           ..writeAsStringSync(e.data.toString());
       });
+
+    // final CSVData e = getKMeansAccuracy(report, groundTruth, shortTimestamps, filename);
+    // File([deviceReportDir.path, "K_ACCURACY.csv"].join("/"))
+    //   ..createSync(recursive: true)
+    //   ..writeAsStringSync(e.toString());
 
     ["TRUE_POSITIVES", "FALSE_POSITIVES", "TRUE_NEGATIVES", "FALSE_NEGATIVES", "PRECISION", "RECALL", "F1_SCORE"]
         .forEach((column) {
