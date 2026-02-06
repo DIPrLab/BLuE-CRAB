@@ -61,9 +61,10 @@ BleDoubtDetection _$BleDoubtDetectionFromJson(Map<String, dynamic> json) => BleD
     );
 
 Map<String, dynamic> _$BleDoubtDetectionToJson(BleDoubtDetection instance) => <String, dynamic>{
-      '"lat"': instance.lat,
-      '"long"': instance.long,
-      '"mac"': instance.mac,
-      '"rssi"': instance.rssi,
-      '"t"': instance.t.toIso8601String(),
+      '"lat"': '${instance.lat}',
+      '"long"': '${instance.long}',
+      '"mac"': '"${instance.mac}"',
+      '"rssi"': '${instance.rssi}',
+      // '"t"': '"${instance.t.toIso8601String()}"',
+      '"t"': '"Sat Jan 1 ${instance.t.hour}:${instance.t.minute}:${instance.t.second} EDT 2000"',
     };
