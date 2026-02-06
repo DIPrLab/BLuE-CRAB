@@ -1,4 +1,6 @@
 import 'package:blue_crab/classifiers/classifier.dart';
+import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_detection.dart';
+import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_device.dart';
 import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_report.dart';
 import 'package:blue_crab/dataset_formats/compact_dataset/compact_dataset.dart';
 import 'package:blue_crab/device/device.dart';
@@ -86,7 +88,8 @@ class Report {
             List<(DateTime, LatLng)>.empty(growable: true),
             (a, b) => a.isEmpty
                 ? [...a, b]
-                : a.last.$2 == b.$2
+                : a.last.$2.latitude.degrees == b.$2.latitude.degrees &&
+                        a.last.$2.longitude.degrees == b.$2.longitude.degrees
                     ? a
                     : [...a, b]));
 
@@ -112,4 +115,19 @@ class Report {
           .map((e) => (e.$1, (e.$2.latitude.degrees, e.$2.longitude.degrees)))
           .map((e) => MapEntry(e.$1, e.$2))
           .toMap((e) => e.key, (e) => e.value));
+
+  BleDoubtReport toBLEDoubtDataset() => BleDoubtReport(
+      devices().map((e) => BleDoubtDevice(e.id, e.name, "", "", "", "", 0, "")).toList(),
+      devices()
+          .map((e) => e
+              .dataPoints()
+              .map((dp) => BleDoubtDetection(
+                    dp.location?.latitude.degrees ?? 0.0,
+                    dp.location?.longitude.degrees ?? 0.0,
+                    e.id,
+                    dp.rssi(),
+                    dp.time,
+                  ))
+              .toList())
+          .fold<List<BleDoubtDetection>>([], (a, b) => a + b).toList());
 }

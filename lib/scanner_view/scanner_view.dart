@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:blue_crab/dataset_formats/ble_doubt_report/ble_doubt_report.dart';
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/datum/datum.dart';
 import 'package:blue_crab/device/device.dart';
@@ -66,7 +67,7 @@ class ScannerViewState extends State<ScannerView> {
     ];
     if (Settings.shared.dataCollectionMode) {
       result = [
-        [ButtonType.toggleEnvironment],
+        // [ButtonType.toggleEnvironment],
         [ButtonType.settings, ButtonType.share],
         [ButtonType.scan],
       ];
@@ -80,7 +81,7 @@ class ScannerViewState extends State<ScannerView> {
       result = [
         [ButtonType.settings, ButtonType.view],
         [ButtonType.load, ButtonType.delete],
-        [ButtonType.temp, ButtonType.scan],
+        [ButtonType.scan],
       ];
     }
     return result;

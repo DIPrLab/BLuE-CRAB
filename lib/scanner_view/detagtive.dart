@@ -10,6 +10,9 @@ extension DeTagTive on ScannerViewState {
   bool traceEndedRecently(Device device) =>
       DateTime.now().difference(device.dataPoints().last.time) < Settings.shared.deTagTiveEndThreshold;
 
+  bool traceHasMetadata(Device device) =>
+      device.name.isNotEmpty || device.platformName.isNotEmpty || device.manufacturer.isNotEmpty;
+
   bool candidateTracesStartInWindow(Device candidate, DateTime deviceEnd) {
     const Duration window = Duration.zero;
     final DateTime candidateStart = candidate.dataPoints().first.time;
@@ -119,7 +122,7 @@ extension DeTagTive on ScannerViewState {
           .where(traceIsStrong)
           .where(traceIsLong)
           .where(traceEndedRecently)
-          // .where((d) => d.name.isNotEmpty || d.platformName.isNotEmpty || d.manufacturer.isNotEmpty)
+          .where(traceHasMetadata)
           .forEach((device) {
         final Device? match = findMatch(report, device);
 

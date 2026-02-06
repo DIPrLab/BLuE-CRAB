@@ -1,6 +1,7 @@
 part of 'scanner_view.dart';
 
 enum ButtonType {
+  custom,
   delete,
   load,
   notify,
@@ -78,7 +79,13 @@ extension Buttons on ScannerViewState {
     report.addDatumToDevice(Device("SWITCH", "SWITCH", "SWITCH", []), location, 0);
   }
 
+  void custom() {
+    final BleDoubtReport data = report.toBLEDoubtDataset();
+    Logger().f(data.toJson().toString());
+  }
+
   Map<ButtonType, Widget> buttons() => [
+        (ButtonType.custom, ButtonProps("Custom Action", Icons.abc, custom)),
         (ButtonType.delete, ButtonProps("Delete Data", Icons.delete, deleteData)),
         (ButtonType.load, ButtonProps("Load Sample Data", Icons.upload, loadReportFromFile)),
         (ButtonType.notify, ButtonProps("Notify", Icons.notifications, sendSampleNotification)),
