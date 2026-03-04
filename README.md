@@ -1,6 +1,6 @@
 # BL(u)E CRAB
 
-Detecting unwanted or suspicious Bluetooth Low Energy (BLE)-based trackers is challenging, due in part to cross-platform compatibility issues, and inconsistent detection methods. BL(u)E CRAB identifies suspicious BLE trackers based on various risk factors including the number of encounters, time with the user, distance traveled with the user, number of areas each device appeared in and device proximity to user. BL(u)E CRAB presents this information in an intuitive way to help users determine which devices pose the biggest threat to them based on their context.
+Detecting malicious Bluetooth Low Energy (BLE) trackers remains challenging because existing approaches rely on fixed time and distance thresholds that are brittle across environments. This results in false positives or requires long observation windows. To address these limitations, we present BL(u)E CRAB, a cross-platform (iOS/Android) mobile system that represents nearby devices using three risk factors derived from BLE scan data. Our detection model adapts Clustering-Based Local Outlier Factor (CBLOF) to BLE tracker detection and adds a gap-thresholding mechanism to separate high-scoring outliers from the benign majority. Across micro-benchmarks and end-to-end case studies, CBLOF reduces false positives up to 77%  and false negatives up to 20% compared to the state of the art. In our case studies, suspicious trackers are typically detected within 5 minutes of scanning, improving practical usability for real-world deployment.
 
 ## Install Flutter
 
