@@ -17,8 +17,8 @@ class BLEDoubt extends Classifier {
   @override
   String csvName() => "BLE_DOUBT";
 
-  double distanceThreshold = 420;
-  Duration timeThreshold = const Duration(minutes: 10);
+  double distanceThreshold = 300;
+  Duration timeThreshold = const Duration(seconds: 300);
 
   @override
   Set<Device> getRiskyDevices(Report report) => report

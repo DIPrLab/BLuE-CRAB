@@ -89,6 +89,7 @@ class TestingSuite {
     final Directory destDir = Directory([currDir.path, "${dataset}_reports"].join("/"))..createSync();
 
     runTest(report, gt["$dataset.json"]?.toSet() ?? {}, destDir, filename);
+    // runTest(report, {"1C20B144-1EA0-86DD-9E1C-782D1DBB8F9D"}, destDir, filename);
   }
 
   void runTest(Report report, Set<String> groundTruth, Directory deviceReportDir, String filename) {

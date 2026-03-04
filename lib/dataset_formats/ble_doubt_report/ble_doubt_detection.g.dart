@@ -66,5 +66,6 @@ Map<String, dynamic> _$BleDoubtDetectionToJson(BleDoubtDetection instance) => <S
       '"mac"': '"${instance.mac}"',
       '"rssi"': '${instance.rssi}',
       // '"t"': '"${instance.t.toIso8601String()}"',
-      '"t"': '"Sat Jan 1 ${instance.t.hour}:${instance.t.minute}:${instance.t.second} EDT 2000"',
+      '"t"':
+          '"Sat Jan 1 ${instance.t.hour}:${instance.t.minute.toString().padLeft(2, "0")}:${instance.t.second.toString().padLeft(2, "0")} EDT 2000"',
     };

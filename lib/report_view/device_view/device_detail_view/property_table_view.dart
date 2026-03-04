@@ -1,6 +1,7 @@
 import 'package:blue_crab/dataset_formats/report/report.dart';
 import 'package:blue_crab/device/device.dart';
 import 'package:blue_crab/extensions/date_time.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class PropertyTable extends StatelessWidget {
@@ -20,8 +21,10 @@ class PropertyTable extends StatelessWidget {
     [
       dataRow("Duration Travelled", device.timeTravelled.toReadableString()),
       dataRow("Distance Travelled", "${device.distanceTravelled.round()} meters"),
-      dataRow("Incidence", device.incidence.toString()),
-      dataRow("Area Count", device.areaCount.toString()),
+      dataRow("Average RSSI",
+          "${device.dataPoints().map((e) => e.rssiBackingData()).fold(List<int>.empty(growable: true), (acc, e) => acc + e).average.round()}"),
+      // dataRow("Incidence", device.incidence.toString()),
+      // dataRow("Area Count", device.areaCount.toString()),
     ].forEach(rows.add);
     return rows;
   }
