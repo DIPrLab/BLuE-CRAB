@@ -60,13 +60,13 @@ flutter run
 ## Dataset
 
 For the dataset, 
-* click on [ble-doubt](https://github.com/jeb482/bledoubt/blob/main/analysis/anonymized_logs.zip) to access the anonymized datasets from the BLE-doubt repo
+* Click on [ble-doubt](https://github.com/jeb482/bledoubt/blob/main/analysis/anonymized_logs.zip) to access the anonymized datasets from the BLE-doubt repo
 * Download the zip file and extract all the datasets from it.
 * Make sure the datasets are stored in the CBLOF folder
 
 ## Running CBLOF
 
 To run CBLOF, 
-* Navigate to the CBLOF folder and 
+* Navigate to the CBLOF folder 
 * Click on the Jupyter notebook file in this folder
 * Execute all the cells in the notebook by clicking on **Run All**
