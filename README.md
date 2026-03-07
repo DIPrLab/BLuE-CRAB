@@ -54,3 +54,19 @@ To start the app, run the command:
 ```
 flutter run
 ```
+
+
+
+##Dataset
+
+For the dataset, 
+* click on [ble-doubt](https://github.com/jeb482/bledoubt/blob/main/analysis/anonymized_logs.zip) to access the anonymized datasets from the BLE-doubt repo
+* Download the zip file and extract all the datasets from the zip file.
+* Make sure the datasets are in the same directory as the notebook
+
+## Running CBLOF
+
+To run CBLOF, 
+* Navigate to the CBLOF folder and 
+* Click on the Jupyter notebook file in this folder
+* Run all the cells in the notebook by clicking **Run All**
