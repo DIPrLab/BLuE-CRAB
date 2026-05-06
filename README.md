@@ -68,5 +68,4 @@ For the dataset,
 
 To run CBLOF, 
 * Navigate to the CBLOF folder 
-* Click on the Jupyter notebook file in this folder
-* Execute all the cells in the notebook by clicking on **Run All**
+* Open the Readme.md file and follow the instructions
