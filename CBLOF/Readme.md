@@ -19,9 +19,9 @@ To run CBLOF,
 * I manually entered Table 1 in LaTeX.
   
 
-## Running BLE-Doubt and getting contents of Table 1 (BLE-Doubt detection)
+## Running BLE-Doubt and getting contents of Table 2 (BLE-Doubt detection)
 
-To run BLE-Doubt and obtain the results in Table 1(BLE-Doubt part of the table),
+To run BLE-Doubt and obtain the results in Table 2(BLE-Doubt part of the table),
 *  Click on [repo](https://github.com/jeb482/bledoubt/tree/main/analysis), and then run the Python script called bledoubt_analysis.py
 
 ## Running Our Collected Dataset for Figure 3a, b and c
@@ -32,7 +32,26 @@ To run BLE-Doubt and obtain the results in Table 1(BLE-Doubt part of the table),
 * Uncomment the last two cells in cblof_model.ipynb the click **Run All** to execute all the cell. The results for Figure 3a, b and c will be displayed in the output of the last cell
 
 For Figure 4a,
-* Navigate to the CBLOF folder 
-* Click on the Jupyter notebook file  named plot_4ab.ipynb in this folder
+* Navigate to the CBLOF folder
+* Open cblof_model.ipynb, and change the file path for the dataset file to 'bledoubt_data/{log_file_path}' and ground truth file to 'bledoubt_data/gt_macs.json'
 * Execute all the cells in the notebook by clicking on **Run All**
+* A file called 'result_fig4a.json' is generated
+* After the above, click on the Jupyter notebook file  named plot_4ab.ipynb in this folder
+* Run the first cell in the notebook and it produce the exact same graph in figure 4a.
+* NOTE: We wanted to show scenarios where our model did beter than BLE-Doubt and in order for this to be a fair comparison, we used the bledoubt dataset.
+  We picked three scenarios each from walking, driving a car and riding the train. These were ' bledoubt_log_h, bledoubt_log_n and bledoubt_log_m'.
+* The BLE-Doubt part of this was hardcoded here but in order to get these outputs and be sure, you can run the BLE-Doubt code and confirm.
+
+For Figure 4b,
+* Navigate to the CBLOF folder
+* Open cblof_model.ipynb, and change the file path for the dataset file to 'our_data/{log_file_path}' and ground truth file to 'our_data/gt_macs.json'
+* Scroll inside this notebook till you get to a cell named 'Individual Log File Results'
+* change every appearnce of 'result_fig4a' in the cell to 'result_fig4b'
+* Execute all the cells in the notebook by clicking on **Run All**
+* A file called 'result_fig4b.json' will be generated
+* After the above, click on the Jupyter notebook file  named plot_4ab.ipynb in this folder
+* Run the second cell in the notebook and it produce the exact same graph in figure 4b.
+* NOTE: We wanted to compare our model with BLE-Doubt based on our own dataset.
+* The BLE-Doubt part of this was hardcoded here but in order to get these outputs and be sure, you can run the BLE-Doubt code with our dataset and confirm.
+
  
