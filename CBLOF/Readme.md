@@ -8,7 +8,7 @@ For the dataset,
 * Create a folder called 'bledoubt_data' and store all the dataset
 * Make sure the 'bledoubt_data' folder is stored in the CBLOF folder
 
-## Running CBLOF and getting contents of Table 1 (CBLOF-based detection)
+## Running CBLOF and getting contents of Table 2 (CBLOF-based detection)
 
 To run CBLOF, 
 * Navigate to the CBLOF folder 
