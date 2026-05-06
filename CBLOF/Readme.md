@@ -1,4 +1,4 @@
-To get the dataset to run the experiments, 
+# To get the dataset to run the experiments 
 
 ## Dataset to run annd get the results stored in Table 2
 
@@ -31,7 +31,7 @@ To run BLE-Doubt and obtain the results in Table 2(BLE-Doubt part of the table),
 * Open cblof_model.ipynb, and change the file path for the dataset file to 'our_data/{log_file_path}' and ground truth file to 'our_data/gt_macs.json'
 * Uncomment the last two cells in cblof_model.ipynb the click **Run All** to execute all the cell. The results for Figure 3a, b and c will be displayed in the output of the last cell
 
-For Figure 4a,
+### For Figure 4a,
 * Navigate to the CBLOF folder
 * Open cblof_model.ipynb, and change the file path for the dataset file to 'bledoubt_data/{log_file_path}' and ground truth file to 'bledoubt_data/gt_macs.json'
 * Execute all the cells in the notebook by clicking on **Run All**
@@ -42,7 +42,7 @@ For Figure 4a,
   We picked three scenarios each from walking, driving a car and riding the train. These were ' bledoubt_log_h, bledoubt_log_n and bledoubt_log_m'.
 * The BLE-Doubt part of this was hardcoded here but in order to get these outputs and be sure, you can run the BLE-Doubt code and confirm.
 
-For Figure 4b,
+### For Figure 4b,
 * Navigate to the CBLOF folder
 * Open cblof_model.ipynb, and change the file path for the dataset file to 'our_data/{log_file_path}' and ground truth file to 'our_data/gt_macs.json'
 * Scroll inside this notebook till you get to a cell named 'Individual Log File Results'
